@@ -1,0 +1,778 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0a0a0d">
+<link rel="icon" href="logo_rb.png">
+<link rel="canonical" href="https://rogerboujieka.github.io/masterclass-ia/">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://rogerboujieka.github.io/masterclass-ia/">
+<meta property="og:title" content="Montez vos vidéos 10X plus vite avec l'IA · Masterclass Roger BOUJIEKA">
+<meta property="og:description" content="Masterclass en ligne, vendredi 16 octobre 19h–21h. Montage vidéo et motion design, même depuis votre téléphone. 15 000 FCFA au lieu de 25 000.">
+<meta property="og:image" content="https://rogerboujieka.github.io/masterclass-ia/og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:locale" content="fr_FR">
+<meta name="twitter:card" content="summary_large_image">
+<title>Masterclass Montage IA</title>
+<meta name="description" content="Masterclass en ligne : montage vidéo et motion design avec l'IA, même depuis votre téléphone. Par Roger BOUJIEKA, vendredi 16 octobre, 19h–21h.">
+<meta name="color-scheme" content="light dark">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter+Tight:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700&display=swap">
+<style>
+/* Mobile-first. One idea per screen; details live in tabs. Red = action, timeline = motion. */
+:root{
+  --bg:#0a0a0d; --bg2:#111116; --card:#16161c; --line:rgba(255,255,255,.08); --line2:rgba(255,255,255,.16);
+  --fg:#f5f4f7; --muted:#aaa9b5; --faint:#76757f;
+  --red:#ff1f33; --red-ink:#ff4a59; --red-soft:rgba(255,31,51,.13); --ok:#2bd17e;
+  --shadow:0 24px 60px rgba(0,0,0,.5);
+  --display:"Archivo Black","Arial Black",Impact,sans-serif;
+  --body:"Inter Tight",ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  --ease:cubic-bezier(.16,1,.3,1);
+  color-scheme:dark;
+}
+@media (prefers-color-scheme: light){:root:not([data-theme="dark"]){
+  --bg:#ffffff; --bg2:#f5f5f7; --card:#ffffff; --line:rgba(12,12,28,.09); --line2:rgba(12,12,28,.17);
+  --fg:#0d0d12; --muted:#53525e; --faint:#8a8995;
+  --red:#e8102a; --red-ink:#cf0a22; --red-soft:rgba(232,16,42,.07); --ok:#0e9b55;
+  --shadow:0 18px 48px rgba(20,20,50,.10); color-scheme:light}}
+:root[data-theme="light"]{
+  --bg:#ffffff; --bg2:#f5f5f7; --card:#ffffff; --line:rgba(12,12,28,.09); --line2:rgba(12,12,28,.17);
+  --fg:#0d0d12; --muted:#53525e; --faint:#8a8995;
+  --red:#e8102a; --red-ink:#cf0a22; --red-soft:rgba(232,16,42,.07); --ok:#0e9b55;
+  --shadow:0 18px 48px rgba(20,20,50,.10); color-scheme:light}
+/* logo variants: white text on dark, dark text on light */
+.lg-l{display:none!important}
+@media (prefers-color-scheme: light){:root:not([data-theme="dark"]) .lg-l{display:inline-block!important}:root:not([data-theme="dark"]) .lg-d{display:none!important}}
+:root[data-theme="light"] .lg-l{display:inline-block!important}:root[data-theme="light"] .lg-d{display:none!important}
+
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--fg);font:400 16px/1.6 var(--body);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+img,video{max-width:100%;height:auto;display:block}
+a{color:inherit}
+button{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--red);outline-offset:3px;border-radius:8px}
+.wrap{max-width:1140px;margin:0 auto;padding-inline:16px}
+@media (min-width:700px){.wrap{padding-inline:32px}body{font-size:17px}}
+section{padding-block:clamp(56px,8vw,104px);position:relative}
+.alt{background:var(--bg2)}
+h1,h2,h3{margin:0;text-wrap:balance}
+h2{font:800 clamp(28px,4.6vw,48px)/1.08 var(--body);letter-spacing:-.035em}
+h3{font:800 18px/1.25 var(--body);letter-spacing:-.01em}
+p{margin:0}
+.eyebrow{font:700 12px/1.2 var(--mono);letter-spacing:.16em;text-transform:uppercase;color:var(--red-ink);display:inline-flex;align-items:center;gap:10px}
+.eyebrow::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--red);box-shadow:0 0 0 4px var(--red-soft);flex:none}
+.lead{color:var(--muted);font-size:clamp(16px,1.5vw,19px);line-height:1.6;max-width:60ch}
+.head{display:grid;gap:14px;margin-bottom:clamp(28px,4vw,48px);max-width:760px}
+.center{text-align:center;justify-items:center;margin-inline:auto}
+.ic{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex:none}
+
+/* buttons */
+.btn{position:relative;overflow:hidden;display:inline-flex;align-items:center;justify-content:center;gap:12px;border:0;cursor:pointer;text-decoration:none;font:800 17px/1 var(--body);letter-spacing:-.01em;border-radius:999px;padding:18px 26px;transition:transform .2s ease,box-shadow .2s ease}
+.btn-red{color:#fff;background:linear-gradient(180deg,#ff3d4e,#d8001b);box-shadow:0 12px 32px rgba(232,16,42,.32),inset 0 1px 0 rgba(255,255,255,.3)}
+.btn-red:hover{transform:translateY(-2px);box-shadow:0 18px 44px rgba(232,16,42,.42),inset 0 1px 0 rgba(255,255,255,.3)}
+.btn-red::after,.btn-white::after{content:"";position:absolute;inset:0;background:linear-gradient(100deg,transparent 30%,rgba(255,255,255,.45) 50%,transparent 70%);transform:translateX(-120%);animation:shine 4.2s ease-in-out infinite 1.2s}
+@keyframes shine{0%,62%{transform:translateX(-120%)}82%,100%{transform:translateX(120%)}}
+.btn .arr{width:26px;height:26px;border-radius:50%;background:#fff;color:#d8001b;display:grid;place-items:center;font-size:15px;flex:none}
+.btn-full{width:100%}
+.btn-white{background:#fff;color:#0d0d12}
+.btn-white .arr{background:#e8102a;color:#fff}
+
+/* top bar */
+.top{position:sticky;top:0;z-index:50;background:color-mix(in srgb,var(--bg) 86%,transparent);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.top .wrap{display:flex;align-items:center;gap:10px;padding-block:10px}
+.brand img{height:26px;width:auto}
+.top .sp{flex:1}
+.tog{display:inline-flex;border-radius:999px;box-shadow:inset 0 0 0 1.5px var(--line2);padding:3px}
+.tog button{border:0;background:transparent;color:var(--muted);font:700 12px/1 var(--mono);letter-spacing:.06em;padding:8px 10px;border-radius:999px;cursor:pointer;display:grid;place-items:center;min-width:34px;min-height:30px}
+.tog button[aria-pressed="true"]{background:var(--fg);color:var(--bg)}
+.tog .ic{width:15px;height:15px}
+.top .btn{display:none;padding:12px 18px;font-size:15px}
+@media (min-width:860px){.top .btn{display:inline-flex}.brand img{height:30px}}
+
+/* hero */
+.hero{padding-block:28px 56px;overflow:hidden}
+.hero .wrap{display:grid;gap:32px;align-items:center}
+@media (min-width:940px){.hero{padding-block:56px 96px}.hero .wrap{grid-template-columns:1.15fr .85fr;gap:48px}}
+.live{display:inline-flex;align-items:center;gap:9px;font:700 11.5px/1.3 var(--mono);letter-spacing:.08em;text-transform:uppercase;padding:9px 14px;border-radius:999px;background:var(--red-soft);color:var(--red-ink)}
+.live i{width:8px;height:8px;border-radius:50%;background:var(--red);animation:blink 1.4s infinite;flex:none}
+@keyframes blink{50%{opacity:.2}}
+.h1{font:900 clamp(38px,4.4vw,60px)/1.02 var(--body);letter-spacing:-.045em;margin-top:18px}
+.h1 .ln{display:block;overflow:hidden;padding-bottom:.06em;margin-bottom:-.06em}
+.h1 .ln>span{display:block;transform:translateY(105%);animation:lineup .95s var(--ease) forwards;animation-delay:calc(.1s + var(--i,0) * .1s)}
+@keyframes lineup{to{transform:none}}
+.h1 .hl{position:relative;display:inline-block;color:#fff;padding:0 .14em;margin-right:.06em;z-index:0}
+.h1 .hl::before{content:"";position:absolute;inset:.06em 0 .02em;background:var(--red);border-radius:.12em;z-index:-1;transform:scaleX(0);transform-origin:left;animation:wipe .7s var(--ease) .75s forwards}
+@keyframes wipe{to{transform:scaleX(1)}}
+.h1 .soft{color:var(--red-ink)}
+.hero .sub{margin-top:18px}
+.in{opacity:0;transform:translateY(16px);animation:fadeup .8s var(--ease) forwards;animation-delay:var(--d,.4s)}
+@keyframes fadeup{to{opacity:1;transform:none}}
+.price-line{display:flex;flex-wrap:wrap;align-items:baseline;gap:8px 14px;margin-top:24px}
+.price-now{font:400 clamp(32px,4vw,42px)/1 var(--display);letter-spacing:-.01em}
+.price-now small{font:800 16px var(--body);margin-left:6px}
+.price-was{color:var(--faint);text-decoration:line-through;text-decoration-color:var(--red);text-decoration-thickness:2px;font:700 17px var(--body)}
+.tag{display:inline-flex;align-items:center;padding:7px 12px;border-radius:999px;font:800 12px/1 var(--body);background:var(--red);color:#fff;letter-spacing:.01em}
+.hero .btn{margin-top:20px}
+@media (min-width:560px){.hero .btn-full{width:auto;padding-inline:34px}}
+.facts{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px}
+.chip{display:inline-flex;align-items:center;gap:7px;padding:8px 12px;border-radius:999px;font:600 13px/1.2 var(--body);background:var(--bg2);color:var(--fg);box-shadow:inset 0 0 0 1px var(--line)}
+.chip .ic{width:15px;height:15px;color:var(--red-ink)}
+.chip.ph{background:var(--red-soft);box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--red) 35%,transparent);font-weight:700}
+
+/* hero card: portrait (nothing on the face) + editing timeline */
+.hcard{border-radius:26px;overflow:hidden;background:var(--card);box-shadow:var(--shadow),inset 0 0 0 1px var(--line);max-width:460px;width:100%;justify-self:center}
+.pic{position:relative;aspect-ratio:1/1.16;overflow:hidden;background:radial-gradient(110% 85% at 50% 100%,#ff4150 0%,#d00a20 48%,#5e000e 100%);isolation:isolate}
+.pic .rg{position:absolute;left:50%;top:44%;width:var(--s);aspect-ratio:1;border-radius:50%;border:1px solid rgba(255,255,255,.22);transform:translate(-50%,-50%) scale(.6);opacity:0;animation:ring 1.4s var(--ease) forwards,breathe 6s ease-in-out 1.4s infinite;z-index:-1}
+.pic .rg:nth-child(2){animation-delay:.12s,1.52s}.pic .rg:nth-child(3){animation-delay:.24s,1.64s}
+@keyframes ring{to{transform:translate(-50%,-50%) scale(1);opacity:1}}
+@keyframes breathe{50%{transform:translate(-50%,-50%) scale(1.04)}}
+/* the cutout is full-bleed: both arms and the bottom edge sit on the frame edges */
+.pic img{position:absolute;left:-6%;bottom:0;width:112%;max-width:none;transform:translateY(5%);opacity:0;animation:rise 1.1s var(--ease) .25s forwards}
+@keyframes rise{to{transform:none;opacity:1}}
+.tl{padding:12px 14px 14px;font:700 10px/1 var(--mono);letter-spacing:.06em;color:var(--muted)}
+.tl-h{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-bottom:10px;font:600 12px/1.3 var(--body);letter-spacing:0}
+.tl-h b{color:var(--fg);font-weight:800}
+.tl-h .tc{font:700 12px/1 var(--mono);color:var(--red-ink);font-variant-numeric:tabular-nums;letter-spacing:.04em}
+.tl-b{display:grid;grid-template-columns:18px 1fr;column-gap:8px;row-gap:5px}
+.tl-b .lab{grid-column:1;display:grid;place-items:center;height:22px;border-radius:5px;background:var(--bg2);color:var(--faint)}
+.lanes{position:relative;display:grid;row-gap:5px;grid-row:1/4;grid-column:2}
+.lane{position:relative;height:22px;border-radius:5px;background:var(--bg2);overflow:hidden}
+.clip{position:absolute;top:2px;bottom:2px;left:calc(var(--s)*1%);width:calc(var(--w)*1%);border-radius:4px;background:color-mix(in srgb,var(--fg) 14%,transparent);color:var(--fg);display:flex;align-items:center;padding-left:6px;font:700 9px/1 var(--mono);font-style:normal;white-space:nowrap;overflow:hidden;transition:box-shadow .2s,background .2s}
+.clip.r{background:var(--red);color:#fff}
+.clip.im{background-size:cover;background-position:center}
+.clip.on{box-shadow:0 0 0 2px var(--red-ink),0 0 14px color-mix(in srgb,var(--red) 50%,transparent)}
+.wave svg{position:absolute;inset:3px 0;width:100%;height:16px}
+.wave rect{fill:var(--faint);opacity:.7}
+.phd{position:absolute;top:-6px;bottom:-4px;left:0;width:2px;background:var(--red);border-radius:2px;will-change:transform}
+.phd::before{content:"";position:absolute;top:-2px;left:-5px;width:12px;height:9px;background:var(--red);clip-path:polygon(0 0,100% 0,50% 100%)}
+
+/* marquee (decorative only) */
+.marquee{padding-block:18px;overflow:hidden;border-block:1px solid var(--line);-webkit-mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent);mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent)}
+.marquee .track{display:flex;gap:40px;width:max-content;animation:scroll 42s linear infinite}
+@keyframes scroll{to{transform:translateX(-50%)}}
+.mq{display:flex;align-items:center;gap:9px;color:var(--faint);font:700 15px/1 var(--body);white-space:nowrap}
+.mq svg{width:22px;height:22px}
+.mq img{height:20px;width:auto}
+
+/* phone section */
+.need{display:grid;gap:28px;align-items:center}
+@media (min-width:940px){.need{grid-template-columns:1fr 1fr;gap:56px}}
+.photo{border-radius:22px;overflow:hidden;background:var(--bg2);box-shadow:var(--shadow)}
+.photo img{width:100%;aspect-ratio:16/10;object-fit:cover}
+.cap{font:600 13px/1.4 var(--body);color:var(--faint);margin-top:10px}
+.items{display:grid;gap:10px;margin-top:22px}
+@media (min-width:560px){.items{grid-template-columns:1fr 1fr}}
+.item{display:flex;gap:14px;align-items:flex-start;padding:16px;border-radius:18px;background:var(--card);box-shadow:inset 0 0 0 1px var(--line)}
+.item .ib{width:42px;height:42px;border-radius:13px;display:grid;place-items:center;background:var(--red-soft);color:var(--red-ink);flex:none}
+.item h3{font-size:16px}
+.item p{color:var(--muted);font-size:14px;line-height:1.5;margin-top:3px}
+.callout{margin-top:16px;padding:18px 18px 18px 20px;border-radius:18px;background:var(--red);color:#fff;font:700 16px/1.45 var(--body);display:flex;gap:14px;align-items:center}
+.callout .ic{width:28px;height:28px}
+
+/* proof video */
+.vid{display:grid;gap:28px;align-items:center}
+@media (min-width:940px){.vid{grid-template-columns:1.15fr .85fr;gap:56px}}
+.player{border-radius:22px;overflow:hidden;background:#000;box-shadow:var(--shadow)}
+.player video{width:100%;aspect-ratio:16/9;background:#000}
+.player.sh{max-width:320px;margin-inline:auto;width:100%}
+.player.sh video{aspect-ratio:9/16}
+.ticks{list-style:none;margin:18px 0 0;padding:0;display:grid;gap:10px}
+.ticks li{display:flex;gap:10px;align-items:flex-start;color:var(--fg);font-weight:600;font-size:15px}
+.ticks li::before{content:"";flex:none;width:20px;height:20px;margin-top:2px;border-radius:50%;background:var(--red-soft) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23e8102a' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 12.5l4 4L18 8'/%3E%3C/svg%3E") center/13px no-repeat}
+
+/* tabs */
+.tabs{position:relative;display:grid;grid-template-columns:1fr 1fr;gap:4px;padding:5px;border-radius:18px;background:var(--bg2);box-shadow:inset 0 0 0 1px var(--line);margin-bottom:24px}
+@media (min-width:700px){.tabs{grid-template-columns:repeat(4,1fr);max-width:720px}}
+.tabs button{position:relative;z-index:1;border:0;background:transparent;cursor:pointer;padding:13px 8px;border-radius:13px;font:700 14px/1.2 var(--body);color:var(--muted);transition:color .3s}
+.tabs button[aria-selected="true"]{color:#fff}
+.tabs .ind{position:absolute;z-index:0;border-radius:13px;background:var(--red);box-shadow:0 8px 22px rgba(232,16,42,.3);transition:transform .5s var(--ease),width .5s var(--ease),height .5s var(--ease)}
+.panel{animation:pin .55s var(--ease)}
+.panel[hidden]{display:none}
+@keyframes pin{from{opacity:0;transform:translateY(16px)}}
+
+/* programme */
+.prog{list-style:none;margin:0;padding:0;position:relative;max-width:780px}
+.prog::before,.prog::after{content:"";position:absolute;left:61px;top:8px;bottom:8px;width:2px;background:var(--line2);border-radius:2px}
+.prog::after{background:var(--red);transform:scaleY(0);transform-origin:top;transition:transform 1.8s var(--ease) .1s}
+.prog.go::after{transform:scaleY(1)}
+.prog li{position:relative;display:grid;grid-template-columns:46px 1fr;column-gap:34px;padding-bottom:22px}
+.prog li::before{content:"";position:absolute;left:56px;top:5px;width:12px;height:12px;border-radius:50%;background:var(--bg);box-shadow:inset 0 0 0 2.5px var(--red);z-index:1}
+.prog time{font:700 13px/1.4 var(--mono);color:var(--red-ink);padding-top:1px}
+.prog .k{font:700 11px/1.2 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--faint)}
+.prog h3{margin-top:4px}
+.prog p{color:var(--muted);font-size:15px;line-height:1.55;margin-top:4px}
+.prog li.bn h3{color:var(--red-ink)}
+.note{color:var(--faint);font-size:13px;margin-top:6px}
+
+/* before / after */
+.ba{display:grid;gap:14px}
+@media (min-width:800px){.ba{grid-template-columns:1fr 1fr}}
+.col{padding:22px;border-radius:22px;background:var(--card);box-shadow:inset 0 0 0 1px var(--line);display:flex;flex-direction:column;gap:14px}
+.col.after{box-shadow:inset 0 0 0 2px var(--red)}
+.col .t{font:700 11px/1.2 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--faint)}
+.col.after .t{color:var(--red-ink)}
+.apps{display:flex;gap:8px;flex-wrap:wrap}
+.app{width:40px;height:40px;border-radius:10px;display:grid;place-items:center;font:700 17px/1 var(--body);letter-spacing:-.02em}
+.app.ps{background:#001e36;color:#31a8ff;box-shadow:inset 0 0 0 1.5px #31a8ff}
+.app.pr{background:#00005b;color:#9999ff;box-shadow:inset 0 0 0 1.5px #9999ff}
+.app.ae{background:#00005b;color:#9999ff;box-shadow:inset 0 0 0 1.5px #9999ff}
+.app.cc{background:#000;color:#fff;box-shadow:inset 0 0 0 1px rgba(255,255,255,.18)}
+.app.cc svg{width:24px;height:24px}
+.col ul{list-style:none;margin:0;padding:0;display:grid;gap:9px}
+.col li{display:flex;gap:10px;font-size:15px;line-height:1.45;color:var(--muted)}
+.col.before li::before{content:"✕";color:var(--faint);font-weight:800;flex:none}
+.col.after li{color:var(--fg)}
+.col.after li::before{content:"✓";color:var(--red-ink);font-weight:900;flex:none}
+.meter{margin-top:auto}
+.meter .row{display:flex;justify-content:space-between;gap:10px;font:700 12px/1.3 var(--mono);color:var(--muted);margin-bottom:8px}
+.meter .bar{height:8px;border-radius:9px;background:var(--bg2);overflow:hidden}
+.meter i{display:block;height:100%;border-radius:inherit;background:var(--faint);transform:scaleX(0);transform-origin:left;transition:transform 1.5s var(--ease) .15s}
+.col.after .meter i{width:10%;background:var(--red)}
+.go .meter i{transform:scaleX(1)}
+
+/* works */
+.works{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media (min-width:860px){.works{grid-template-columns:repeat(4,1fr)}}
+.work{margin:0}
+.work.big{grid-column:span 2}
+.work video{width:100%;aspect-ratio:16/9;object-fit:cover;border-radius:16px;background:var(--bg2);box-shadow:inset 0 0 0 1px var(--line)}
+.work figcaption{display:flex;flex-direction:column;margin-top:8px;font:800 14px/1.25 var(--body)}
+.work figcaption b{font:inherit}
+.work figcaption span{font:600 12px/1.3 var(--body);color:var(--faint);margin-top:2px}
+
+/* trainer */
+.trainer{display:grid;gap:24px;align-items:center}
+@media (min-width:800px){.trainer{grid-template-columns:320px 1fr;gap:44px}}
+.portrait{position:relative;aspect-ratio:1/1.16;border-radius:24px;overflow:hidden;background:radial-gradient(110% 85% at 50% 100%,#ff4150 0%,#d00a20 48%,#5e000e 100%);max-width:340px}
+.portrait img{position:absolute;bottom:0;left:-6%;width:112%;max-width:none}
+.trainer h3{font:800 clamp(26px,3.4vw,36px)/1.1 var(--body);letter-spacing:-.03em}
+.roles{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+.cos{display:grid;gap:8px;margin-top:16px}
+.cos div{display:flex;align-items:center;gap:10px;font-weight:700;font-size:15px}
+.cos div::before{content:"";width:8px;height:8px;border-radius:2px;background:var(--red);flex:none}
+.faith{margin-top:16px;color:var(--muted);font-style:italic}
+
+/* monetisation */
+.mphotos{display:grid;gap:14px}
+@media (min-width:640px){.mphotos{grid-template-columns:1fr 1fr}}
+.mphotos figure{margin:0}
+.mphotos img{width:100%;aspect-ratio:16/10;object-fit:cover;border-radius:20px;box-shadow:var(--shadow)}
+.msteps{display:grid;gap:12px;margin-top:22px}
+@media (min-width:800px){.msteps{grid-template-columns:repeat(3,1fr)}}
+.ms{padding:20px;border-radius:20px;background:var(--card);box-shadow:inset 0 0 0 1px var(--line)}
+.ms b{font:400 26px/1 var(--display);color:var(--red-ink)}
+.ms h3{margin-top:10px}
+.ms p{color:var(--muted);font-size:14.5px;line-height:1.5;margin-top:4px}
+.goal{margin-top:14px;padding:22px;border-radius:22px;background:var(--card);box-shadow:inset 0 0 0 2px var(--red);display:grid;gap:8px}
+@media (min-width:800px){.goal{grid-template-columns:auto 1fr;align-items:center;column-gap:28px}}
+.goal .big{font:400 clamp(26px,4.4vw,44px)/1.1 var(--display);color:var(--red-ink);letter-spacing:-.01em;min-width:0}
+.goal .big small{display:block;font:700 13px/1.3 var(--body);color:var(--fg);letter-spacing:0;margin-top:6px;white-space:normal}
+.goal .d{color:var(--faint);font-size:13px;line-height:1.5}
+
+/* offer */
+.pack{max-width:580px;margin:0 auto;padding:clamp(22px,4vw,34px);border-radius:28px;background:var(--card);box-shadow:var(--shadow),inset 0 0 0 2px var(--red)}
+.pack .tp{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.pack .nm{font:700 12px/1.2 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.pack .price{display:flex;align-items:baseline;flex-wrap:wrap;gap:6px 12px;margin-top:14px}
+.pack .price b{font:400 clamp(44px,9vw,60px)/1 var(--display);letter-spacing:-.02em}
+.pack .price em{font:800 18px var(--body);font-style:normal}
+.pack ul{list-style:none;margin:20px 0 0;padding:0;display:grid;gap:11px}
+.pack li{display:flex;gap:11px;align-items:flex-start;font-size:15.5px;line-height:1.45}
+.pack li::before{content:"";flex:none;width:20px;height:20px;margin-top:1px;border-radius:50%;background:var(--red) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='3.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 12.5l4 4L18 8'/%3E%3C/svg%3E") center/12px no-repeat}
+.pack li.phl{font-weight:700}
+.pack .count{margin-top:22px}
+.pack .btn{margin-top:18px}
+.pay{margin-top:20px;padding-top:18px;border-top:1px dashed var(--line2)}
+.pay .lbl{display:flex;align-items:center;gap:8px;font:700 12px/1.2 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.pay .lbl .ic{width:15px;height:15px}
+.methods{display:flex;flex-wrap:wrap;gap:7px;margin-top:12px}
+.methods img{height:32px;width:auto;border-radius:5px}
+.methods img.cd{box-shadow:0 0 0 1px var(--line2)}
+.access{margin-top:16px;display:flex;gap:10px;align-items:flex-start;font-size:14.5px;line-height:1.45;font-weight:600}
+.access .ic{color:var(--ok);margin-top:1px}
+.steps{list-style:none;margin:18px 0 0;padding:0;display:grid;gap:8px;counter-reset:s}
+.steps li{counter-increment:s;display:flex;gap:12px;align-items:center;font-size:14.5px;color:var(--muted)}
+.steps li::before{content:counter(s);flex:none;width:26px;height:26px;border-radius:8px;display:grid;place-items:center;background:var(--bg2);box-shadow:inset 0 0 0 1px var(--line2);font:700 12px/1 var(--mono);color:var(--fg);margin:0}
+.steps li b{color:var(--fg)}
+
+/* countdown */
+.count{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.count .lbl{font:700 11px/1.3 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);flex-basis:100%}
+.count .u{flex:1;min-width:0;max-width:86px;padding:10px 6px;border-radius:14px;background:var(--bg2);box-shadow:inset 0 0 0 1px var(--line);text-align:center}
+.count .u b{display:block;font:400 24px/1 var(--display);font-variant-numeric:tabular-nums}
+.count .u span{display:block;font:700 10px/1 var(--mono);letter-spacing:.1em;color:var(--muted);margin-top:5px;text-transform:uppercase}
+
+/* faq */
+.faq{display:grid;gap:10px;max-width:820px}
+.faq details{border-radius:16px;background:var(--card);box-shadow:inset 0 0 0 1px var(--line);overflow:hidden}
+.faq summary{cursor:pointer;list-style:none;padding:17px 52px 17px 18px;position:relative;font:700 16px/1.4 var(--body)}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:"+";position:absolute;right:16px;top:50%;transform:translateY(-50%);width:26px;height:26px;border-radius:50%;display:grid;place-items:center;background:var(--red-soft);color:var(--red-ink);font:800 18px/1 var(--body);transition:transform .3s var(--ease)}
+.faq details[open] summary::after{transform:translateY(-50%) rotate(45deg)}
+.faq details p{padding:0 18px 18px;color:var(--muted);font-size:15px;line-height:1.6}
+.faq details[open] p{animation:pin .45s var(--ease)}
+
+/* final */
+.final .box{position:relative;overflow:hidden;border-radius:30px;padding:clamp(28px,6vw,64px) clamp(20px,5vw,56px);text-align:center;color:#fff;background:radial-gradient(120% 120% at 50% 0%,#ff4150 0%,#d00a20 50%,#7a0012 100%);display:grid;justify-items:center;gap:14px}
+.final .box::before{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.07) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.07) 1px,transparent 1px);background-size:44px 44px;-webkit-mask-image:radial-gradient(70% 60% at 50% 40%,#000,transparent);mask-image:radial-gradient(70% 60% at 50% 40%,#000,transparent);animation:drift 14s linear infinite}
+@keyframes drift{to{background-position:44px 44px}}
+.final .box>*{position:relative}
+.final .eyebrow{color:#fff}.final .eyebrow::before{background:#fff;box-shadow:0 0 0 4px rgba(255,255,255,.25)}
+.final h2{color:#fff;max-width:18ch}
+.final p{color:rgba(255,255,255,.88);max-width:52ch}
+.final .count{justify-content:center;max-width:380px;width:100%;margin-top:6px}
+.final .count .lbl{color:rgba(255,255,255,.8);text-align:center}
+.final .count .u{background:rgba(255,255,255,.14);box-shadow:inset 0 0 0 1px rgba(255,255,255,.22)}
+.final .count .u span{color:rgba(255,255,255,.75)}
+.final .btn{margin-top:8px}
+
+/* partners + footer */
+.partners{padding-block:36px;border-top:1px solid var(--line)}
+.partners .wrap{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:18px 34px}
+.partners .k{flex-basis:100%;text-align:center;font:700 11px/1 var(--mono);letter-spacing:.18em;text-transform:uppercase;color:var(--faint)}
+.partners img{height:30px;width:auto}
+.partners img.tall{height:46px}
+footer{padding:18px 16px 110px;text-align:center;color:var(--faint);font-size:12.5px;border-top:1px solid var(--line)}
+@media (min-width:860px){footer{padding-bottom:28px}}
+
+/* mobile sticky bar */
+.mbar{position:fixed;left:10px;right:10px;bottom:calc(10px + env(safe-area-inset-bottom,0px));z-index:60;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:9px 9px 9px 16px;border-radius:999px;background:color-mix(in srgb,var(--card) 92%,transparent);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);box-shadow:0 14px 40px rgba(0,0,0,.25),inset 0 0 0 1px var(--line2);transform:translateY(140%);transition:transform .45s var(--ease)}
+.mbar.show{transform:none}
+.mbar .p{font:400 19px/1 var(--display)}
+.mbar .p small{display:block;font:700 10px/1.3 var(--mono);letter-spacing:.06em;color:var(--muted);margin-top:3px}
+.mbar .btn{padding:13px 16px;font-size:15px}
+.mbar .btn .arr{width:22px;height:22px}
+@media (min-width:860px){.mbar{display:none}}
+
+/* scroll reveal */
+.rv{transition:opacity .8s var(--ease),transform .8s var(--ease)}
+.rv.pre{opacity:0;transform:translateY(26px)}
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+  .marquee .track{animation:none}
+}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-phone" viewBox="0 0 24 24"><rect x="6.5" y="2.5" width="11" height="19" rx="2.8"/><path d="M10.5 18.3h3"/></symbol>
+  <symbol id="i-wifi" viewBox="0 0 24 24"><path d="M2.5 9a15 15 0 0 1 19 0M5.5 12.6a10 10 0 0 1 13 0M8.6 16.1a5 5 0 0 1 6.8 0"/><circle cx="12" cy="19.4" r=".9"/></symbol>
+  <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7.5V12l3 2"/></symbol>
+  <symbol id="i-start" viewBox="0 0 24 24"><path d="M5 19c4-1 6-3 7-7m0 0c1-4 3.5-7 7-7-0 3.5-3 6-7 7zM5 19l3-3"/><circle cx="7.5" cy="9" r="1.6"/></symbol>
+  <symbol id="i-play" viewBox="0 0 24 24"><rect x="3" y="4.5" width="18" height="15" rx="3"/><path d="M10 9.2v5.6l4.6-2.8z"/></symbol>
+  <symbol id="i-file" viewBox="0 0 24 24"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h4"/></symbol>
+  <symbol id="i-users" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0M16 4.6a3.5 3.5 0 0 1 0 6.8M18 14a6.5 6.5 0 0 1 3.5 6"/></symbol>
+  <symbol id="i-lock" viewBox="0 0 24 24"><rect x="4.5" y="10.5" width="15" height="10" rx="2.5"/><path d="M8 10.5V8a4 4 0 0 1 8 0v2.5"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M8 12.3l2.8 2.8L16.2 9.7"/></symbol>
+  <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2M12 19.5v2M2.5 12h2M19.5 12h2M5.3 5.3l1.4 1.4M17.3 17.3l1.4 1.4M5.3 18.7l1.4-1.4M17.3 6.7l1.4-1.4"/></symbol>
+  <symbol id="i-moon" viewBox="0 0 24 24"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/></symbol>
+</svg>
+
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="#top" aria-label="Roger BOUJIEKA"><img class="lg-d" src="logo_rb.png" alt="Roger BOUJIEKA"><img class="lg-l" src="logo_rb_dk.png" alt="Roger BOUJIEKA"></a>
+    <div class="sp"></div>
+    <div class="tog" role="group" aria-label="Langue / Language"><button id="lang-fr" aria-pressed="true">FR</button><button id="lang-en" aria-pressed="false">EN</button></div>
+    <div class="tog" role="group" aria-label="Thème"><button id="th-day" aria-pressed="false" aria-label="Mode jour"><svg class="ic"><use href="#i-sun"/></svg></button><button id="th-night" aria-pressed="false" aria-label="Mode nuit"><svg class="ic"><use href="#i-moon"/></svg></button></div>
+    <a class="btn btn-red js-cta" href="https://rogerboujieka237.mychariow.shop/prd_gy9104l1/checkout"><span data-i18n="cta_short">Réserver ma place</span></a>
+  </div>
+</header>
+
+<main>
+<!-- HERO -->
+<section class="hero" id="top">
+  <div class="wrap">
+    <div>
+      <span class="live in" style="--d:.05s"><i></i><span data-i18n="hero_live">En direct · Ven. 16 oct. · 19h–21h GMT+1</span></span>
+      <h1 class="h1" data-i18n="hero_h1"><span class="ln"><span style="--i:0">Montez vos vidéos</span></span><span class="ln"><span style="--i:1"><span class="hl">10X</span> plus vite</span></span><span class="ln"><span style="--i:2" class="soft">avec l'IA.</span></span></h1>
+      <p class="lead sub in" style="--d:.5s" data-i18n="hero_sub">Apprenez le montage vidéo et le motion design avec les bons outils, <b>même depuis votre téléphone</b>. Puis transformez cette compétence en revenus.</p>
+      <div class="price-line in" style="--d:.6s"><span class="price-now">15 000<small>FCFA</small></span><span class="price-was">25 000 FCFA</span><span class="tag" data-i18n="limited">Places limitées</span></div>
+      <div class="in" style="--d:.7s"><a class="btn btn-red btn-full js-cta" href="https://rogerboujieka237.mychariow.shop/prd_gy9104l1/checkout"><span data-i18n="cta_main">Je réserve ma place</span><span class="arr">→</span></a></div>
+      <div class="facts in" style="--d:.8s">
+        <span class="chip ph"><svg class="ic"><use href="#i-phone"/></svg><span data-i18n="hf1">Accessible depuis un smartphone</span></span>
+        <span class="chip"><svg class="ic"><use href="#i-clock"/></svg><span data-i18n="hf2">2 h en direct</span></span>
+        <span class="chip"><svg class="ic"><use href="#i-file"/></svg><span data-i18n="hf3">Replay + PDF</span></span>
+        <span class="chip"><svg class="ic"><use href="#i-users"/></svg><span data-i18n="hf4">Groupe privé</span></span>
+      </div>
+    </div>
+    <div class="hcard in" style="--d:.15s">
+      <div class="pic"><span class="rg" style="--s:56%"></span><span class="rg" style="--s:78%"></span><span class="rg" style="--s:100%"></span><img src="roger.webp" alt="Roger BOUJIEKA" width="1000" height="1000"></div>
+      <div class="tl" aria-hidden="true">
+        <div class="tl-h"><span><b>Roger BOUJIEKA</b> · <span data-i18n="tl_role">votre formateur</span></span><span class="tc js-tc">00:00:00</span></div>
+        <div class="tl-b">
+          <span class="lab">T</span><span class="lab">V</span><span class="lab">A</span>
+          <div class="lanes js-lanes">
+            <div class="lane"><i class="clip r" style="--s:1;--w:15">HOOK</i><i class="clip" style="--s:20;--w:13">10X</i><i class="clip" style="--s:38;--w:20">TITRE</i><i class="clip" style="--s:62;--w:15">LOGO</i><i class="clip r" style="--s:82;--w:17">CTA</i></div>
+            <div class="lane"><i class="clip im" style="--s:0;--w:24.5;background-image:url(work-camairco.jpg)"></i><i class="clip im" style="--s:25;--w:24.5;background-image:url(motion-kwiva.jpg)"></i><i class="clip im" style="--s:50;--w:24.5;background-image:url(work-bovann.jpg)"></i><i class="clip im" style="--s:75;--w:25;background-image:url(motion-volta.jpg)"></i></div>
+            <div class="lane wave"><svg viewBox="0 0 100 16" preserveAspectRatio="none"><rect x="0.15" y="6.50" width="0.57" height="3.00" rx=".4"/><rect x="1.19" y="3.72" width="0.57" height="8.57" rx=".4"/><rect x="2.23" y="2.81" width="0.57" height="10.39" rx=".4"/><rect x="3.27" y="3.66" width="0.57" height="8.68" rx=".4"/><rect x="4.32" y="4.45" width="0.57" height="7.10" rx=".4"/><rect x="5.36" y="3.83" width="0.57" height="8.35" rx=".4"/><rect x="6.40" y="2.52" width="0.57" height="10.97" rx=".4"/><rect x="7.44" y="2.47" width="0.57" height="11.06" rx=".4"/><rect x="8.48" y="4.55" width="0.57" height="6.91" rx=".4"/><rect x="9.53" y="5.58" width="0.57" height="4.83" rx=".4"/><rect x="10.57" y="4.07" width="0.57" height="7.85" rx=".4"/><rect x="11.61" y="4.60" width="0.57" height="6.80" rx=".4"/><rect x="12.65" y="5.74" width="0.57" height="4.52" rx=".4"/><rect x="13.69" y="5.72" width="0.57" height="4.57" rx=".4"/><rect x="14.73" y="4.52" width="0.57" height="6.96" rx=".4"/><rect x="15.78" y="3.93" width="0.57" height="8.13" rx=".4"/><rect x="16.82" y="5.43" width="0.57" height="5.15" rx=".4"/><rect x="17.86" y="4.61" width="0.57" height="6.78" rx=".4"/><rect x="18.90" y="2.32" width="0.57" height="11.35" rx=".4"/><rect x="19.94" y="2.10" width="0.57" height="11.81" rx=".4"/><rect x="20.98" y="3.12" width="0.57" height="9.76" rx=".4"/><rect x="22.02" y="3.47" width="0.57" height="9.06" rx=".4"/><rect x="23.07" y="2.40" width="0.57" height="11.19" rx=".4"/><rect x="24.11" y="1.27" width="0.57" height="13.47" rx=".4"/><rect x="25.15" y="1.92" width="0.57" height="12.16" rx=".4"/><rect x="26.19" y="4.54" width="0.57" height="6.92" rx=".4"/><rect x="27.23" y="5.71" width="0.57" height="4.58" rx=".4"/><rect x="28.27" y="4.73" width="0.57" height="6.55" rx=".4"/><rect x="29.32" y="5.47" width="0.57" height="5.06" rx=".4"/><rect x="30.36" y="6.14" width="0.57" height="3.72" rx=".4"/><rect x="31.40" y="5.39" width="0.57" height="5.22" rx=".4"/><rect x="32.44" y="3.92" width="0.57" height="8.15" rx=".4"/><rect x="33.48" y="3.71" width="0.57" height="8.58" rx=".4"/><rect x="34.52" y="5.68" width="0.57" height="4.65" rx=".4"/><rect x="35.57" y="4.45" width="0.57" height="7.10" rx=".4"/><rect x="36.61" y="2.84" width="0.57" height="10.32" rx=".4"/><rect x="37.65" y="3.22" width="0.57" height="9.56" rx=".4"/><rect x="38.69" y="4.21" width="0.57" height="7.58" rx=".4"/><rect x="39.73" y="4.04" width="0.57" height="7.91" rx=".4"/><rect x="40.77" y="2.70" width="0.57" height="10.61" rx=".4"/><rect x="41.82" y="1.94" width="0.57" height="12.12" rx=".4"/><rect x="42.86" y="3.32" width="0.57" height="9.36" rx=".4"/><rect x="43.90" y="6.27" width="0.57" height="3.45" rx=".4"/><rect x="44.94" y="4.32" width="0.57" height="7.36" rx=".4"/><rect x="45.98" y="3.88" width="0.57" height="8.24" rx=".4"/><rect x="47.02" y="4.67" width="0.57" height="6.66" rx=".4"/><rect x="48.07" y="4.77" width="0.57" height="6.46" rx=".4"/><rect x="49.11" y="3.44" width="0.57" height="9.13" rx=".4"/><rect x="50.15" y="1.99" width="0.57" height="12.02" rx=".4"/><rect x="51.19" y="2.35" width="0.57" height="11.31" rx=".4"/><rect x="52.23" y="4.74" width="0.57" height="6.51" rx=".4"/><rect x="53.27" y="5.61" width="0.57" height="4.78" rx=".4"/><rect x="54.32" y="4.64" width="0.57" height="6.72" rx=".4"/><rect x="55.36" y="5.35" width="0.57" height="5.29" rx=".4"/><rect x="56.40" y="5.99" width="0.57" height="4.01" rx=".4"/><rect x="57.44" y="5.20" width="0.57" height="5.60" rx=".4"/><rect x="58.48" y="3.65" width="0.57" height="8.70" rx=".4"/><rect x="59.52" y="3.34" width="0.57" height="9.31" rx=".4"/><rect x="60.57" y="5.27" width="0.57" height="5.45" rx=".4"/><rect x="61.61" y="4.78" width="0.57" height="6.44" rx=".4"/><rect x="62.65" y="2.98" width="0.57" height="10.03" rx=".4"/><rect x="63.69" y="3.11" width="0.57" height="9.77" rx=".4"/><rect x="64.73" y="3.85" width="0.57" height="8.31" rx=".4"/><rect x="65.78" y="3.41" width="0.57" height="9.17" rx=".4"/><rect x="66.82" y="1.76" width="0.57" height="12.47" rx=".4"/><rect x="67.86" y="0.68" width="0.57" height="14.63" rx=".4"/><rect x="68.90" y="1.76" width="0.57" height="12.47" rx=".4"/><rect x="69.94" y="4.52" width="0.57" height="6.95" rx=".4"/><rect x="70.98" y="6.14" width="0.57" height="3.72" rx=".4"/><rect x="72.03" y="5.68" width="0.57" height="4.63" rx=".4"/><rect x="73.07" y="6.42" width="0.57" height="3.17" rx=".4"/><rect x="74.11" y="6.44" width="0.57" height="3.11" rx=".4"/><rect x="75.15" y="4.99" width="0.57" height="6.01" rx=".4"/><rect x="76.19" y="3.39" width="0.57" height="9.23" rx=".4"/><rect x="77.23" y="3.57" width="0.57" height="8.87" rx=".4"/><rect x="78.28" y="5.85" width="0.57" height="4.29" rx=".4"/><rect x="79.32" y="4.50" width="0.57" height="6.99" rx=".4"/><rect x="80.36" y="3.45" width="0.57" height="9.11" rx=".4"/><rect x="81.40" y="4.03" width="0.57" height="7.94" rx=".4"/><rect x="82.44" y="4.54" width="0.57" height="6.92" rx=".4"/><rect x="83.48" y="3.59" width="0.57" height="8.82" rx=".4"/><rect x="84.53" y="1.85" width="0.57" height="12.30" rx=".4"/><rect x="85.57" y="1.33" width="0.57" height="13.33" rx=".4"/><rect x="86.61" y="3.11" width="0.57" height="9.79" rx=".4"/><rect x="87.65" y="6.01" width="0.57" height="3.98" rx=".4"/><rect x="88.69" y="5.12" width="0.57" height="5.76" rx=".4"/><rect x="89.73" y="5.10" width="0.57" height="5.80" rx=".4"/><rect x="90.78" y="5.65" width="0.57" height="4.70" rx=".4"/><rect x="91.82" y="5.01" width="0.57" height="5.98" rx=".4"/><rect x="92.86" y="3.09" width="0.57" height="9.82" rx=".4"/><rect x="93.90" y="1.70" width="0.57" height="12.61" rx=".4"/><rect x="94.94" y="2.47" width="0.57" height="11.07" rx=".4"/><rect x="95.98" y="5.00" width="0.57" height="6.01" rx=".4"/><rect x="97.03" y="5.79" width="0.57" height="4.43" rx=".4"/><rect x="98.07" y="5.37" width="0.57" height="5.26" rx=".4"/><rect x="99.11" y="6.11" width="0.57" height="3.78" rx=".4"/></svg></div>
+            <span class="phd js-ph"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- LOGOS (decorative) -->
+<div class="marquee" aria-hidden="true"><div class="track"><span class="mq"><svg aria-hidden="true" fill="currentColor" fill-rule="evenodd" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9.205 8.658v-2.26c0-.19.072-.333.238-.428l4.543-2.616c.619-.357 1.356-.523 2.117-.523 2.854 0 4.662 2.212 4.662 4.566 0 .167 0 .357-.024.547l-4.71-2.759a.797.797 0 00-.856 0l-5.97 3.473zm10.609 8.8V12.06c0-.333-.143-.57-.429-.737l-5.97-3.473 1.95-1.118a.433.433 0 01.476 0l4.543 2.617c1.309.76 2.189 2.378 2.189 3.948 0 1.808-1.07 3.473-2.76 4.163zM7.802 12.703l-1.95-1.142c-.167-.095-.239-.238-.239-.428V5.899c0-2.545 1.95-4.472 4.591-4.472 1 0 1.927.333 2.712.928L8.23 5.067c-.285.166-.428.404-.428.737v6.898zM12 15.128l-2.795-1.57v-3.33L12 8.658l2.795 1.57v3.33L12 15.128zm1.796 7.23c-1 0-1.927-.332-2.712-.927l4.686-2.712c.285-.166.428-.404.428-.737v-6.898l1.974 1.142c.167.095.238.238.238.428v5.233c0 2.545-1.974 4.472-4.614 4.472zm-5.637-5.303l-4.544-2.617c-1.308-.761-2.188-2.378-2.188-3.948A4.482 4.482 0 014.21 6.327v5.423c0 .333.143.571.428.738l5.947 3.449-1.95 1.118a.432.432 0 01-.476 0zm-.262 3.9c-2.688 0-4.662-2.021-4.662-4.519 0-.19.024-.38.047-.57l4.686 2.71c.286.167.571.167.856 0l5.97-3.448v2.26c0 .19-.07.333-.237.428l-4.543 2.616c-.619.357-1.356.523-2.117.523zm5.899 2.83a5.947 5.947 0 005.827-4.756C22.287 18.339 24 15.84 24 13.296c0-1.665-.713-3.282-1.998-4.448.119-.5.19-.999.19-1.498 0-3.401-2.759-5.947-5.946-5.947-.642 0-1.26.095-1.88.31A5.962 5.962 0 0010.205 0a5.947 5.947 0 00-5.827 4.757C1.713 5.447 0 7.945 0 10.49c0 1.666.713 3.283 1.998 4.448-.119.5-.19 1-.19 1.499 0 3.401 2.759 5.946 5.946 5.946.642 0 1.26-.095 1.88-.309a5.96 5.96 0 004.162 1.713z"></path></svg>ChatGPT</span><span class="mq"><svg aria-hidden="true" fill="currentColor" fill-rule="evenodd" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M4.709 15.955l4.72-2.647.08-.23-.08-.128H9.2l-.79-.048-2.698-.073-2.339-.097-2.266-.122-.571-.121L0 11.784l.055-.352.48-.321.686.06 1.52.103 2.278.158 1.652.097 2.449.255h.389l.055-.157-.134-.098-.103-.097-2.358-1.596-2.552-1.688-1.336-.972-.724-.491-.364-.462-.158-1.008.656-.722.881.06.225.061.893.686 1.908 1.476 2.491 1.833.365.304.145-.103.019-.073-.164-.274-1.355-2.446-1.446-2.49-.644-1.032-.17-.619a2.97 2.97 0 01-.104-.729L6.283.134 6.696 0l.996.134.42.364.62 1.414 1.002 2.229 1.555 3.03.456.898.243.832.091.255h.158V9.01l.128-1.706.237-2.095.23-2.695.08-.76.376-.91.747-.492.584.28.48.685-.067.444-.286 1.851-.559 2.903-.364 1.942h.212l.243-.242.985-1.306 1.652-2.064.73-.82.85-.904.547-.431h1.033l.76 1.129-.34 1.166-1.064 1.347-.881 1.142-1.264 1.7-.79 1.36.073.11.188-.02 2.856-.606 1.543-.28 1.841-.315.833.388.091.395-.328.807-1.969.486-2.309.462-3.439.813-.042.03.049.061 1.549.146.662.036h1.622l3.02.225.79.522.474.638-.079.485-1.215.62-1.64-.389-3.829-.91-1.312-.329h-.182v.11l1.093 1.068 2.006 1.81 2.509 2.33.127.578-.322.455-.34-.049-2.205-1.657-.851-.747-1.926-1.62h-.128v.17l.444.649 2.345 3.521.122 1.08-.17.353-.608.213-.668-.122-1.374-1.925-1.415-2.167-1.143-1.943-.14.08-.674 7.254-.316.37-.729.28-.607-.461-.322-.747.322-1.476.389-1.924.315-1.53.286-1.9.17-.632-.012-.042-.14.018-1.434 1.967-2.18 2.945-1.726 1.845-.414.164-.717-.37.067-.662.401-.589 2.388-3.036 1.44-1.882.93-1.086-.006-.158h-.055L4.132 18.56l-1.13.146-.487-.456.061-.746.231-.243 1.908-1.312-.006.006z"></path></svg>Claude</span><span class="mq"><svg aria-hidden="true" fill="currentColor" fill-rule="evenodd" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20.616 10.835a14.147 14.147 0 01-4.45-3.001 14.111 14.111 0 01-3.678-6.452.503.503 0 00-.975 0 14.134 14.134 0 01-3.679 6.452 14.155 14.155 0 01-4.45 3.001c-.65.28-1.318.505-2.002.678a.502.502 0 000 .975c.684.172 1.35.397 2.002.677a14.147 14.147 0 014.45 3.001 14.112 14.112 0 013.679 6.453.502.502 0 00.975 0c.172-.685.397-1.351.677-2.003a14.145 14.145 0 013.001-4.45 14.113 14.113 0 016.453-3.678.503.503 0 000-.975 13.245 13.245 0 01-2.003-.678z"></path></svg>Gemini</span><span class="mq"><svg aria-hidden="true" fill="currentColor" fill-rule="evenodd" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M6.897 4c1.915 0 3.516.932 5.43 3.376l.282-.373c.19-.246.383-.484.58-.71l.313-.35C14.588 4.788 15.792 4 17.225 4c1.273 0 2.469.557 3.491 1.516l.218.213c1.73 1.765 2.917 4.71 3.053 8.026l.011.392.002.25c0 1.501-.28 2.759-.818 3.7l-.14.23-.108.153c-.301.42-.664.758-1.086 1.009l-.265.142-.087.04a3.493 3.493 0 01-.302.118 4.117 4.117 0 01-1.33.208c-.524 0-.996-.067-1.438-.215-.614-.204-1.163-.56-1.726-1.116l-.227-.235c-.753-.812-1.534-1.976-2.493-3.586l-1.43-2.41-.544-.895-1.766 3.13-.343.592C7.597 19.156 6.227 20 4.356 20c-1.21 0-2.205-.42-2.936-1.182l-.168-.184c-.484-.573-.837-1.311-1.043-2.189l-.067-.32a8.69 8.69 0 01-.136-1.288L0 14.468c.002-.745.06-1.49.174-2.23l.1-.573c.298-1.53.828-2.958 1.536-4.157l.209-.34c1.177-1.83 2.789-3.053 4.615-3.16L6.897 4zm-.033 2.615l-.201.01c-.83.083-1.606.673-2.252 1.577l-.138.199-.01.018c-.67 1.017-1.185 2.378-1.456 3.845l-.004.022a12.591 12.591 0 00-.207 2.254l.002.188c.004.18.017.36.04.54l.043.291c.092.503.257.908.486 1.208l.117.137c.303.323.698.492 1.17.492 1.1 0 1.796-.676 3.696-3.641l2.175-3.4.454-.701-.139-.198C9.11 7.3 8.084 6.616 6.864 6.616zm10.196-.552l-.176.007c-.635.048-1.223.359-1.82.933l-.196.198c-.439.462-.887 1.064-1.367 1.807l.266.398c.18.274.362.56.55.858l.293.475 1.396 2.335.695 1.114c.583.926 1.03 1.6 1.408 2.082l.213.262c.282.326.529.54.777.673l.102.05c.227.1.457.138.718.138.176.002.35-.023.518-.073.338-.104.61-.32.813-.637l.095-.163.077-.162c.194-.459.29-1.06.29-1.785l-.006-.449c-.08-2.871-.938-5.372-2.2-6.798l-.176-.189c-.67-.683-1.444-1.074-2.27-1.074z"></path></svg>Meta</span><span class="mq"><svg aria-hidden="true" fill="currentColor" fill-rule="evenodd" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M22.369 17.676c-1.387 1.259-3.17 2.378-5.332 3.417.044.03.086.057.13.083l.018.01.019.012c.216.123.42.184.641.184.222 0 .426-.061.642-.184l.018-.011.019-.011c.14-.084.266-.178.492-.366l.178-.148c.279-.232.426-.342.625-.456.304-.174.612-.266.949-.266.337 0 .645.092.949.266l.023.014c.188.109.334.219.602.442l.178.148c.221.184.346.278.483.36l.028.017.018.01c.21.12.407.181.62.185h.022a.31.31 0 110 .618c-.337 0-.645-.092-.95-.266a3.137 3.137 0 01-.09-.054l-.022-.014-.022-.013-.02-.014a5.356 5.356 0 01-.49-.377l-.159-.132a3.836 3.836 0 00-.483-.36l-.027-.017-.019-.01a1.256 1.256 0 00-.641-.185c-.222 0-.426.061-.641.184l-.02.011-.018.011c-.14.084-.266.178-.492.366l-.158.132a5.125 5.125 0 01-.51.39l-.022.014-.022.014-.09.054a1.868 1.868 0 01-.95.266c-.337 0-.644-.092-.949-.266a3.137 3.137 0 01-.09-.054l-.022-.014-.022-.013-.026-.017a4.881 4.881 0 01-.425-.325.308.308 0 01-.12-.1l-.098-.081a3.836 3.836 0 00-.483-.36l-.027-.017-.019-.01a1.256 1.256 0 00-.641-.185c-.222 0-.426.061-.642.184l-.018.011-.019.011c-.14.084-.266.178-.492.366l-.158.132a5.125 5.125 0 01-.51.39l-.023.014-.022.014-.09.054A1.868 1.868 0 0112 22c-.337 0-.645-.092-.949-.266a3.137 3.137 0 01-.09-.054l-.022-.014-.022-.013-.021-.014a5.356 5.356 0 01-.49-.377l-.158-.132a3.836 3.836 0 00-.483-.36l-.028-.017-.018-.01a1.256 1.256 0 00-.642-.185c-.221 0-.425.061-.641.184l-.019.011-.018.011c-.141.084-.266.178-.492.366l-.158.132a5.125 5.125 0 01-.511.39l-.022.014-.022.014-.09.054a1.868 1.868 0 01-.986.264c-.746-.09-1.319-.38-1.89-.866l-.035-.03c-.047-.041-.118-.106-.192-.174l-.196-.181-.107-.1-.011-.01a1.531 1.531 0 00-.336-.253.313.313 0 00-.095-.03h-.005c-.119.022-.238.059-.361.11a.308.308 0 01-.077.061l-.008.005a.309.309 0 01-.126.034 5.66 5.66 0 00-.774.518l-.416.324-.055.043a6.542 6.542 0 01-.324.236c-.305.207-.552.315-.8.315a.31.31 0 01-.01-.618h.01c.09 0 .235-.062.438-.198l.04-.027c.077-.054.163-.117.27-.199l.385-.301.06-.047c.268-.206.506-.373.73-.505l-.633-1.21a.309.309 0 01.254-.451l20.287-1.305a.309.309 0 01.228.537zm-1.118.14L2.369 19.03l.423.809c.128-.045.256-.078.388-.1a.31.31 0 01.052-.005c.132 0 .26.032.386.093.153.073.294.179.483.35l.016.015.092.086.144.134.097.089c.065.06.125.114.16.144.485.418.948.658 1.554.736h.011a1.25 1.25 0 00.6-.172l.021-.011.019-.011.018-.011c.141-.084.266-.178.492-.366l.178-.148c.279-.232.426-.342.625-.456.305-.174.612-.266.95-.266.336 0 .644.092.948.266l.023.014c.188.109.335.219.603.442l.177.148c.222.184.346.278.484.36l.027.017.019.01c.215.124.42.185.641.185.222 0 .426-.061.641-.184l.019-.011.018-.011c.141-.084.267-.178.493-.366l.177-.148c.28-.232.427-.342.626-.456.304-.174.612-.266.949-.266.337 0 .644.092.949.266l.025.015c.187.109.334.22.603.443 1.867-.878 3.448-1.811 4.73-2.832l.02-.016zM3.653 2.026C6.073 3.06 8.69 4.941 10.8 7.258c2.46 2.7 4.109 5.828 4.637 9.149a.31.31 0 01-.421.335c-2.348-.945-4.54-1.258-6.59-1.02-1.739.2-3.337.792-4.816 1.703-.294.182-.62-.182-.405-.454 1.856-2.355 2.581-4.99 2.343-7.794-.195-2.292-1.031-4.61-2.284-6.709a.31.31 0 01.388-.442zM10.04 4.45c1.778.543 3.892 2.102 5.782 4.243 1.984 2.248 3.552 4.934 4.347 7.582a.31.31 0 01-.401.38l-.022-.01-.386-.154a10.594 10.594 0 00-.291-.112l-.016-.006c-.68-.247-1.199-.291-1.944-.101a.31.31 0 01-.375-.218C15.378 11.123 13.073 7.276 9.775 5c-.291-.201-.072-.653.266-.55zM4.273 2.996l.008.015c1.028 1.94 1.708 4.031 1.885 6.113.213 2.513-.31 4.906-1.673 7.092l-.02.031.003-.001c1.198-.581 2.47-.969 3.825-1.132l.055-.006c1.981-.23 4.083.029 6.309.837l.066.025-.007-.039c-.593-2.95-2.108-5.737-4.31-8.179l-.07-.078c-1.785-1.96-3.944-3.6-6.014-4.65l-.057-.028zm7.92 3.238l.048.048c2.237 2.295 3.885 5.431 4.974 9.191l.038.132.022-.004c.71-.133 1.284-.063 1.963.18l.027.01.066.024.046.018-.025-.073c-.811-2.307-2.208-4.62-3.936-6.594l-.058-.065c-1.02-1.155-2.103-2.132-3.15-2.856l-.015-.011z"></path></svg>Midjourney</span><span class="mq"><svg aria-hidden="true" fill="currentColor" fill-rule="evenodd" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17.86 22.992c-2.669.245-4.887-2.876-6.597-4.454C10.398 24.759 1 24.177 1 17.86V6.15c0-.921.244-1.861.733-2.65C2.635 1.977 4.383.98 6.15 1h11.71c6.316 0 6.918 9.398.677 10.243l2.97 2.951c3.252 3.064.808 8.929-3.646 8.797zm-1.428-3.721c1.842 1.898 4.774-1.034 2.876-2.876l-5.132-5.132H11.3v2.876l4.436 4.436.696.696zM4.12 17.842c-.037 2.632 4.117 2.632 4.06 0V6.132c.038-1.316-1.353-2.35-2.612-1.955-.057.019-.113.037-.15.056-.79.301-1.335 1.09-1.317 1.936v11.673h.02zm13.74-9.68c2.632.037 2.632-4.098 0-4.06h-6.973c.526 1.109.395 2.857.413 4.06h6.56z"></path></svg>Runway</span><span class="mq"><svg aria-hidden="true" fill="currentColor" fill-rule="evenodd" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path clip-rule="evenodd" d="M5.493 21.234c-1.112-1.451-1.109-4.263-.081-7.459l-4.557-2.63a1.683 1.683 0 01-.85-1.304 1.505 1.505 0 01.08-.622 13.18 13.18 0 011.037-2.255c3.476-6.02 10.916-8.23 16.619-4.938.46.266.82.67 1.081 1.184.785 1.545.685 4.096-.234 6.954l4.557 2.631c.339.196.596.492.736.832a1.53 1.53 0 01.034 1.093 13.146 13.146 0 01-1.037 2.255c-3.476 6.02-10.916 8.23-16.619 4.938a2.6 2.6 0 01-.766-.68zm11.096-6.615c-2.073 3.591-5.808 5.316-8.343 3.852-1.267-.731-1.994-2.122-2.145-3.778-.095-1.035.036-2.173.4-3.32.217-.684.517-1.37.902-2.039l.008-.014c2.073-3.59 5.808-5.315 8.343-3.852.633.366 1.13.895 1.49 1.54.986 1.772.922 4.415-.285 6.914-.111.23-.232.457-.362.683l-.008.014z"></path></svg>Kling</span><span class="mq"><svg aria-hidden="true" fill="currentColor" fill-rule="evenodd" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M5 0h5v24H5V0zM14 0h5v24h-5V0z"></path></svg>ElevenLabs</span><span class="mq"><svg aria-hidden="true" fill="currentColor" fill-rule="evenodd" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M16.5 0C20.642 0 24 5.373 24 12h-9c0 6.627-3.358 12-7.5 12C3.358 24 0 18.627 0 12h9c0-6.627 3.358-12 7.5-12z"></path></svg>Suno</span><span class="mq"><svg aria-hidden="true" fill="currentColor" fill-rule="evenodd" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M24.189 6.442V2.671l-4.535 2.383V4.91c.002-1.505-1.078-2.411-2.638-2.411H2.64C.993 2.5 0 3.407 0 4.91V8.72L6.354 12 0 15.316v3.8C0 20.595 1 21.5 2.64 21.5h14.373c1.56 0 2.639-.907 2.639-2.382v-.197l4.536 2.409v-3.828L13.64 12 24.19 6.443zM9.982 13.873l7.797 4.083H2.157l7.825-4.083zm7.741-7.828l-7.742 4.057-7.825-4.057h15.567z"></path></svg>CapCut</span><span class="mq"><img class="lg-d" src="logo_izivoice.png" alt=""><img class="lg-l" src="logo_izivoice_darktext.png" alt=""></span><span class="mq"><svg aria-hidden="true" fill="currentColor" fill-rule="evenodd" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9.205 8.658v-2.26c0-.19.072-.333.238-.428l4.543-2.616c.619-.357 1.356-.523 2.117-.523 2.854 0 4.662 2.212 4.662 4.566 0 .167 0 .357-.024.547l-4.71-2.759a.797.797 0 00-.856 0l-5.97 3.473zm10.609 8.8V12.06c0-.333-.143-.57-.429-.737l-5.97-3.473 1.95-1.118a.433.433 0 01.476 0l4.543 2.617c1.309.76 2.189 2.378 2.189 3.948 0 1.808-1.07 3.473-2.76 4.163zM7.802 12.703l-1.95-1.142c-.167-.095-.239-.238-.239-.428V5.899c0-2.545 1.95-4.472 4.591-4.472 1 0 1.927.333 2.712.928L8.23 5.067c-.285.166-.428.404-.428.737v6.898zM12 15.128l-2.795-1.57v-3.33L12 8.658l2.795 1.57v3.33L12 15.128zm1.796 7.23c-1 0-1.927-.332-2.712-.927l4.686-2.712c.285-.166.428-.404.428-.737v-6.898l1.974 1.142c.167.095.238.238.238.428v5.233c0 2.545-1.974 4.472-4.614 4.472zm-5.637-5.303l-4.544-2.617c-1.308-.761-2.188-2.378-2.188-3.948A4.482 4.482 0 014.21 6.327v5.423c0 .333.143.571.428.738l5.947 3.449-1.95 1.118a.432.432 0 01-.476 0zm-.262 3.9c-2.688 0-4.662-2.021-4.662-4.519 0-.19.024-.38.047-.57l4.686 2.71c.286.167.571.167.856 0l5.97-3.448v2.26c0 .19-.07.333-.237.428l-4.543 2.616c-.619.357-1.356.523-2.117.523zm5.899 2.83a5.947 5.947 0 005.827-4.756C22.287 18.339 24 15.84 24 13.296c0-1.665-.713-3.282-1.998-4.448.119-.5.19-.999.19-1.498 0-3.401-2.759-5.947-5.946-5.947-.642 0-1.26.095-1.88.31A5.962 5.962 0 0010.205 0a5.947 5.947 0 00-5.827 4.757C1.713 5.447 0 7.945 0 10.49c0 1.666.713 3.283 1.998 4.448-.119.5-.19 1-.19 1.499 0 3.401 2.759 5.946 5.946 5.946.642 0 1.26-.095 1.88-.309a5.96 5.96 0 004.162 1.713z"></path></svg>ChatGPT</span><span class="mq"><svg aria-hidden="true" fill="currentColor" fill-rule="evenodd" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M4.709 15.955l4.72-2.647.08-.23-.08-.128H9.2l-.79-.048-2.698-.073-2.339-.097-2.266-.122-.571-.121L0 11.784l.055-.352.48-.321.686.06 1.52.103 2.278.158 1.652.097 2.449.255h.389l.055-.157-.134-.098-.103-.097-2.358-1.596-2.552-1.688-1.336-.972-.724-.491-.364-.462-.158-1.008.656-.722.881.06.225.061.893.686 1.908 1.476 2.491 1.833.365.304.145-.103.019-.073-.164-.274-1.355-2.446-1.446-2.49-.644-1.032-.17-.619a2.97 2.97 0 01-.104-.729L6.283.134 6.696 0l.996.134.42.364.62 1.414 1.002 2.229 1.555 3.03.456.898.243.832.091.255h.158V9.01l.128-1.706.237-2.095.23-2.695.08-.76.376-.91.747-.492.584.28.48.685-.067.444-.286 1.851-.559 2.903-.364 1.942h.212l.243-.242.985-1.306 1.652-2.064.73-.82.85-.904.547-.431h1.033l.76 1.129-.34 1.166-1.064 1.347-.881 1.142-1.264 1.7-.79 1.36.073.11.188-.02 2.856-.606 1.543-.28 1.841-.315.833.388.091.395-.328.807-1.969.486-2.309.462-3.439.813-.042.03.049.061 1.549.146.662.036h1.622l3.02.225.79.522.474.638-.079.485-1.215.62-1.64-.389-3.829-.91-1.312-.329h-.182v.11l1.093 1.068 2.006 1.81 2.509 2.33.127.578-.322.455-.34-.049-2.205-1.657-.851-.747-1.926-1.62h-.128v.17l.444.649 2.345 3.521.122 1.08-.17.353-.608.213-.668-.122-1.374-1.925-1.415-2.167-1.143-1.943-.14.08-.674 7.254-.316.37-.729.28-.607-.461-.322-.747.322-1.476.389-1.924.315-1.53.286-1.9.17-.632-.012-.042-.14.018-1.434 1.967-2.18 2.945-1.726 1.845-.414.164-.717-.37.067-.662.401-.589 2.388-3.036 1.44-1.882.93-1.086-.006-.158h-.055L4.132 18.56l-1.13.146-.487-.456.061-.746.231-.243 1.908-1.312-.006.006z"></path></svg>Claude</span><span class="mq"><svg aria-hidden="true" fill="currentColor" fill-rule="evenodd" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20.616 10.835a14.147 14.147 0 01-4.45-3.001 14.111 14.111 0 01-3.678-6.452.503.503 0 00-.975 0 14.134 14.134 0 01-3.679 6.452 14.155 14.155 0 01-4.45 3.001c-.65.28-1.318.505-2.002.678a.502.502 0 000 .975c.684.172 1.35.397 2.002.677a14.147 14.147 0 014.45 3.001 14.112 14.112 0 013.679 6.453.502.502 0 00.975 0c.172-.685.397-1.351.677-2.003a14.145 14.145 0 013.001-4.45 14.113 14.113 0 016.453-3.678.503.503 0 000-.975 13.245 13.245 0 01-2.003-.678z"></path></svg>Gemini</span><span class="mq"><svg aria-hidden="true" fill="currentColor" fill-rule="evenodd" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M6.897 4c1.915 0 3.516.932 5.43 3.376l.282-.373c.19-.246.383-.484.58-.71l.313-.35C14.588 4.788 15.792 4 17.225 4c1.273 0 2.469.557 3.491 1.516l.218.213c1.73 1.765 2.917 4.71 3.053 8.026l.011.392.002.25c0 1.501-.28 2.759-.818 3.7l-.14.23-.108.153c-.301.42-.664.758-1.086 1.009l-.265.142-.087.04a3.493 3.493 0 01-.302.118 4.117 4.117 0 01-1.33.208c-.524 0-.996-.067-1.438-.215-.614-.204-1.163-.56-1.726-1.116l-.227-.235c-.753-.812-1.534-1.976-2.493-3.586l-1.43-2.41-.544-.895-1.766 3.13-.343.592C7.597 19.156 6.227 20 4.356 20c-1.21 0-2.205-.42-2.936-1.182l-.168-.184c-.484-.573-.837-1.311-1.043-2.189l-.067-.32a8.69 8.69 0 01-.136-1.288L0 14.468c.002-.745.06-1.49.174-2.23l.1-.573c.298-1.53.828-2.958 1.536-4.157l.209-.34c1.177-1.83 2.789-3.053 4.615-3.16L6.897 4zm-.033 2.615l-.201.01c-.83.083-1.606.673-2.252 1.577l-.138.199-.01.018c-.67 1.017-1.185 2.378-1.456 3.845l-.004.022a12.591 12.591 0 00-.207 2.254l.002.188c.004.18.017.36.04.54l.043.291c.092.503.257.908.486 1.208l.117.137c.303.323.698.492 1.17.492 1.1 0 1.796-.676 3.696-3.641l2.175-3.4.454-.701-.139-.198C9.11 7.3 8.084 6.616 6.864 6.616zm10.196-.552l-.176.007c-.635.048-1.223.359-1.82.933l-.196.198c-.439.462-.887 1.064-1.367 1.807l.266.398c.18.274.362.56.55.858l.293.475 1.396 2.335.695 1.114c.583.926 1.03 1.6 1.408 2.082l.213.262c.282.326.529.54.777.673l.102.05c.227.1.457.138.718.138.176.002.35-.023.518-.073.338-.104.61-.32.813-.637l.095-.163.077-.162c.194-.459.29-1.06.29-1.785l-.006-.449c-.08-2.871-.938-5.372-2.2-6.798l-.176-.189c-.67-.683-1.444-1.074-2.27-1.074z"></path></svg>Meta</span><span class="mq"><svg aria-hidden="true" fill="currentColor" fill-rule="evenodd" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M22.369 17.676c-1.387 1.259-3.17 2.378-5.332 3.417.044.03.086.057.13.083l.018.01.019.012c.216.123.42.184.641.184.222 0 .426-.061.642-.184l.018-.011.019-.011c.14-.084.266-.178.492-.366l.178-.148c.279-.232.426-.342.625-.456.304-.174.612-.266.949-.266.337 0 .645.092.949.266l.023.014c.188.109.334.219.602.442l.178.148c.221.184.346.278.483.36l.028.017.018.01c.21.12.407.181.62.185h.022a.31.31 0 110 .618c-.337 0-.645-.092-.95-.266a3.137 3.137 0 01-.09-.054l-.022-.014-.022-.013-.02-.014a5.356 5.356 0 01-.49-.377l-.159-.132a3.836 3.836 0 00-.483-.36l-.027-.017-.019-.01a1.256 1.256 0 00-.641-.185c-.222 0-.426.061-.641.184l-.02.011-.018.011c-.14.084-.266.178-.492.366l-.158.132a5.125 5.125 0 01-.51.39l-.022.014-.022.014-.09.054a1.868 1.868 0 01-.95.266c-.337 0-.644-.092-.949-.266a3.137 3.137 0 01-.09-.054l-.022-.014-.022-.013-.026-.017a4.881 4.881 0 01-.425-.325.308.308 0 01-.12-.1l-.098-.081a3.836 3.836 0 00-.483-.36l-.027-.017-.019-.01a1.256 1.256 0 00-.641-.185c-.222 0-.426.061-.642.184l-.018.011-.019.011c-.14.084-.266.178-.492.366l-.158.132a5.125 5.125 0 01-.51.39l-.023.014-.022.014-.09.054A1.868 1.868 0 0112 22c-.337 0-.645-.092-.949-.266a3.137 3.137 0 01-.09-.054l-.022-.014-.022-.013-.021-.014a5.356 5.356 0 01-.49-.377l-.158-.132a3.836 3.836 0 00-.483-.36l-.028-.017-.018-.01a1.256 1.256 0 00-.642-.185c-.221 0-.425.061-.641.184l-.019.011-.018.011c-.141.084-.266.178-.492.366l-.158.132a5.125 5.125 0 01-.511.39l-.022.014-.022.014-.09.054a1.868 1.868 0 01-.986.264c-.746-.09-1.319-.38-1.89-.866l-.035-.03c-.047-.041-.118-.106-.192-.174l-.196-.181-.107-.1-.011-.01a1.531 1.531 0 00-.336-.253.313.313 0 00-.095-.03h-.005c-.119.022-.238.059-.361.11a.308.308 0 01-.077.061l-.008.005a.309.309 0 01-.126.034 5.66 5.66 0 00-.774.518l-.416.324-.055.043a6.542 6.542 0 01-.324.236c-.305.207-.552.315-.8.315a.31.31 0 01-.01-.618h.01c.09 0 .235-.062.438-.198l.04-.027c.077-.054.163-.117.27-.199l.385-.301.06-.047c.268-.206.506-.373.73-.505l-.633-1.21a.309.309 0 01.254-.451l20.287-1.305a.309.309 0 01.228.537zm-1.118.14L2.369 19.03l.423.809c.128-.045.256-.078.388-.1a.31.31 0 01.052-.005c.132 0 .26.032.386.093.153.073.294.179.483.35l.016.015.092.086.144.134.097.089c.065.06.125.114.16.144.485.418.948.658 1.554.736h.011a1.25 1.25 0 00.6-.172l.021-.011.019-.011.018-.011c.141-.084.266-.178.492-.366l.178-.148c.279-.232.426-.342.625-.456.305-.174.612-.266.95-.266.336 0 .644.092.948.266l.023.014c.188.109.335.219.603.442l.177.148c.222.184.346.278.484.36l.027.017.019.01c.215.124.42.185.641.185.222 0 .426-.061.641-.184l.019-.011.018-.011c.141-.084.267-.178.493-.366l.177-.148c.28-.232.427-.342.626-.456.304-.174.612-.266.949-.266.337 0 .644.092.949.266l.025.015c.187.109.334.22.603.443 1.867-.878 3.448-1.811 4.73-2.832l.02-.016zM3.653 2.026C6.073 3.06 8.69 4.941 10.8 7.258c2.46 2.7 4.109 5.828 4.637 9.149a.31.31 0 01-.421.335c-2.348-.945-4.54-1.258-6.59-1.02-1.739.2-3.337.792-4.816 1.703-.294.182-.62-.182-.405-.454 1.856-2.355 2.581-4.99 2.343-7.794-.195-2.292-1.031-4.61-2.284-6.709a.31.31 0 01.388-.442zM10.04 4.45c1.778.543 3.892 2.102 5.782 4.243 1.984 2.248 3.552 4.934 4.347 7.582a.31.31 0 01-.401.38l-.022-.01-.386-.154a10.594 10.594 0 00-.291-.112l-.016-.006c-.68-.247-1.199-.291-1.944-.101a.31.31 0 01-.375-.218C15.378 11.123 13.073 7.276 9.775 5c-.291-.201-.072-.653.266-.55zM4.273 2.996l.008.015c1.028 1.94 1.708 4.031 1.885 6.113.213 2.513-.31 4.906-1.673 7.092l-.02.031.003-.001c1.198-.581 2.47-.969 3.825-1.132l.055-.006c1.981-.23 4.083.029 6.309.837l.066.025-.007-.039c-.593-2.95-2.108-5.737-4.31-8.179l-.07-.078c-1.785-1.96-3.944-3.6-6.014-4.65l-.057-.028zm7.92 3.238l.048.048c2.237 2.295 3.885 5.431 4.974 9.191l.038.132.022-.004c.71-.133 1.284-.063 1.963.18l.027.01.066.024.046.018-.025-.073c-.811-2.307-2.208-4.62-3.936-6.594l-.058-.065c-1.02-1.155-2.103-2.132-3.15-2.856l-.015-.011z"></path></svg>Midjourney</span><span class="mq"><svg aria-hidden="true" fill="currentColor" fill-rule="evenodd" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17.86 22.992c-2.669.245-4.887-2.876-6.597-4.454C10.398 24.759 1 24.177 1 17.86V6.15c0-.921.244-1.861.733-2.65C2.635 1.977 4.383.98 6.15 1h11.71c6.316 0 6.918 9.398.677 10.243l2.97 2.951c3.252 3.064.808 8.929-3.646 8.797zm-1.428-3.721c1.842 1.898 4.774-1.034 2.876-2.876l-5.132-5.132H11.3v2.876l4.436 4.436.696.696zM4.12 17.842c-.037 2.632 4.117 2.632 4.06 0V6.132c.038-1.316-1.353-2.35-2.612-1.955-.057.019-.113.037-.15.056-.79.301-1.335 1.09-1.317 1.936v11.673h.02zm13.74-9.68c2.632.037 2.632-4.098 0-4.06h-6.973c.526 1.109.395 2.857.413 4.06h6.56z"></path></svg>Runway</span><span class="mq"><svg aria-hidden="true" fill="currentColor" fill-rule="evenodd" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path clip-rule="evenodd" d="M5.493 21.234c-1.112-1.451-1.109-4.263-.081-7.459l-4.557-2.63a1.683 1.683 0 01-.85-1.304 1.505 1.505 0 01.08-.622 13.18 13.18 0 011.037-2.255c3.476-6.02 10.916-8.23 16.619-4.938.46.266.82.67 1.081 1.184.785 1.545.685 4.096-.234 6.954l4.557 2.631c.339.196.596.492.736.832a1.53 1.53 0 01.034 1.093 13.146 13.146 0 01-1.037 2.255c-3.476 6.02-10.916 8.23-16.619 4.938a2.6 2.6 0 01-.766-.68zm11.096-6.615c-2.073 3.591-5.808 5.316-8.343 3.852-1.267-.731-1.994-2.122-2.145-3.778-.095-1.035.036-2.173.4-3.32.217-.684.517-1.37.902-2.039l.008-.014c2.073-3.59 5.808-5.315 8.343-3.852.633.366 1.13.895 1.49 1.54.986 1.772.922 4.415-.285 6.914-.111.23-.232.457-.362.683l-.008.014z"></path></svg>Kling</span><span class="mq"><svg aria-hidden="true" fill="currentColor" fill-rule="evenodd" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M5 0h5v24H5V0zM14 0h5v24h-5V0z"></path></svg>ElevenLabs</span><span class="mq"><svg aria-hidden="true" fill="currentColor" fill-rule="evenodd" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M16.5 0C20.642 0 24 5.373 24 12h-9c0 6.627-3.358 12-7.5 12C3.358 24 0 18.627 0 12h9c0-6.627 3.358-12 7.5-12z"></path></svg>Suno</span><span class="mq"><svg aria-hidden="true" fill="currentColor" fill-rule="evenodd" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M24.189 6.442V2.671l-4.535 2.383V4.91c.002-1.505-1.078-2.411-2.638-2.411H2.64C.993 2.5 0 3.407 0 4.91V8.72L6.354 12 0 15.316v3.8C0 20.595 1 21.5 2.64 21.5h14.373c1.56 0 2.639-.907 2.639-2.382v-.197l4.536 2.409v-3.828L13.64 12 24.19 6.443zM9.982 13.873l7.797 4.083H2.157l7.825-4.083zm7.741-7.828l-7.742 4.057-7.825-4.057h15.567z"></path></svg>CapCut</span><span class="mq"><img class="lg-d" src="logo_izivoice.png" alt=""><img class="lg-l" src="logo_izivoice_darktext.png" alt=""></span></div></div>
+
+<!-- WHAT YOU NEED: PHONE -->
+<section id="materiel">
+  <div class="wrap need">
+    <div class="rv">
+      <div class="photo"><img src="photo-phone.webp" alt="" loading="lazy" width="960" height="540"></div>
+      <p class="cap" data-i18n="ph_cap">Montage d'une vidéo produit, directement sur smartphone.</p>
+    </div>
+    <div>
+      <div class="head rv" style="margin-bottom:0"><span class="eyebrow" data-i18n="ph_eye">Ce qu'il vous faut</span><h2 data-i18n="ph_h">Votre téléphone suffit pour commencer.</h2><p class="lead" data-i18n="ph_p">Pas besoin d'un ordinateur puissant ni de logiciels coûteux. La méthode est pensée pour être appliquée depuis un smartphone.</p></div>
+      <div class="items">
+        <div class="item rv"><span class="ib"><svg class="ic"><use href="#i-phone"/></svg></span><div><h3 data-i18n="n1h">Un smartphone</h3><p data-i18n="n1p">Android ou iPhone. Un ordinateur est un plus, pas une obligation.</p></div></div>
+        <div class="item rv"><span class="ib"><svg class="ic"><use href="#i-wifi"/></svg></span><div><h3 data-i18n="n2h">Une connexion internet</h3><p data-i18n="n2p">Pour suivre le direct et utiliser les outils en ligne.</p></div></div>
+        <div class="item rv"><span class="ib"><svg class="ic"><use href="#i-clock"/></svg></span><div><h3 data-i18n="n3h">Deux heures, vendredi soir</h3><p data-i18n="n3p">De 19h à 21h (GMT+1). Le replay est inclus si vous êtes empêché.</p></div></div>
+        <div class="item rv"><span class="ib"><svg class="ic"><use href="#i-start"/></svg></span><div><h3 data-i18n="n4h">Aucune expérience requise</h3><p data-i18n="n4p">Je pars de zéro et je vous guide étape par étape.</p></div></div>
+      </div>
+      <div class="callout rv"><svg class="ic"><use href="#i-check"/></svg><span data-i18n="ph_hl">Dès la fin de la masterclass, vous pouvez vous lancer avec le téléphone que vous avez déjà en poche.</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- PROOF VIDEO -->
+<section id="video" class="alt">
+  <div class="wrap vid">
+    <div class="player rv" id="player"><video id="spot" controls playsinline preload="none" poster="spot-16x9.jpg"><source src="spot-16x9.mp4" type="video/mp4"></video></div>
+    <div class="rv">
+      <span class="eyebrow" data-i18n="vid_eye">La preuve en 88 secondes</span>
+      <h2 style="margin-top:14px" data-i18n="vid_h">Ce spot a été réalisé avec la méthode que j'enseigne.</h2>
+      <p class="lead" style="margin-top:14px" data-i18n="vid_p">Montage, motion design, voix off, musique et effets sonores. Pendant la masterclass, je vous montre comment le reproduire, étape par étape.</p>
+      <ul class="ticks" data-i18n="vid_list"><li>Titres animés, transitions et logos en mouvement</li><li>Voix off, musique et sound design</li><li>Une version YouTube et une version Short à partir du même projet</li></ul>
+    </div>
+  </div>
+</section>
+
+<!-- DETAILS IN TABS -->
+<section id="details">
+  <div class="wrap">
+    <div class="head rv"><span class="eyebrow" data-i18n="tb_eye">La masterclass en détail</span><h2 data-i18n="tb_h">Tout ce que vous allez apprendre.</h2></div>
+    <div class="tabs rv" role="tablist" aria-label="Détails">
+      <span class="ind" aria-hidden="true"></span>
+      <button role="tab" id="tab-programme" aria-controls="p-programme" aria-selected="true" data-i18n="tab1">Programme</button>
+      <button role="tab" id="tab-avant-apres" aria-controls="p-avant-apres" aria-selected="false" tabindex="-1" data-i18n="tab2">Avant / Après</button>
+      <button role="tab" id="tab-realisations" aria-controls="p-realisations" aria-selected="false" tabindex="-1" data-i18n="tab3">Réalisations</button>
+      <button role="tab" id="tab-formateur" aria-controls="p-formateur" aria-selected="false" tabindex="-1" data-i18n="tab4">Formateur</button>
+    </div>
+
+    <div class="panel" role="tabpanel" id="p-programme" aria-labelledby="tab-programme">
+      <ol class="prog">
+        <li><time>19:00</time><div><span class="k" data-i18n="t0k">Ouverture</span><h3 data-i18n="t0h">Ce qui a changé dans le montage</h3><p data-i18n="t0p">Pourquoi on monte aujourd'hui plus vite qu'avant, et les outils que j'utilise au quotidien.</p></div></li>
+        <li><time>19:15</time><div><span class="k" data-i18n="t1k">Module 1</span><h3 data-i18n="t1h">Des rushes au montage</h3><p data-i18n="t1p">Trier vos rushes, écrire un script qui accroche, construire le rythme et les sous-titres, puis créer la voix off.</p></div></li>
+        <li><time>19:45</time><div><span class="k" data-i18n="t2k">Module 2</span><h3 data-i18n="t2h">Le motion design, simplement</h3><p data-i18n="t2p">Titres animés, transitions, logos qui se fendent, effets sonores. Export en 16:9 et en 9:16.</p></div></li>
+        <li><time>20:15</time><div><span class="k" data-i18n="t3k">Module 3</span><h3 data-i18n="t3h">Mes techniques et mes stratégies</h3><p data-i18n="t3p">Les hooks qui retiennent, le montage calé sur la musique, et la structure d'une vidéo qui vend.</p></div></li>
+        <li class="bn"><time>20:35</time><div><span class="k" data-i18n="t4k">Bonus</span><h3 data-i18n="t4h">Monétiser la compétence</h3><p data-i18n="t4p">Trouver des clients, fixer vos prix, présenter une offre et livrer vite.</p></div></li>
+        <li><time>20:50</time><div><span class="k" data-i18n="t5k">En direct</span><h3 data-i18n="t5h">Questions-réponses</h3><p data-i18n="t5p">Vos questions et vos projets : on y répond ensemble.</p></div></li>
+        <li style="padding-bottom:0"><time>21:00</time><div><span class="k" data-i18n="t6k">Après</span><h3 data-i18n="t6h">Replay, PDF et groupe privé</h3><p data-i18n="t6p">Le replay, le PDF des présentations et les ressources vous attendent dans le groupe privé.</p></div></li>
+      </ol>
+      <p class="note" style="margin-top:18px" data-i18n="pg_note">Déroulé indicatif : l'ordre peut légèrement évoluer pendant le direct.</p>
+    </div>
+
+    <div class="panel" role="tabpanel" id="p-avant-apres" aria-labelledby="tab-avant-apres" hidden>
+      <div class="ba">
+        <div class="col before">
+          <span class="t" data-i18n="ba_b_tag">Avant · le montage classique</span>
+          <h3 data-i18n="ba_b_h">Des heures pour une seule vidéo.</h3>
+          <div class="apps" aria-label="Photoshop, Premiere Pro, After Effects, CapCut"><span class="app ps">Ps</span><span class="app pr">Pr</span><span class="app ae">Ae</span><span class="app cc"><svg aria-hidden="true" fill="currentColor" fill-rule="evenodd" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M24.189 6.442V2.671l-4.535 2.383V4.91c.002-1.505-1.078-2.411-2.638-2.411H2.64C.993 2.5 0 3.407 0 4.91V8.72L6.354 12 0 15.316v3.8C0 20.595 1 21.5 2.64 21.5h14.373c1.56 0 2.639-.907 2.639-2.382v-.197l4.536 2.409v-3.828L13.64 12 24.19 6.443zM9.982 13.873l7.797 4.083H2.157l7.825-4.083zm7.741-7.828l-7.742 4.057-7.825-4.057h15.567z"></path></svg></span></div>
+          <ul data-i18n="ba_b_list"><li>Des logiciels lourds, longs à maîtriser</li><li>Un ordinateur puissant presque obligatoire</li><li>Un montage clip par clip, à la main</li><li>Un motion design réservé aux experts</li></ul>
+          <div class="meter"><div class="row"><span data-i18n="ba_m">Un spot de 90 secondes</span><span>≈ 4 h</span></div><div class="bar"><i></i></div></div>
+        </div>
+        <div class="col after">
+          <span class="t" data-i18n="ba_a_tag">Après · avec ma méthode</span>
+          <h3 data-i18n="ba_a_h">Une vidéo pro le jour même.</h3>
+          <ul data-i18n="ba_a_list"><li>Vous décrivez ce que vous voulez, les outils montent avec vous</li><li>Titres, transitions et animations en quelques minutes</li><li>Voix off, musique et effets sonores compris</li><li>Faisable depuis votre téléphone</li></ul>
+          <div class="meter"><div class="row"><span data-i18n="ba_m2">Le même spot</span><span style="color:var(--red-ink)">≈ 24 min</span></div><div class="bar"><i></i></div></div>
+        </div>
+      </div>
+      <p class="note" style="margin-top:14px" data-i18n="ba_note">Durées données à titre d'exemple pour un spot de 90 secondes.</p>
+    </div>
+
+    <div class="panel" role="tabpanel" id="p-realisations" aria-labelledby="tab-realisations" hidden>
+      <div class="works">
+        <figure class="work big"><video muted loop playsinline preload="none" poster="work-camairco.jpg"><source src="work-camairco.mp4" type="video/mp4"></video><figcaption><b data-i18n="w1">Spot Camair-Co</b><span data-i18n="w1s">Compagnie aérienne</span></figcaption></figure>
+        <figure class="work big"><video muted loop playsinline preload="none" poster="work-bovann.jpg"><source src="work-bovann.mp4" type="video/mp4"></video><figcaption><b data-i18n="w2">Spot Bovann Group</b><span data-i18n="w2s">Entreprise</span></figcaption></figure>
+        <figure class="work"><video muted loop playsinline preload="none" poster="motion-kwiva.jpg"><source src="motion-kwiva.mp4" type="video/mp4"></video><figcaption>Kwiva<span data-i18n="w3s">Pub fintech</span></figcaption></figure>
+        <figure class="work"><video muted loop playsinline preload="none" poster="motion-mboa.jpg"><source src="motion-mboa.mp4" type="video/mp4"></video><figcaption>Mboa Market<span data-i18n="w4s">E-commerce</span></figcaption></figure>
+        <figure class="work"><video muted loop playsinline preload="none" poster="motion-snapia.jpg"><source src="motion-snapia.mp4" type="video/mp4"></video><figcaption>Snapia<span data-i18n="w5s">Application mobile</span></figcaption></figure>
+        <figure class="work"><video muted loop playsinline preload="none" poster="motion-volta.jpg"><source src="motion-volta.mp4" type="video/mp4"></video><figcaption>Volta<span data-i18n="w6s">Lancement produit</span></figcaption></figure>
+      </div>
+      <p class="note" style="margin-top:16px" data-i18n="wk_note">Kwiva, Mboa Market, Snapia et Volta sont des marques fictives créées pour montrer ce que vous pourrez réaliser.</p>
+    </div>
+
+    <div class="panel" role="tabpanel" id="p-formateur" aria-labelledby="tab-formateur" hidden>
+      <div class="trainer">
+        <div class="portrait"><img src="roger.webp" alt="Roger BOUJIEKA" loading="lazy" width="1000" height="1000"></div>
+        <div>
+          <h3>Roger BOUJIEKA</h3>
+          <p class="lead" style="margin-top:12px" data-i18n="tr_p">Entrepreneur web, expert en intelligence artificielle, en montage vidéo, en motion design et en marketing digital. Je crée chaque jour des vidéos et des campagnes pour des marques et des entreprises, et je vous transmets exactement ce qui marche.</p>
+          <div class="roles"><span class="chip" data-i18n="r1">Intelligence artificielle</span><span class="chip" data-i18n="r2">Montage vidéo</span><span class="chip" data-i18n="r3">Motion design</span><span class="chip" data-i18n="r4">Marketing digital</span></div>
+          <div class="cos"><div data-i18n="co1">PDG de Boujieka Group</div><div data-i18n="co2">PDG de Boujieka Agency</div><div data-i18n="co3">PDG de Boujieka Academy</div></div>
+          <p class="faith" data-i18n="tr_faith">Responsable et enfant de Dieu.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MONETISATION -->
+<section id="revenus" class="alt">
+  <div class="wrap">
+    <div class="head rv"><span class="eyebrow" data-i18n="mn_k">Bonus · Monétisation</span><h2 data-i18n="mn_h">Transformez la compétence en revenus.</h2><p class="lead" data-i18n="mn_p">Commerçants, restaurants, entreprises, églises, créateurs : tous ont besoin de vidéos, chaque semaine. Je vous montre comment trouver vos premiers clients et vous faire payer.</p></div>
+    <div class="mphotos">
+      <figure class="rv"><img src="photo-shoot.webp" alt="" loading="lazy" width="960" height="540"><figcaption class="cap" data-i18n="mn_c1">Tourner une vidéo pour une boutique, au smartphone.</figcaption></figure>
+      <figure class="rv"><img src="photo-client.webp" alt="" loading="lazy" width="960" height="540"><figcaption class="cap" data-i18n="mn_c2">Présenter le résultat au client et conclure.</figcaption></figure>
+    </div>
+    <div class="msteps">
+      <div class="ms rv"><b>01</b><h3 data-i18n="ms1h">Trouver vos premiers clients</h3><p data-i18n="ms1p">Où les chercher, quoi leur montrer, comment les approcher.</p></div>
+      <div class="ms rv"><b>02</b><h3 data-i18n="ms2h">Fixer vos prix</h3><p data-i18n="ms2p">Présenter une offre claire, au bon prix pour votre marché.</p></div>
+      <div class="ms rv"><b>03</b><h3 data-i18n="ms3h">Livrer vite et fidéliser</h3><p data-i18n="ms3p">Livrer le jour même et faire revenir vos clients.</p></div>
+    </div>
+    <div class="goal rv"><div class="big"><span data-i18n="mn_big">200 000 – 500 000 FCFA</span><small data-i18n="mn_small">par mois : l'objectif présenté pendant la masterclass</small></div><p class="d" data-i18n="mn_d">Les revenus dépendent de votre travail et de votre marché. Aucun montant n'est garanti.</p></div>
+  </div>
+</section>
+
+<!-- OFFER -->
+<section id="offre">
+  <div class="wrap">
+    <div class="head center rv"><span class="eyebrow" data-i18n="of_eye">Votre place</span><h2 data-i18n="of_h">Un seul pack, tout compris.</h2></div>
+    <div class="pack rv">
+      <div class="tp"><span class="nm" data-i18n="pk_name">Pack Masterclass</span><span class="tag" data-i18n="limited">Places limitées</span></div>
+      <div class="price"><b>15 000</b><em>FCFA</em><span class="price-was">25 000 FCFA</span></div>
+      <ul data-i18n="pk_list"><li>2 h de masterclass en direct, vendredi 16 octobre de 19h à 21h</li><li class="phl">À suivre et à appliquer depuis votre smartphone</li><li>Des rushes au spot en motion design, étape par étape</li><li>Le bonus monétisation : trouver des clients et vendre la compétence</li><li>Le replay et le PDF des présentations</li><li>Les ressources de la masterclass</li><li>L'accès direct au groupe privé après le paiement</li></ul>
+      <div class="count js-count" aria-live="off"><span class="lbl" data-i18n="count_lbl">Début dans</span><div class="u"><b data-u="d">0</b><span data-i18n="u_d">jours</span></div><div class="u"><b data-u="h">00</b><span data-i18n="u_h">heures</span></div><div class="u"><b data-u="m">00</b><span data-i18n="u_m">min</span></div><div class="u"><b data-u="s">00</b><span data-i18n="u_s">sec</span></div></div>
+      <a class="btn btn-red btn-full js-cta" id="buy" href="https://rogerboujieka237.mychariow.shop/prd_gy9104l1/checkout"><span data-i18n="cta_buy">Je réserve ma place</span><span class="arr">→</span></a>
+      <div class="pay"><span class="lbl"><svg class="ic"><use href="#i-lock"/></svg><span data-i18n="pay_lbl">Paiement sécurisé</span></span><div class="methods"><img src="orange-money.svg" alt="Orange Money" width="60" height="36"><img src="momo-mtn.webp" alt="MoMo MTN Mobile Money" width="60" height="36"><img src="moov-money.svg" alt="Moov Money" width="60" height="36"><img class="cd" src="visa.svg" alt="Visa" width="54" height="36"><img class="cd" src="mastercard.svg" alt="Mastercard" width="54" height="36"></div></div>
+      <div class="access"><svg class="ic"><use href="#i-check"/></svg><span data-i18n="access">Après le paiement, vous accédez directement au groupe privé de la masterclass.</span></div>
+      <ol class="steps" data-i18n="steps"><li><span><b>Réservez</b> votre place</span></li><li><span><b>Payez</b> par Mobile Money ou par carte</span></li><li><span><b>Rejoignez</b> le groupe privé et recevez le lien du direct</span></li></ol>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq" class="alt">
+  <div class="wrap">
+    <div class="head rv"><span class="eyebrow">FAQ</span><h2 data-i18n="fq_h">Vos questions, mes réponses.</h2></div>
+    <div class="faq rv" data-i18n="faq">
+      <details open><summary>Puis-je vraiment tout faire avec mon téléphone ?</summary><p>Oui. Vous pouvez suivre le direct et appliquer la méthode depuis votre smartphone. Un ordinateur est un plus, pas une obligation : dès la fin de la masterclass, vous pouvez vous lancer avec votre téléphone.</p></details>
+      <details><summary>Je n'ai jamais fait de montage. Est-ce pour moi ?</summary><p>Oui. Je pars de zéro et je vous montre chaque étape en direct, des rushes jusqu'à la vidéo finale.</p></details>
+      <details><summary>Comment se déroule la masterclass ?</summary><p>Elle est 100 % en ligne et en direct, le vendredi 16 octobre de 19h à 21h (GMT+1). Le lien est partagé dans le groupe privé.</p></details>
+      <details><summary>Et si je rate le direct ?</summary><p>Le replay est disponible dans le groupe privé, avec le PDF des présentations.</p></details>
+      <details><summary>Quand est-ce que je reçois mon accès ?</summary><p>Juste après le paiement, vous accédez directement au groupe privé de la masterclass.</p></details>
+      <details><summary>Les outils sont-ils payants ?</summary><p>Beaucoup d'outils ont une version gratuite pour commencer. Je vous indique lesquels utiliser selon votre budget.</p></details>
+      <details><summary>Vais-je vraiment pouvoir gagner de l'argent ?</summary><p>Les entreprises ont besoin de vidéos. Je vous montre comment trouver des clients, fixer vos prix et livrer vite. Vos résultats dépendront de votre travail : aucun revenu n'est garanti.</p></details>
+    </div>
+  </div>
+</section>
+
+<!-- FINAL CTA -->
+<section class="final" id="final">
+  <div class="wrap">
+    <div class="box rv">
+      <span class="eyebrow" data-i18n="fn_eye">Vendredi 16 octobre · 19h</span>
+      <h2 data-i18n="fn_h">Votre téléphone suffit. Il ne manque que votre place.</h2>
+      <p data-i18n="fn_p">15 000 FCFA au lieu de 25 000 FCFA, tant qu'il reste des places. Replay et PDF inclus.</p>
+      <div class="count js-count" aria-live="off"><span class="lbl" data-i18n="count_lbl">Début dans</span><div class="u"><b data-u="d">0</b><span data-i18n="u_d">jours</span></div><div class="u"><b data-u="h">00</b><span data-i18n="u_h">heures</span></div><div class="u"><b data-u="m">00</b><span data-i18n="u_m">min</span></div><div class="u"><b data-u="s">00</b><span data-i18n="u_s">sec</span></div></div>
+      <a class="btn btn-white js-cta" href="https://rogerboujieka237.mychariow.shop/prd_gy9104l1/checkout"><span data-i18n="cta_main">Je réserve ma place</span><span class="arr">→</span></a>
+    </div>
+  </div>
+</section>
+</main>
+
+<div class="partners"><div class="wrap"><span class="k" data-i18n="partners">Partenaires</span>
+  <img class="tall lg-d" src="logo_transmission.png" alt="TRANSMISSION"><img class="tall lg-l" src="logo_transmission_dk.png" alt="TRANSMISSION">
+  <img class="lg-d" src="logo_rb.png" alt="Roger BOUJIEKA"><img class="lg-l" src="logo_rb_dk.png" alt="Roger BOUJIEKA">
+  <img class="lg-d" src="logo_boujieka_agency.png" alt="Boujieka agency"><img class="lg-l" src="logo_boujieka_agency_dk.png" alt="Boujieka agency">
+  <img class="lg-d" src="logo_izivoice.png" alt="iziVoice"><img class="lg-l" src="logo_izivoice_darktext.png" alt="iziVoice">
+</div></div>
+<footer><span data-i18n="foot">© 2026 Roger BOUJIEKA · Boujieka Academy · Masterclass « Montage vidéo &amp; Motion Design avec l'IA »</span></footer>
+
+<div class="mbar" id="mbar"><div class="p">15 000 F<small data-i18n="mbar_s">AU LIEU DE 25 000</small></div><a class="btn btn-red js-cta" href="https://rogerboujieka237.mychariow.shop/prd_gy9104l1/checkout"><span data-i18n="cta_short">Réserver ma place</span><span class="arr">→</span></a></div>
+
+<script>
+/* ===== Configuration =====
+   CHECKOUT_URL: the Chariow checkout of the masterclass. Every booking button opens it. */
+const CHECKOUT_URL = "https://rogerboujieka237.mychariow.shop/prd_gy9104l1/checkout";
+const START = Date.parse("2026-10-16T18:00:00Z"); // 19:00 GMT+1
+const END = Date.parse("2026-10-16T20:00:00Z");
+
+const EN = {
+  cta_short:"Book my seat", cta_main:"Book my seat",
+  hero_live:"Live · Fri. Oct 16 · 7–9 pm GMT+1",
+  hero_h1:'<span class="ln"><span style="--i:0">Edit your videos</span></span><span class="ln"><span style="--i:1"><span class="hl">10X</span> faster</span></span><span class="ln"><span style="--i:2" class="soft">with AI.</span></span>',
+  hero_sub:"Learn video editing and motion design with the right tools, <b>even from your phone</b>. Then turn this skill into income.",
+  limited:"Limited seats", hf1:"Works on a smartphone", hf2:"2 hours live", hf3:"Replay + PDF", hf4:"Private group", tl_role:"your trainer",
+  ph_cap:"Editing a product video, directly on a smartphone.", ph_eye:"What you need", ph_h:"Your phone is enough to get started.",
+  ph_p:"No powerful computer, no expensive software. The method is designed to be applied from a smartphone.",
+  n1h:"A smartphone", n1p:"Android or iPhone. A computer is a plus, not a requirement.", n2h:"An internet connection", n2p:"To follow the live session and use the online tools.",
+  n3h:"Two hours on Friday evening", n3p:"From 7 to 9 pm (GMT+1). The replay is included if you can't make it.", n4h:"No experience needed", n4p:"I start from zero and guide you step by step.",
+  ph_hl:"Right after the masterclass, you can get started with the phone already in your pocket.",
+  vid_eye:"The proof in 88 seconds", vid_h:"This ad was made with the method I teach.",
+  vid_p:"Editing, motion design, voice-over, music and sound effects. In the masterclass, I show you how to reproduce it, step by step.",
+  vid_list:"<li>Animated titles, transitions and moving logos</li><li>Voice-over, music and sound design</li><li>A YouTube version and a Short version from the same project</li>",
+  tb_eye:"The masterclass in detail", tb_h:"Everything you will learn.", tab1:"Programme", tab2:"Before / After", tab3:"Portfolio", tab4:"Trainer",
+  t0k:"Opening", t0h:"What has changed in video editing", t0p:"Why editing is faster today than before, and the tools I use every day.",
+  t1k:"Module 1", t1h:"From raw footage to the edit", t1p:"Sort your footage, write a script that hooks, build the pacing and subtitles, then create the voice-over.",
+  t2k:"Module 2", t2h:"Motion design, made simple", t2p:"Animated titles, transitions, logos that split, sound effects. Export in 16:9 and 9:16.",
+  t3k:"Module 3", t3h:"My techniques and strategies", t3p:"Hooks that hold attention, editing on the beat, and the structure of a video that sells.",
+  t4k:"Bonus", t4h:"Monetise the skill", t4p:"Find clients, set your prices, present an offer and deliver fast.",
+  t5k:"Live", t5h:"Q&amp;A", t5p:"Your questions and projects: we answer them together.",
+  t6k:"After", t6h:"Replay, PDF and private group", t6p:"The replay, the slides PDF and the resources are waiting for you in the private group.",
+  pg_note:"Indicative running order: it may change slightly during the live session.",
+  ba_b_tag:"Before · classic editing", ba_b_h:"Hours for a single video.",
+  ba_b_list:"<li>Heavy software that takes ages to master</li><li>A powerful computer almost required</li><li>Editing clip by clip, by hand</li><li>Motion design reserved for experts</li>",
+  ba_m:"A 90-second ad", ba_a_tag:"After · with my method", ba_a_h:"A pro video the same day.",
+  ba_a_list:"<li>You describe what you want, the tools edit with you</li><li>Titles, transitions and animations in minutes</li><li>Voice-over, music and sound effects included</li><li>Doable from your phone</li>",
+  ba_m2:"The same ad", ba_note:"Durations given as an example for a 90-second ad.",
+  w1:"Camair-Co ad", w1s:"Airline", w2:"Bovann Group ad", w2s:"Company", w3s:"Fintech ad", w4s:"E-commerce", w5s:"Mobile app", w6s:"Product launch",
+  wk_note:"Kwiva, Mboa Market, Snapia and Volta are fictional brands created to show what you will be able to make.",
+  tr_p:"Web entrepreneur, expert in artificial intelligence, video editing, motion design and digital marketing. Every day I create videos and campaigns for brands and companies, and I pass on exactly what works.",
+  r1:"Artificial intelligence", r2:"Video editing", r3:"Motion design", r4:"Digital marketing",
+  co1:"CEO of Boujieka Group", co2:"CEO of Boujieka Agency", co3:"CEO of Boujieka Academy", tr_faith:"Responsible, and a child of God.",
+  mn_k:"Bonus · Monetisation", mn_h:"Turn the skill into income.",
+  mn_p:"Shops, restaurants, companies, churches, creators: they all need videos, every week. I show you how to find your first clients and get paid.",
+  mn_c1:"Shooting a video for a shop, with a smartphone.", mn_c2:"Showing the result to the client and closing the deal.",
+  ms1h:"Find your first clients", ms1p:"Where to look, what to show them, how to approach them.", ms2h:"Set your prices", ms2p:"Present a clear offer, at the right price for your market.", ms3h:"Deliver fast, keep clients", ms3p:"Deliver the same day and bring your clients back.",
+  mn_big:"200,000 – 500,000 FCFA", mn_small:"per month: the goal presented in the masterclass", mn_d:"Income depends on your work and your market. No amount is guaranteed.",
+  of_eye:"Your seat", of_h:"One pack, everything included.", pk_name:"Masterclass pack",
+  pk_list:'<li>2-hour live masterclass, Friday October 16, 7 to 9 pm</li><li class="phl">Follow and apply it from your smartphone</li><li>From raw footage to a motion design ad, step by step</li><li>The monetisation bonus: find clients and sell the skill</li><li>The replay and the slides PDF</li><li>The masterclass resources</li><li>Direct access to the private group after payment</li>',
+  count_lbl:"Starts in", u_d:"days", u_h:"hours", u_m:"min", u_s:"sec",
+  cta_buy:"Book my seat", pay_lbl:"Secure payment",
+  access:"Right after payment, you get direct access to the masterclass private group.",
+  steps:"<li><span><b>Book</b> your seat</span></li><li><span><b>Pay</b> by Mobile Money or card</span></li><li><span><b>Join</b> the private group and get the live link</span></li>",
+  fq_h:"Your questions, my answers.",
+  faq:'<details open><summary>Can I really do everything with my phone?</summary><p>Yes. You can follow the live session and apply the method from your smartphone. A computer is a plus, not a requirement: right after the masterclass, you can get started with your phone.</p></details><details><summary>I have never edited a video. Is this for me?</summary><p>Yes. I start from zero and show you every step live, from raw footage to the final video.</p></details><details><summary>How does the masterclass work?</summary><p>It is 100% online and live, on Friday October 16 from 7 to 9 pm (GMT+1). The link is shared in the private group.</p></details><details><summary>What if I miss the live session?</summary><p>The replay is available in the private group, with the slides PDF.</p></details><details><summary>When do I get access?</summary><p>Right after payment, you get direct access to the masterclass private group.</p></details><details><summary>Are the tools paid?</summary><p>Many tools have a free version to get started. I tell you which ones to use depending on your budget.</p></details><details><summary>Will I really be able to make money?</summary><p>Companies need videos. I show you how to find clients, set your prices and deliver fast. Your results will depend on your work: no income is guaranteed.</p></details>',
+  fn_eye:"Friday, October 16 · 7 pm", fn_h:"Your phone is enough. All you need is your seat.", fn_p:"15,000 FCFA instead of 25,000 FCFA while seats last. Replay and PDF included.",
+  partners:"Partners", foot:"© 2026 Roger BOUJIEKA · Boujieka Academy · Masterclass “Video editing &amp; Motion Design with AI”", mbar_s:"INSTEAD OF 25,000"
+};
+
+/* ---------- language ---------- */
+const FR = {}; const nodes = [...document.querySelectorAll('[data-i18n]')];
+nodes.forEach(n => { const k = n.dataset.i18n; if (!(k in FR)) FR[k] = n.innerHTML; });
+function setLang(l) {
+  nodes.forEach(n => { const v = (l === 'en' ? EN : FR)[n.dataset.i18n]; if (v != null) n.innerHTML = v; });
+  document.documentElement.lang = l;
+  document.getElementById('lang-fr').setAttribute('aria-pressed', l === 'fr'); document.getElementById('lang-en').setAttribute('aria-pressed', l === 'en');
+  try { localStorage.setItem('mc_lang', l); } catch (e) {}
+  tick(); moveInd();
+}
+document.getElementById('lang-fr').onclick = () => setLang('fr');
+document.getElementById('lang-en').onclick = () => setLang('en');
+
+/* ---------- theme (day / night) ---------- */
+function setTheme(t, save) {
+  if (t) document.documentElement.setAttribute('data-theme', t); else document.documentElement.removeAttribute('data-theme');
+  const dark = t ? t === 'dark' : !matchMedia('(prefers-color-scheme: light)').matches;
+  document.getElementById('th-night').setAttribute('aria-pressed', dark); document.getElementById('th-day').setAttribute('aria-pressed', !dark);
+  const tc = document.querySelector('meta[name="theme-color"]'); if (tc) tc.content = dark ? '#0a0a0d' : '#ffffff';
+  if (save) { try { localStorage.setItem('mc_theme', t); } catch (e) {} }
+}
+document.getElementById('th-day').onclick = () => setTheme('light', true);
+document.getElementById('th-night').onclick = () => setTheme('dark', true);
+
+/* ---------- countdown ---------- */
+function pad(n) { return String(n).padStart(2, '0'); }
+function tick() {
+  const now = Date.now(), en = document.documentElement.lang === 'en';
+  document.querySelectorAll('.js-count').forEach(c => {
+    const lbl = c.querySelector('.lbl');
+    if (now >= END) { lbl.textContent = en ? 'Replay available in the private group' : 'Replay disponible dans le groupe privé'; c.querySelectorAll('.u').forEach(u => u.hidden = true); return; }
+    if (now >= START) { lbl.textContent = en ? 'Live now' : 'En direct maintenant'; c.querySelectorAll('.u').forEach(u => u.hidden = true); return; }
+    let s = Math.floor((START - now) / 1000); const d = Math.floor(s / 86400); s -= d * 86400; const h = Math.floor(s / 3600); s -= h * 3600; const m = Math.floor(s / 60); s -= m * 60;
+    c.querySelector('[data-u="d"]').textContent = d; c.querySelector('[data-u="h"]').textContent = pad(h); c.querySelector('[data-u="m"]').textContent = pad(m); c.querySelector('[data-u="s"]').textContent = pad(s);
+  });
+}
+setInterval(tick, 1000);
+
+/* ---------- checkout: every booking button goes straight to the payment page ---------- */
+document.querySelectorAll('.js-cta').forEach(a => { a.href = CHECKOUT_URL; });
+
+/* ---------- tabs ---------- */
+const tabs = [...document.querySelectorAll('[role="tab"]')], ind = document.querySelector('.tabs .ind');
+function moveInd() {
+  const t = tabs.find(b => b.getAttribute('aria-selected') === 'true'); if (!t) return;
+  ind.style.width = t.offsetWidth + 'px'; ind.style.height = t.offsetHeight + 'px';
+  ind.style.transform = `translate(${t.offsetLeft}px,${t.offsetTop}px)`;
+}
+function openTab(t, focus) {
+  tabs.forEach(b => { const on = b === t; b.setAttribute('aria-selected', on); b.tabIndex = on ? 0 : -1;
+    const p = document.getElementById(b.getAttribute('aria-controls')); p.hidden = !on; p.classList.remove('go'); });
+  const p = document.getElementById(t.getAttribute('aria-controls'));
+  requestAnimationFrame(() => requestAnimationFrame(() => { p.classList.add('go'); const pr = p.querySelector('.prog'); if (pr) pr.classList.add('go'); }));
+  p.querySelectorAll('video').forEach(v => { v.play().catch(() => {}); });
+  document.querySelectorAll('.panel[hidden] video').forEach(v => v.pause());
+  if (focus) t.focus();
+  moveInd();
+}
+tabs.forEach((t, i) => {
+  t.addEventListener('click', () => openTab(t));
+  t.addEventListener('keydown', e => { const d = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0; if (d) { e.preventDefault(); openTab(tabs[(i + d + tabs.length) % tabs.length], true); } });
+});
+addEventListener('resize', moveInd);
+if (document.fonts) document.fonts.ready.then(moveInd);
+
+/* ---------- proof video: vertical cut on phones ---------- */
+(function () {
+  const v = document.getElementById('spot'), p = document.getElementById('player');
+  if (matchMedia('(max-width: 700px)').matches) { p.classList.add('sh'); v.poster = 'spot-9x16.jpg'; v.querySelector('source').src = 'spot-9x16.mp4'; v.load(); }
+})();
+
+/* ---------- hero timeline: playhead, timecode, active clips ---------- */
+(function () {
+  const lanes = document.querySelector('.js-lanes'), ph = document.querySelector('.js-ph'), tc = document.querySelector('.js-tc');
+  const clips = [...lanes.querySelectorAll('.clip')].map(c => ({ el: c, s: parseFloat(c.style.getPropertyValue('--s')), w: parseFloat(c.style.getPropertyValue('--w')) }));
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches, PERIOD = 11000, LEN = 88;
+  let visible = true, t0 = performance.now();
+  function draw(p) {
+    ph.style.transform = `translateX(${p * lanes.clientWidth}px)`;
+    const sec = p * LEN, fr = Math.floor((sec % 1) * 30);
+    tc.textContent = `00:${pad(Math.floor(sec / 60))}:${pad(Math.floor(sec % 60))}:${pad(fr)}`;
+    const x = p * 100; clips.forEach(c => c.el.classList.toggle('on', x >= c.s && x < c.s + c.w));
+  }
+  if (reduce) { draw(.36); return; }
+  function loop(now) { if (visible) draw(((now - t0) % PERIOD) / PERIOD); requestAnimationFrame(loop); }
+  if ('IntersectionObserver' in window) new IntersectionObserver(es => { visible = es[0].isIntersecting; }).observe(lanes);
+  requestAnimationFrame(loop);
+})();
+
+/* ---------- reveal on scroll (visible at rest; lift only below the fold) ---------- */
+(function () {
+  const cur = () => tabs.find(b => b.getAttribute('aria-selected') === 'true');
+  if (!('IntersectionObserver' in window)) { openTab(cur()); return; }
+  // sticky booking bar: after the hero button, hidden on the pack itself
+  const bar = document.getElementById('mbar'), heroBtn = document.querySelector('.hero .js-cta'), pack = document.querySelector('.pack');
+  let pastHero = false, onPack = false; const upd = () => bar.classList.toggle('show', pastHero && !onPack);
+  new IntersectionObserver(es => { pastHero = !es[0].isIntersecting && es[0].boundingClientRect.top < 0; upd(); }).observe(heroBtn);
+  new IntersectionObserver(es => { onPack = es[0].isIntersecting; upd(); }, { threshold: .2 }).observe(pack);
+  // start the programme line + tab videos when the tabs come into view
+  const det = document.getElementById('details'); let seen = false;
+  new IntersectionObserver(es => { if (es[0].isIntersecting && !seen) { seen = true; openTab(cur()); } }, { threshold: .15 }).observe(det);
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const vh = innerHeight;
+  const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.remove('pre'); io.unobserve(e.target); } }), { rootMargin: '0px 0px -8% 0px' });
+  document.querySelectorAll('.rv').forEach(el => { if (el.getBoundingClientRect().top > vh) { el.classList.add('pre'); io.observe(el); } });
+})();
+
+/* ---------- init ---------- */
+let L = 'fr', T = null;
+try { L = localStorage.getItem('mc_lang') || 'fr'; T = localStorage.getItem('mc_theme'); } catch (e) {}
+const H = location.hash.slice(1);
+if (H === 'en') L = 'en'; if (H === 'fr') L = 'fr';
+if (H === 'jour' || H === 'day') T = 'light'; if (H === 'nuit' || H === 'night') T = 'dark';
+setTheme(T, false); if (L === 'en') setLang('en'); else { tick(); moveInd(); }
+const deep = tabs.find(b => b.id === 'tab-' + H); if (deep) { openTab(deep); document.getElementById('details').scrollIntoView(); }
+matchMedia('(prefers-color-scheme: light)').addEventListener('change', () => { if (!document.documentElement.getAttribute('data-theme')) setTheme(null, false); });
+
+</script>
+</body>
+</html>
