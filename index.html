@@ -376,6 +376,18 @@ footer{padding:18px 16px 110px;text-align:center;color:var(--faint);font-size:12
 .toast .t-x{flex:none;align-self:flex-start;border:0;background:transparent;color:var(--faint);font:700 13px/1 var(--body);cursor:pointer;padding:2px 4px}
 @media (min-width:860px){.toast{left:22px;right:auto;bottom:22px;width:330px}}
 
+/* local currency + local time */
+.fx{margin-top:8px;font:800 15px/1.35 var(--body);color:var(--fg)}
+.fx small{font-weight:500;font-size:12.5px;color:var(--muted)}
+.micro{margin-top:12px;font:600 12.5px/1.45 var(--body);color:var(--muted)}
+.ltime{margin-top:4px;font:600 12.5px/1.45 var(--body);color:var(--fg)}
+.ltime[hidden],.fx[hidden],.fxnote[hidden]{display:none}
+.fxbox{margin-top:10px;display:grid;gap:7px}
+.fxbox .js-fx2{font:800 17px/1.3 var(--body)}
+.fxsel{display:flex;align-items:center;flex-wrap:wrap;gap:8px;font:600 13px/1.3 var(--body);color:var(--muted)}
+.fxsel select{font:700 13px var(--body);color:var(--fg);background:var(--bg2);border:1px solid var(--line2);border-radius:10px;padding:7px 10px;max-width:230px}
+.fxnote{font-size:12px;color:var(--faint);line-height:1.45}
+
 /* mobile sticky bar */
 .mbar{position:fixed;left:10px;right:10px;bottom:calc(10px + env(safe-area-inset-bottom,0px));z-index:60;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:9px 9px 9px 16px;border-radius:999px;background:color-mix(in srgb,var(--card) 92%,transparent);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);box-shadow:0 14px 40px rgba(0,0,0,.25),inset 0 0 0 1px var(--line2);transform:translateY(140%);transition:transform .45s var(--ease)}
 .mbar.show{transform:none}
@@ -430,7 +442,8 @@ footer{padding:18px 16px 110px;text-align:center;color:var(--faint);font-size:12
       <h1 class="h1" data-i18n="hero_h1"><span class="ln"><span style="--i:0">Montez vos vidéos</span></span><span class="ln"><span style="--i:1"><span class="hl">10X</span> plus vite</span></span><span class="ln"><span style="--i:2" class="soft">avec l'IA.</span></span></h1>
       <p class="lead sub in" style="--d:.5s" data-i18n="hero_sub">Apprenez le montage vidéo et le motion design avec les bons outils, <b>même depuis votre téléphone</b>. Puis transformez cette compétence en revenus.</p>
       <div class="price-line in" style="--d:.6s"><span class="price-now">15 000<small>FCFA</small></span><span class="price-was">25 000 FCFA</span><span class="tag" data-i18n="limited">Places limitées</span></div>
-      <div class="in" style="--d:.7s"><a class="btn btn-red btn-full js-cta" href="https://rogerboujieka237.mychariow.shop/prd_gy9104l1/checkout"><span data-i18n="cta_main">Je réserve ma place</span><span class="arr">→</span></a></div>
+      <div class="fx js-fx" hidden></div>
+      <div class="in" style="--d:.7s"><a class="btn btn-red btn-full js-cta" href="https://rogerboujieka237.mychariow.shop/prd_gy9104l1/checkout"><span data-i18n="cta_main">Je réserve ma place</span><span class="arr">→</span></a><p class="micro" data-i18n="micro">🔒 Paiement sécurisé · Mobile Money ou carte · Accès immédiat au groupe privé</p><p class="ltime js-ltime" hidden></p></div>
       <div class="facts in" style="--d:.8s">
         <span class="chip ph"><svg class="ic"><use href="#i-phone"/></svg><span data-i18n="hf1">Accessible depuis un smartphone</span></span>
         <span class="chip"><svg class="ic"><use href="#i-clock"/></svg><span data-i18n="hf2">2 h en direct</span></span>
@@ -587,6 +600,7 @@ footer{padding:18px 16px 110px;text-align:center;color:var(--faint);font-size:12
     <div class="pack rv">
       <div class="tp"><span class="nm" data-i18n="pk_name">Pack Masterclass</span><span class="tag" data-i18n="limited">Places limitées</span></div>
       <div class="price"><b>15 000</b><em>FCFA</em><span class="price-was">25 000 FCFA</span></div>
+      <div class="fxbox"><span class="js-fx2"></span><label class="fxsel"><span data-i18n="fx_lbl">Voir le prix dans votre devise :</span><select id="fx-cur"></select></label><small class="fxnote" data-i18n="fx_note" hidden>Montant indicatif. Le paiement se fait en FCFA ; la conversion finale dépend de votre moyen de paiement.</small></div>
       <ul data-i18n="pk_list"><li>2 h de masterclass en direct, vendredi 16 octobre de 19h à 21h</li><li class="phl">À suivre et à appliquer depuis votre smartphone</li><li>Des rushes au spot en motion design, étape par étape</li><li>Le bonus monétisation : trouver des clients et vendre la compétence</li><li>Le replay et le PDF des présentations</li><li>Les ressources de la masterclass</li><li>L'accès direct au groupe privé après le paiement</li></ul>
       <div class="count js-count" aria-live="off"><span class="lbl" data-i18n="count_lbl">Début dans</span><div class="u"><b data-u="d">0</b><span data-i18n="u_d">jours</span></div><div class="u"><b data-u="h">00</b><span data-i18n="u_h">heures</span></div><div class="u"><b data-u="m">00</b><span data-i18n="u_m">min</span></div><div class="u"><b data-u="s">00</b><span data-i18n="u_s">sec</span></div></div>
       <a class="btn btn-red btn-full js-cta" id="buy" href="https://rogerboujieka237.mychariow.shop/prd_gy9104l1/checkout"><span data-i18n="cta_buy">Je réserve ma place</span><span class="arr">→</span></a>
@@ -603,6 +617,7 @@ footer{padding:18px 16px 110px;text-align:center;color:var(--faint);font-size:12
     <div class="head rv"><span class="eyebrow">FAQ</span><h2 data-i18n="fq_h">Vos questions, mes réponses.</h2></div>
     <div class="faq rv" data-i18n="faq">
       <details open><summary>Puis-je vraiment tout faire avec mon téléphone ?</summary><p>Oui. Vous pouvez suivre le direct et appliquer la méthode depuis votre smartphone. Un ordinateur est un plus, pas une obligation : dès la fin de la masterclass, vous pouvez vous lancer avec votre téléphone.</p></details>
+      <details><summary>J'habite hors du Cameroun. Comment ça se passe ?</summary><p>Aucun problème : la masterclass est 100 % en ligne. Le prix est en FCFA, et le site vous affiche une estimation dans votre devise ainsi que l'heure du direct à votre heure locale. Les moyens de paiement disponibles s'affichent sur la page de paiement.</p></details>
       <details><summary>Je n'ai jamais fait de montage. Est-ce pour moi ?</summary><p>Oui. Je pars de zéro et je vous montre chaque étape en direct, des rushes jusqu'à la vidéo finale.</p></details>
       <details><summary>Comment se déroule la masterclass ?</summary><p>Elle est 100 % en ligne et en direct, le vendredi 16 octobre de 19h à 21h (GMT+1). Le lien est partagé dans le groupe privé.</p></details>
       <details><summary>Et si je rate le direct ?</summary><p>Le replay est disponible dans le groupe privé, avec le PDF des présentations.</p></details>
@@ -692,7 +707,8 @@ const EN = {
   access:"Right after payment, you get direct access to the masterclass private group.",
   steps:"<li><span><b>Book</b> your seat</span></li><li><span><b>Pay</b> by Mobile Money or card</span></li><li><span><b>Join</b> the private group and get the live link</span></li>",
   fq_h:"Your questions, my answers.",
-  faq:'<details open><summary>Can I really do everything with my phone?</summary><p>Yes. You can follow the live session and apply the method from your smartphone. A computer is a plus, not a requirement: right after the masterclass, you can get started with your phone.</p></details><details><summary>I have never edited a video. Is this for me?</summary><p>Yes. I start from zero and show you every step live, from raw footage to the final video.</p></details><details><summary>How does the masterclass work?</summary><p>It is 100% online and live, on Friday October 16 from 7 to 9 pm (GMT+1). The link is shared in the private group.</p></details><details><summary>What if I miss the live session?</summary><p>The replay is available in the private group, with the slides PDF.</p></details><details><summary>When do I get access?</summary><p>Right after payment, you get direct access to the masterclass private group.</p></details><details><summary>Are the tools paid?</summary><p>Many tools have a free version to get started. I tell you which ones to use depending on your budget.</p></details><details><summary>Will I really be able to make money?</summary><p>Companies need videos. I show you how to find clients, set your prices and deliver fast. Your results will depend on your work: no income is guaranteed.</p></details>',
+  faq:'<details open><summary>Can I really do everything with my phone?</summary><p>Yes. You can follow the live session and apply the method from your smartphone. A computer is a plus, not a requirement: right after the masterclass, you can get started with your phone.</p></details><details><summary>I live outside Cameroon. How does it work?</summary><p>No problem: the masterclass is 100% online. The price is in FCFA, and the site shows you an estimate in your currency and the live time in your local time. The available payment methods are shown on the payment page.</p></details><details><summary>I have never edited a video. Is this for me?</summary><p>Yes. I start from zero and show you every step live, from raw footage to the final video.</p></details><details><summary>How does the masterclass work?</summary><p>It is 100% online and live, on Friday October 16 from 7 to 9 pm (GMT+1). The link is shared in the private group.</p></details><details><summary>What if I miss the live session?</summary><p>The replay is available in the private group, with the slides PDF.</p></details><details><summary>When do I get access?</summary><p>Right after payment, you get direct access to the masterclass private group.</p></details><details><summary>Are the tools paid?</summary><p>Many tools have a free version to get started. I tell you which ones to use depending on your budget.</p></details><details><summary>Will I really be able to make money?</summary><p>Companies need videos. I show you how to find clients, set your prices and deliver fast. Your results will depend on your work: no income is guaranteed.</p></details>',
+  micro:"🔒 Secure payment · Mobile Money or card · Instant access to the private group", fx_lbl:"See the price in your currency:", fx_note:"Indicative amount. Payment is made in FCFA; the final conversion depends on your payment method.",
   cb_text:'<span class="l">Free WhatsApp community <b>LE DIGITAL POUR TOUS</b>: artificial intelligence, digital marketing, content creation and much more.</span><span class="s"><b>LE DIGITAL POUR TOUS</b><br>AI · Marketing · Content</span>', cb_btn:"Join for free",
   fn_eye:"Friday, October 16 · 7 pm", fn_h:"Your phone is enough. All you need is your seat.", fn_p:"15,000 FCFA instead of 25,000 FCFA while seats last. Replay and PDF included.",
   partners:"Partners", foot:"© 2026 Roger BOUJIEKA · Boujieka Academy · Masterclass “Video editing &amp; Motion Design with AI”", mbar_s:"INSTEAD OF 25,000"
@@ -706,7 +722,7 @@ function setLang(l) {
   document.documentElement.lang = l;
   document.getElementById('lang-fr').setAttribute('aria-pressed', l === 'fr'); document.getElementById('lang-en').setAttribute('aria-pressed', l === 'en');
   try { localStorage.setItem('mc_lang', l); } catch (e) {}
-  tick(); moveInd();
+  tick(); moveInd(); if (window.fxRender) fxRender(); if (window.ltRender) ltRender();
 }
 document.getElementById('lang-fr').onclick = () => setLang('fr');
 document.getElementById('lang-en').onclick = () => setLang('en');
@@ -806,8 +822,8 @@ if (document.fonts) document.fonts.ready.then(moveInd);
 })();
 
 /* ---------- init ---------- */
-let L = 'fr', T = null;
-try { L = localStorage.getItem('mc_lang') || 'fr'; T = localStorage.getItem('mc_theme'); } catch (e) {}
+let L = /^en\b/i.test(navigator.language || '') ? 'en' : 'fr', T = null;
+try { L = localStorage.getItem('mc_lang') || L; T = localStorage.getItem('mc_theme'); } catch (e) {}
 const H = location.hash.slice(1);
 if (H === 'en') L = 'en'; if (H === 'fr') L = 'fr';
 if (H === 'jour' || H === 'day') T = 'light'; if (H === 'nuit' || H === 'night') T = 'dark';
@@ -866,6 +882,58 @@ const BOOKINGS = [];
     if (e.target.closest('.t-x')) { stopped = true; clearTimeout(t); box.classList.remove('on'); try { sessionStorage.setItem('mc_toast', '0'); } catch (x) {} return; }
     document.getElementById('offre').scrollIntoView({ behavior: 'smooth' });
   });
+})();
+/* ---------- local currency + local time, chosen automatically from the visitor's time zone ----------
+   The payment itself stays in FCFA on Chariow; amounts in other currencies are estimates.
+   Rates: live daily rates (currency-api), cached 12 h; the values below (12 Oct 2026) are the fallback. */
+(function () {
+  const PRICE = 15000, NAMES = {XAF:["FCFA","FCFA"],USD:["dollar américain","US dollar"],EUR:["euro","euro"],CAD:["dollar canadien","Canadian dollar"],GBP:["livre sterling","British pound"],CHF:["franc suisse","Swiss franc"],CDF:["franc congolais","Congolese franc"],GNF:["franc guinéen","Guinean franc"],NGN:["naira nigérian","Nigerian naira"],GHS:["cedi ghanéen","Ghanaian cedi"],MAD:["dirham marocain","Moroccan dirham"],DZD:["dinar algérien","Algerian dinar"],TND:["dinar tunisien","Tunisian dinar"],RWF:["franc rwandais","Rwandan franc"],BIF:["franc burundais","Burundian franc"],KES:["shilling kényan","Kenyan shilling"],ZAR:["rand sud-africain","South African rand"],KMF:["franc comorien","Comorian franc"],MGA:["ariary malgache","Malagasy ariary"],MRU:["ouguiya mauritanien","Mauritanian ouguiya"],DJF:["franc djiboutien","Djiboutian franc"],HTG:["gourde haïtienne","Haitian gourde"],AED:["dirham émirati","UAE dirham"]};
+  const RATES = {usd:0.0017074959,eur:0.0015244902,cad:0.002435105,gbp:0.0012900629,chf:0.0014188134,cdf:3.95197988,gnf:15.02218249,ngn:2.27367723,ghs:0.020097125,mad:0.016695015,dzd:0.22972376,tnd:0.0050877317,rwf:2.5210712,bif:5.10742836,kes:0.22153785,zar:0.028186129,kmf:0.75,mga:7.61946569,mru:0.068189891,djf:0.30399081,htg:0.2234538,aed:0.0062707788};
+  const TZ = {"Africa/Douala":"XAF","Africa/Libreville":"XAF","Africa/Brazzaville":"XAF","Africa/Ndjamena":"XAF","Africa/Bangui":"XAF","Africa/Malabo":"XAF","Africa/Abidjan":"XAF","Africa/Dakar":"XAF","Africa/Bamako":"XAF","Africa/Ouagadougou":"XAF","Africa/Niamey":"XAF","Africa/Lome":"XAF","Africa/Porto-Novo":"XAF","Africa/Bissau":"XAF","Africa/Kinshasa":"CDF","Africa/Lubumbashi":"CDF","Africa/Conakry":"GNF","Africa/Lagos":"NGN","Africa/Accra":"GHS","Africa/Casablanca":"MAD","Africa/El_Aaiun":"MAD","Africa/Algiers":"DZD","Africa/Tunis":"TND","Africa/Kigali":"RWF","Africa/Bujumbura":"BIF","Africa/Nairobi":"KES","Africa/Johannesburg":"ZAR","Africa/Nouakchott":"MRU","Africa/Djibouti":"DJF","Indian/Comoro":"KMF","Indian/Antananarivo":"MGA","America/Port-au-Prince":"HTG","Asia/Dubai":"AED","Europe/London":"GBP","Europe/Zurich":"CHF","America/Toronto":"CAD","America/Montreal":"CAD","America/Vancouver":"CAD","America/Edmonton":"CAD","America/Winnipeg":"CAD","America/Halifax":"CAD","America/Regina":"CAD","America/St_Johns":"CAD","America/Moncton":"CAD","America/Martinique":"EUR","America/Guadeloupe":"EUR","America/Cayenne":"EUR","Indian/Reunion":"EUR","Indian/Mayotte":"EUR"};
+  const tz = (Intl.DateTimeFormat().resolvedOptions().timeZone || '');
+  const auto = TZ[tz] || (/^America\//.test(tz) ? 'USD' : /^Europe\//.test(tz) ? 'EUR' : 'XAF');
+  let cur = auto; try { cur = localStorage.getItem('mc_cur') || auto; } catch (e) {}
+  const sel = document.getElementById('fx-cur'), fx = document.querySelector('.js-fx'), fx2 = document.querySelector('.js-fx2'), note = document.querySelector('.fxnote');
+  const en = () => document.documentElement.lang === 'en';
+  function fmt(v, c) {
+    const d = v >= 1000 ? 0 : 2;
+    try { return new Intl.NumberFormat(en() ? 'en-US' : 'fr-FR', { style: 'currency', currency: c, minimumFractionDigits: d, maximumFractionDigits: d }).format(v); }
+    catch (e) { return Math.round(v) + ' ' + c; }
+  }
+  function render() {
+    sel.innerHTML = Object.keys(NAMES).map(c => '<option value="' + c + '">' + (c === 'XAF' ? 'FCFA' : c + ' · ' + NAMES[c][en() ? 1 : 0]) + '</option>').join('');
+    if (!NAMES[cur]) cur = 'XAF';
+    sel.value = cur;
+    const r = cur === 'XAF' ? 0 : RATES[cur.toLowerCase()];
+    if (!r) { fx.hidden = true; fx2.textContent = ''; note.hidden = true; return; }
+    const txt = '≈ ' + fmt(PRICE * r, cur);
+    fx.innerHTML = txt + ' <small>' + (en() ? '· estimate in your currency' : '· estimation dans votre devise') + '</small>';
+    fx.hidden = false; fx2.textContent = txt; note.hidden = false;
+  }
+  window.fxRender = render;
+  sel.addEventListener('change', () => { cur = sel.value; try { localStorage.setItem('mc_cur', cur); } catch (e) {} render(); });
+  render();
+  let cached = null; try { cached = JSON.parse(localStorage.getItem('mc_fx') || 'null'); } catch (e) {}
+  if (cached && Date.now() - cached.t < 43200000) { Object.assign(RATES, cached.r); render(); return; }
+  const urls = ['https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/xaf.min.json', 'https://latest.currency-api.pages.dev/v1/currencies/xaf.min.json'];
+  (function next(i) {
+    if (i >= urls.length || !window.fetch) return;
+    fetch(urls[i]).then(res => res.ok ? res.json() : Promise.reject()).then(d => {
+      const r = {}; Object.keys(RATES).forEach(k => { if (d.xaf && d.xaf[k] > 0) r[k] = d.xaf[k]; });
+      Object.assign(RATES, r); try { localStorage.setItem('mc_fx', JSON.stringify({ t: Date.now(), r })); } catch (e) {}
+      render();
+    }).catch(() => next(i + 1));
+  })(0);
+})();
+(function () {
+  const el = document.querySelector('.js-ltime');
+  function render() {
+    const en = document.documentElement.lang === 'en', off = -new Date(START).getTimezoneOffset();
+    if (off === 60 || Date.now() >= END) { el.hidden = true; return; }
+    const t = new Intl.DateTimeFormat(en ? 'en-US' : 'fr-FR', { weekday: 'long', day: 'numeric', month: 'long', hour: en ? 'numeric' : '2-digit', minute: '2-digit' }).format(new Date(START));
+    el.textContent = (en ? '🕒 In your time zone: ' : '🕒 À votre heure locale : ') + t; el.hidden = false;
+  }
+  window.ltRender = render; render();
 })();
 </script>
 </body>
