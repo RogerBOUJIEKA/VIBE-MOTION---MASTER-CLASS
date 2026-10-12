@@ -29,7 +29,7 @@
 :root{
   --bg:#0a0a0d; --bg2:#111116; --card:#16161c; --line:rgba(255,255,255,.08); --line2:rgba(255,255,255,.16);
   --fg:#f5f4f7; --muted:#aaa9b5; --faint:#76757f;
-  --red:#ff1f33; --red-ink:#ff4a59; --red-soft:rgba(255,31,51,.13); --ok:#2bd17e;
+  --red:#ff0019; --red-ink:#ff0019; --red-soft:rgba(255,0,25,.14); --ok:#2bd17e;
   --shadow:0 24px 60px rgba(0,0,0,.5);
   --display:"Archivo Black","Arial Black",Impact,sans-serif;
   --body:"Inter Tight",ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
@@ -40,12 +40,12 @@
 @media (prefers-color-scheme: light){:root:not([data-theme="dark"]){
   --bg:#ffffff; --bg2:#f5f5f7; --card:#ffffff; --line:rgba(12,12,28,.09); --line2:rgba(12,12,28,.17);
   --fg:#0d0d12; --muted:#53525e; --faint:#8a8995;
-  --red:#e8102a; --red-ink:#cf0a22; --red-soft:rgba(232,16,42,.07); --ok:#0e9b55;
+  --red:#ff0019; --red-ink:#e00016; --red-soft:#f3f3f5; --ok:#0e9b55;
   --shadow:0 18px 48px rgba(20,20,50,.10); color-scheme:light}}
 :root[data-theme="light"]{
   --bg:#ffffff; --bg2:#f5f5f7; --card:#ffffff; --line:rgba(12,12,28,.09); --line2:rgba(12,12,28,.17);
   --fg:#0d0d12; --muted:#53525e; --faint:#8a8995;
-  --red:#e8102a; --red-ink:#cf0a22; --red-soft:rgba(232,16,42,.07); --ok:#0e9b55;
+  --red:#ff0019; --red-ink:#e00016; --red-soft:#f3f3f5; --ok:#0e9b55;
   --shadow:0 18px 48px rgba(20,20,50,.10); color-scheme:light}
 /* logo variants: white text on dark, dark text on light */
 .lg-l{display:none!important}
@@ -76,14 +76,14 @@ p{margin:0}
 
 /* buttons */
 .btn{position:relative;overflow:hidden;display:inline-flex;align-items:center;justify-content:center;gap:12px;border:0;cursor:pointer;text-decoration:none;font:800 17px/1 var(--body);letter-spacing:-.01em;border-radius:999px;padding:18px 26px;transition:transform .2s ease,box-shadow .2s ease}
-.btn-red{color:#fff;background:linear-gradient(180deg,#ff3d4e,#d8001b);box-shadow:0 12px 32px rgba(232,16,42,.32),inset 0 1px 0 rgba(255,255,255,.3)}
-.btn-red:hover{transform:translateY(-2px);box-shadow:0 18px 44px rgba(232,16,42,.42),inset 0 1px 0 rgba(255,255,255,.3)}
+.btn-red{color:#fff;background:linear-gradient(180deg,#ff0019,#c80014);box-shadow:0 12px 32px rgba(255,0,25,.32),inset 0 1px 0 rgba(255,255,255,.3)}
+.btn-red:hover{transform:translateY(-2px);box-shadow:0 18px 44px rgba(255,0,25,.42),inset 0 1px 0 rgba(255,255,255,.3)}
 .btn-red::after,.btn-white::after{content:"";position:absolute;inset:0;background:linear-gradient(100deg,transparent 30%,rgba(255,255,255,.45) 50%,transparent 70%);transform:translateX(-120%);animation:shine 4.2s ease-in-out infinite 1.2s}
 @keyframes shine{0%,62%{transform:translateX(-120%)}82%,100%{transform:translateX(120%)}}
-.btn .arr{width:26px;height:26px;border-radius:50%;background:#fff;color:#d8001b;display:grid;place-items:center;font-size:15px;flex:none}
+.btn .arr{width:26px;height:26px;border-radius:50%;background:#fff;color:#c80014;display:grid;place-items:center;font-size:15px;flex:none}
 .btn-full{width:100%}
 .btn-white{background:#fff;color:#0d0d12}
-.btn-white .arr{background:#e8102a;color:#fff}
+.btn-white .arr{background:#ff0019;color:#fff}
 
 /* top bar */
 .top{position:sticky;top:0;z-index:50;background:color-mix(in srgb,var(--bg) 86%,transparent);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
@@ -125,11 +125,11 @@ p{margin:0}
 .facts{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px}
 .chip{display:inline-flex;align-items:center;gap:7px;padding:8px 12px;border-radius:999px;font:600 13px/1.2 var(--body);background:var(--bg2);color:var(--fg);box-shadow:inset 0 0 0 1px var(--line)}
 .chip .ic{width:15px;height:15px;color:var(--red-ink)}
-.chip.ph{background:var(--red-soft);box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--red) 35%,transparent);font-weight:700}
+.chip.ph{background:var(--red-soft);box-shadow:inset 0 0 0 1px var(--red);font-weight:700}
 
 /* hero card: portrait (nothing on the face) + editing timeline */
 .hcard{border-radius:26px;overflow:hidden;background:var(--card);box-shadow:var(--shadow),inset 0 0 0 1px var(--line);max-width:460px;width:100%;justify-self:center}
-.pic{position:relative;aspect-ratio:1/1.16;overflow:hidden;background:radial-gradient(110% 85% at 50% 100%,#ff4150 0%,#d00a20 48%,#5e000e 100%);isolation:isolate}
+.pic{position:relative;aspect-ratio:1/1.16;overflow:hidden;background:radial-gradient(110% 85% at 50% 100%,#ff0019 0%,#c80014 50%,#5a0009 100%);isolation:isolate}
 .pic .rg{position:absolute;left:50%;top:44%;width:var(--s);aspect-ratio:1;border-radius:50%;border:1px solid rgba(255,255,255,.22);transform:translate(-50%,-50%) scale(.6);opacity:0;animation:ring 1.4s var(--ease) forwards,breathe 6s ease-in-out 1.4s infinite;z-index:-1}
 .pic .rg:nth-child(2){animation-delay:.12s,1.52s}.pic .rg:nth-child(3){animation-delay:.24s,1.64s}
 @keyframes ring{to{transform:translate(-50%,-50%) scale(1);opacity:1}}
@@ -186,14 +186,14 @@ p{margin:0}
 .player.sh video{aspect-ratio:9/16}
 .ticks{list-style:none;margin:18px 0 0;padding:0;display:grid;gap:10px}
 .ticks li{display:flex;gap:10px;align-items:flex-start;color:var(--fg);font-weight:600;font-size:15px}
-.ticks li::before{content:"";flex:none;width:20px;height:20px;margin-top:2px;border-radius:50%;background:var(--red-soft) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23e8102a' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 12.5l4 4L18 8'/%3E%3C/svg%3E") center/13px no-repeat}
+.ticks li::before{content:"";flex:none;width:20px;height:20px;margin-top:2px;border-radius:50%;background:var(--red-soft) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ff0019' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 12.5l4 4L18 8'/%3E%3C/svg%3E") center/13px no-repeat}
 
 /* tabs */
 .tabs{position:relative;display:grid;grid-template-columns:1fr 1fr;gap:4px;padding:5px;border-radius:18px;background:var(--bg2);box-shadow:inset 0 0 0 1px var(--line);margin-bottom:24px}
 @media (min-width:700px){.tabs{grid-template-columns:repeat(4,1fr);max-width:720px}}
 .tabs button{position:relative;z-index:1;border:0;background:transparent;cursor:pointer;padding:13px 8px;border-radius:13px;font:700 14px/1.2 var(--body);color:var(--muted);transition:color .3s}
 .tabs button[aria-selected="true"]{color:#fff}
-.tabs .ind{position:absolute;z-index:0;border-radius:13px;background:var(--red);box-shadow:0 8px 22px rgba(232,16,42,.3);transition:transform .5s var(--ease),width .5s var(--ease),height .5s var(--ease)}
+.tabs .ind{position:absolute;z-index:0;border-radius:13px;background:var(--red);box-shadow:0 8px 22px rgba(255,0,25,.3);transition:transform .5s var(--ease),width .5s var(--ease),height .5s var(--ease)}
 .panel{animation:pin .55s var(--ease)}
 .panel[hidden]{display:none}
 @keyframes pin{from{opacity:0;transform:translateY(16px)}}
@@ -251,7 +251,7 @@ p{margin:0}
 /* trainer */
 .trainer{display:grid;gap:24px;align-items:center}
 @media (min-width:800px){.trainer{grid-template-columns:320px 1fr;gap:44px}}
-.portrait{position:relative;aspect-ratio:1/1.16;border-radius:24px;overflow:hidden;background:radial-gradient(110% 85% at 50% 100%,#ff4150 0%,#d00a20 48%,#5e000e 100%);max-width:340px}
+.portrait{position:relative;aspect-ratio:1/1.16;border-radius:24px;overflow:hidden;background:radial-gradient(110% 85% at 50% 100%,#ff0019 0%,#c80014 50%,#5a0009 100%);max-width:340px}
 .portrait img{position:absolute;bottom:0;left:-6%;width:112%;max-width:none}
 .trainer h3{font:800 clamp(26px,3.4vw,36px)/1.1 var(--body);letter-spacing:-.03em}
 .roles{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
@@ -321,7 +321,7 @@ p{margin:0}
 .faq details[open] p{animation:pin .45s var(--ease)}
 
 /* final */
-.final .box{position:relative;overflow:hidden;border-radius:30px;padding:clamp(28px,6vw,64px) clamp(20px,5vw,56px);text-align:center;color:#fff;background:radial-gradient(120% 120% at 50% 0%,#ff4150 0%,#d00a20 50%,#7a0012 100%);display:grid;justify-items:center;gap:14px}
+.final .box{position:relative;overflow:hidden;border-radius:30px;padding:clamp(28px,6vw,64px) clamp(20px,5vw,56px);text-align:center;color:#fff;background:radial-gradient(120% 120% at 50% 0%,#ff0019 0%,#c80014 52%,#6e000f 100%);display:grid;justify-items:center;gap:14px}
 .final .box::before{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.07) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.07) 1px,transparent 1px);background-size:44px 44px;-webkit-mask-image:radial-gradient(70% 60% at 50% 40%,#000,transparent);mask-image:radial-gradient(70% 60% at 50% 40%,#000,transparent);animation:drift 14s linear infinite}
 @keyframes drift{to{background-position:44px 44px}}
 .final .box>*{position:relative}
@@ -391,113 +391,119 @@ footer{padding:18px 16px 110px;text-align:center;color:var(--faint);font-size:12
 .fxsel select{font:700 13px var(--body);color:var(--fg);background:var(--bg2);border:1px solid var(--line2);border-radius:10px;padding:7px 10px;max-width:230px}
 .fxnote{font-size:12px;color:var(--faint);line-height:1.45}
 
-/* motion illustrations (replace the photos): pure HTML/CSS, driven by a tiny timeline */
-.mo{position:relative;overflow:hidden;aspect-ratio:1/1;border-radius:22px;background:radial-gradient(120% 90% at 50% 0%,#1f1f29 0%,#0c0c11 62%);color:#f5f4f7;box-shadow:var(--shadow);isolation:isolate;container-type:inline-size;font-family:var(--body);line-height:1.2}
+/* motion illustrations: HTML/CSS scenes driven by a small timeline (see the script) */
+.mo{position:relative;overflow:hidden;aspect-ratio:1/1;border-radius:22px;background:radial-gradient(120% 90% at 50% 0%,#1d1d27 0%,#0b0b10 62%);color:#f5f4f7;box-shadow:var(--shadow);isolation:isolate;container-type:inline-size;font-family:var(--body);line-height:1.2}
 @media (min-width:640px){.mo{aspect-ratio:16/10}}
-.mo::before{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.05) 1px,transparent 1px);background-size:8cqw 8cqw;-webkit-mask-image:radial-gradient(70% 70% at 50% 45%,#000,transparent);mask-image:radial-gradient(70% 70% at 50% 45%,#000,transparent);z-index:-1}
-.mo::after{content:"";position:absolute;left:50%;top:55%;width:70cqw;height:70cqw;transform:translate(-50%,-50%);background:radial-gradient(circle,rgba(232,16,42,.28),transparent 62%);z-index:-1}
-.mo [data-at]{transition:opacity .45s var(--ease),transform .6s var(--ease)}
-/* A · editing on a phone */
-.mo-edit .phone{position:absolute;left:50%;top:6%;height:88%;aspect-ratio:9/18.6;container-type:inline-size;transform:translateX(-50%);background:#050507;border-radius:clamp(14px,4.4cqw,26px);padding:1.4%;box-shadow:0 20px 50px rgba(0,0,0,.55),inset 0 0 0 1.5px rgba(255,255,255,.12)}
-.mo-edit .scr{position:relative;height:100%;border-radius:clamp(11px,3.6cqw,21px);overflow:hidden;background:#111116;display:grid;grid-template-rows:56% 1fr auto;gap:3%;padding:4% 4% 5%}
-.mo-edit .pv{position:relative;border-radius:8px;overflow:hidden;background:linear-gradient(160deg,#ff5a3c 0%,#c40d24 55%,#5a0412 100%)}
-.mo-edit .pv svg{position:absolute;left:8%;right:8%;bottom:14%;width:84%;filter:drop-shadow(0 6px 8px rgba(0,0,0,.35));animation:shoe 3s ease-in-out infinite}
-@keyframes shoe{50%{transform:translateY(-4%) rotate(-3deg)}}
-.mo-edit .t{position:absolute;left:8%;font:900 9.6cqw/1 var(--display);letter-spacing:.02em;color:#fff;opacity:0;transform:translateX(-30%)}
-.mo-edit .t.on{opacity:1;transform:none}
-.mo-edit .t1{top:9%}.mo-edit .t2{top:24%;color:#ffd84d}
-.mo-edit .badge{position:absolute;right:6%;top:40%;width:26%;aspect-ratio:1;border-radius:50%;display:grid;place-items:center;background:#fff;color:#c40d24;font:900 7cqw/1 var(--body);opacity:0;transform:scale(0) rotate(-30deg)}
-.mo-edit .badge.on{opacity:1;transform:none}
-.mo-edit .tl{position:relative;display:grid;align-content:center;gap:9%;padding:0 2%}
-.mo-edit .trk{position:relative;height:5.4cqw;border-radius:3px;background:rgba(255,255,255,.06);display:flex;gap:3%}
-.mo-edit .c{display:block;height:100%;border-radius:3px;transform:scaleX(0);transform-origin:left;opacity:0}
-.mo-edit .c.on{transform:none;opacity:1}
-.mo-edit .c1{width:34%;background:#e8102a}.mo-edit .c2{width:28%;background:#ff7a59}.mo-edit .c3{width:30%;background:#f5c542}
-.mo-edit .c4{width:40%;background:#7aa7ff;margin-left:10%}.mo-edit .c5{width:30%;background:#c9a7ff}
-.mo-edit .wav{background:repeating-linear-gradient(90deg,rgba(30,169,82,.9) 0 2px,transparent 2px 4px);opacity:0;transform:scaleX(0);transform-origin:left}
-.mo-edit .wav.on{opacity:.9;transform:none}
-.mo-edit .ph{position:absolute;top:-8%;bottom:-8%;left:2%;width:2px;background:#fff;box-shadow:0 0 8px #fff;animation:ph 3.2s linear infinite}
-@keyframes ph{to{left:96%}}
-.mo-edit .ex{position:relative;height:14cqw}
-.mo-edit .ex>*{position:absolute;inset:0;border-radius:999px;display:grid;place-items:center;font:800 6.6cqw/1 var(--body)}
-.mo-edit .exb{background:#e8102a;color:#fff;opacity:1}
-.mo-edit .exb.on{opacity:0}
-.mo-edit .bar{background:rgba(255,255,255,.1);overflow:hidden;opacity:0}
-.mo-edit .bar.on{opacity:1}
-.mo-edit .bar i{position:absolute;left:0;top:0;bottom:0;width:0;background:linear-gradient(90deg,#e8102a,#ff7a59);transition:width 2s linear}
-.mo-edit .bar.on i{width:100%}
-.mo-edit .ok{background:#1ea952;color:#fff;opacity:0;transform:scale(.8)}
-.mo-edit .ok.on{opacity:1;transform:none}
-.mo-edit .tools{position:absolute;left:3.5%;top:16%;display:grid;gap:clamp(6px,2.4cqw,14px)}
-.mo-edit .tool{display:flex;align-items:center;gap:6px;padding:clamp(5px,1.6cqw,9px) clamp(7px,2.2cqw,12px);border-radius:999px;background:rgba(255,255,255,.08);box-shadow:inset 0 0 0 1px rgba(255,255,255,.12);font:700 clamp(9px,2.5cqw,13px)/1 var(--body);white-space:nowrap;opacity:0;transform:translateX(-24px)}
-.mo-edit .tool.on{opacity:1;transform:none}
-.mo-edit .pub{position:absolute;right:3.5%;bottom:14%;padding:clamp(7px,2.2cqw,12px) clamp(9px,2.8cqw,15px);border-radius:14px;background:#fff;color:#0d0d12;box-shadow:0 14px 30px rgba(0,0,0,.4);opacity:0;transform:translateY(16px) scale(.92)}
-.mo-edit .pub.on{opacity:1;transform:none}
-.mo-edit .pub b{display:block;font:800 clamp(9px,2.6cqw,14px)/1.2 var(--body)}
-.mo-edit .pub small{display:block;font:600 clamp(8px,2.1cqw,11px)/1.2 var(--body);color:#6b6a75;margin-top:3px}
-.mo-edit .heart{position:absolute;right:12%;bottom:30%;font-size:clamp(12px,3.6cqw,20px);opacity:0}
-.mo-edit .heart.on{animation:heart 1.8s ease-out forwards}
-.mo-edit .h2.on{animation-delay:.25s}.mo-edit .h3.on{animation-delay:.5s}
-@keyframes heart{0%{opacity:0;transform:translate(0,0) scale(.6)}20%{opacity:1}100%{opacity:0;transform:translate(-30%,-260%) scale(1.15)}}
-@media (max-width:639px){.mo-edit .tools{top:auto;bottom:6%;left:3%}.mo-edit .tool{font-size:9px;padding:5px 7px}.mo-edit .pub{bottom:auto;top:10%;right:3%}}
-/* B · shooting in a shop */
-.mo-shoot{background:linear-gradient(180deg,#3b2a20 0%,#26180f 70%,#1a100a 100%)}
-.mo-shoot::before,.mo-shoot::after{display:none}
-.mo-shoot .shop{position:absolute;inset:0;transform-origin:62% 46%}
-.mo-shoot .shop.on{transform:scale(1.32);transition:transform 1.6s cubic-bezier(.4,0,.2,1)}
-.mo-shoot .lamp{position:absolute;top:0;width:30%;height:60%;background:radial-gradient(60% 80% at 50% 0%,rgba(255,214,150,.35),transparent 70%)}
-.mo-shoot .sh{position:absolute;left:6%;right:6%;height:2.2%;background:linear-gradient(#8a6142,#5a3c27);border-radius:2px;box-shadow:0 6px 10px rgba(0,0,0,.35)}
-.mo-shoot .s1{top:44%}.mo-shoot .s2{top:78%}
-.mo-shoot .bag{position:absolute;width:13%;aspect-ratio:1/.85;border-radius:10% 10% 16% 16%;box-shadow:inset -6px -6px 0 rgba(0,0,0,.18)}
-.mo-shoot .bag::before{content:"";position:absolute;left:24%;right:24%;top:-32%;height:40%;border:clamp(2px,.8cqw,4px) solid currentColor;border-bottom:0;border-radius:50% 50% 0 0}
-.mo-shoot .shoe{position:absolute;width:17%}
-.mo-shoot .box{position:absolute;width:11%;aspect-ratio:1/1.1;border-radius:4px;background:#f2efe9;box-shadow:inset -5px -5px 0 rgba(0,0,0,.12)}
-.mo-shoot .vf{position:absolute;inset:0;pointer-events:none;background-image:linear-gradient(90deg,transparent calc(33.33% - .5px),rgba(255,255,255,.22) calc(33.33% - .5px) calc(33.33% + .5px),transparent calc(33.33% + .5px) calc(66.66% - .5px),rgba(255,255,255,.22) calc(66.66% - .5px) calc(66.66% + .5px),transparent calc(66.66% + .5px)),linear-gradient(transparent calc(33.33% - .5px),rgba(255,255,255,.22) calc(33.33% - .5px) calc(33.33% + .5px),transparent calc(33.33% + .5px) calc(66.66% - .5px),rgba(255,255,255,.22) calc(66.66% - .5px) calc(66.66% + .5px),transparent calc(66.66% + .5px))}
-.mo-shoot .cr{position:absolute;width:7%;aspect-ratio:1;border:2px solid rgba(255,255,255,.85)}
-.mo-shoot .k1{left:4%;top:5%;border-right:0;border-bottom:0}.mo-shoot .k2{right:4%;top:5%;border-left:0;border-bottom:0}.mo-shoot .k3{left:4%;bottom:5%;border-right:0;border-top:0}.mo-shoot .k4{right:4%;bottom:5%;border-left:0;border-top:0}
-.mo-shoot .rec{position:absolute;left:7%;top:8%;display:flex;align-items:center;gap:6px;padding:4px 8px;border-radius:6px;background:rgba(0,0,0,.45);font:800 clamp(9px,2.6cqw,13px)/1 var(--mono);letter-spacing:.06em}
-.mo-shoot .rec i{width:clamp(7px,2cqw,10px);aspect-ratio:1;border-radius:50%;background:#ff2a3c;animation:blink 1s steps(2) infinite}
-.mo-shoot .fmt{position:absolute;right:7%;top:8%;padding:4px 8px;border-radius:6px;background:rgba(0,0,0,.45);font:700 clamp(8px,2.2cqw,12px)/1 var(--mono)}
-.mo-shoot .focus{position:absolute;left:52%;top:20%;width:22%;aspect-ratio:1;border:2px solid #ffd84d;border-radius:6px;opacity:0;transform:scale(1.5)}
-.mo-shoot .focus.on{opacity:1;transform:none;animation:fpulse 1.2s ease-in-out .6s 2}
-@keyframes fpulse{50%{transform:scale(.92)}}
-.mo-shoot .zoom{position:absolute;left:calc(50% + clamp(24px,7.5cqw,40px));bottom:calc(5% + clamp(3px,1cqw,6px));display:flex;gap:6px;padding:4px;border-radius:999px;background:rgba(0,0,0,.45)}
-.mo-shoot .zoom span{width:clamp(20px,6cqw,30px);aspect-ratio:1;border-radius:50%;display:grid;place-items:center;font:800 clamp(8px,2.2cqw,11px)/1 var(--body);color:#fff}
-.mo-shoot .z1{background:rgba(255,255,255,.18)}
-.mo-shoot .z2.on{background:#ffd84d;color:#1a100a}
-.mo-shoot .shutter{position:absolute;left:50%;bottom:5%;width:clamp(30px,9cqw,46px);aspect-ratio:1;transform:translateX(-50%);border-radius:50%;border:3px solid #fff;display:grid;place-items:center}
-.mo-shoot .shutter::after{content:"";width:62%;aspect-ratio:1;border-radius:28%;background:#ff2a3c;animation:rpulse 1.6s ease-in-out infinite}
-@keyframes rpulse{50%{transform:scale(.82)}}
-.mo-shoot .flash{position:absolute;inset:0;background:#fff;opacity:0;pointer-events:none}
-.mo-shoot .flash.on{animation:flash .6s ease-out forwards}
-@keyframes flash{0%{opacity:.75}100%{opacity:0}}
-.mo-shoot .saved{position:absolute;left:50%;top:42%;transform:translate(-50%,10px);padding:clamp(7px,2cqw,11px) clamp(10px,3cqw,16px);border-radius:999px;background:#1ea952;color:#fff;font:800 clamp(10px,2.8cqw,14px)/1 var(--body);white-space:nowrap;opacity:0;box-shadow:0 12px 26px rgba(0,0,0,.4)}
-.mo-shoot .saved.on{opacity:1;transform:translate(-50%,0)}
-/* C · delivering to the client */
-.mo-chat .chat{position:absolute;left:50%;top:5%;bottom:5%;width:min(80%,74cqw);transform:translateX(-50%);border-radius:18px;background:#101318;box-shadow:0 20px 50px rgba(0,0,0,.5),inset 0 0 0 1px rgba(255,255,255,.08);display:flex;flex-direction:column;overflow:hidden}
-@media (min-width:640px){.mo-chat .chat{width:62%}}
-.mo-chat .ch-h{display:flex;align-items:center;gap:8px;padding:clamp(7px,2.2cqw,11px) clamp(9px,2.6cqw,13px);background:#181c23;border-bottom:1px solid rgba(255,255,255,.06)}
-.mo-chat .av{width:clamp(22px,6.4cqw,32px);aspect-ratio:1;border-radius:50%;display:grid;place-items:center;background:linear-gradient(135deg,#f5c542,#e8102a);color:#fff;font:900 clamp(10px,3cqw,15px)/1 var(--body);flex:none}
-.mo-chat .ch-h b{display:block;font:800 clamp(10px,2.8cqw,14px)/1.2 var(--body)}
-.mo-chat .ch-h small{display:block;font:600 clamp(8px,2.1cqw,11px)/1.2 var(--body);color:#1ea952}
-.mo-chat .msgs>*{flex-shrink:0}
-.mo-chat .msgs{flex:1;display:flex;flex-direction:column;justify-content:flex-end;gap:0;padding:2% 4% 4%;overflow:hidden}
-.mo-chat .m{max-width:80%;margin:0;padding:0 clamp(8px,2.4cqw,12px);border-radius:14px;font:500 clamp(9.5px,2.7cqw,13.5px)/1.35 var(--body);max-height:0;opacity:0;overflow:hidden;transform:translateY(8px);transition:max-height .5s var(--ease),opacity .4s ease,transform .5s var(--ease),padding .5s var(--ease),margin .5s var(--ease)}
-.mo-chat .m.on{max-height:120px;opacity:1;transform:none;padding-top:clamp(6px,1.8cqw,9px);padding-bottom:clamp(6px,1.8cqw,9px);margin-top:clamp(5px,1.6cqw,8px)}
-.mo-chat .in{align-self:flex-start;background:#232832;border-bottom-left-radius:4px}
-.mo-chat .out{align-self:flex-end;background:#1d6b47;border-bottom-right-radius:4px}
-.mo-chat .vid{padding-left:clamp(4px,1.2cqw,6px)!important;padding-right:clamp(4px,1.2cqw,6px)!important}
-.mo-chat .vid .th{position:relative;display:block;width:clamp(110px,34cqw,190px);aspect-ratio:16/9;border-radius:10px;background:#000 url(motion-mboa.jpg) center/cover}
-.mo-chat .vid .th b{position:absolute;inset:0;margin:auto;width:28%;aspect-ratio:1;border-radius:50%;display:grid;place-items:center;background:rgba(0,0,0,.55);font-size:clamp(9px,2.6cqw,13px)}
-.mo-chat .vid.on{max-height:240px}
-.mo-chat .vid small{display:block;margin-top:4px;font:600 clamp(8px,2.1cqw,11px)/1.2 var(--body);opacity:.85}
-.mo-chat .typing{align-self:flex-start;display:flex;gap:4px;margin:0;padding:0 10px;border-radius:14px;background:#232832;max-height:0;opacity:0;overflow:hidden;transition:max-height .3s ease,opacity .3s ease,padding .3s ease,margin .3s ease}
-.mo-chat .typing.on{max-height:40px;opacity:1;padding:9px 10px;margin-top:6px}
-.mo-chat .typing i{width:6px;height:6px;border-radius:50%;background:#9aa0aa;animation:dot 1s ease-in-out infinite}
-.mo-chat .typing i:nth-child(2){animation-delay:.15s}.mo-chat .typing i:nth-child(3){animation-delay:.3s}
-@keyframes dot{50%{transform:translateY(-4px);opacity:.5}}
-.mo-chat .paid{align-self:center;margin:0;padding:0 12px;border-radius:999px;background:rgba(30,169,82,.18);color:#5fe39a;font:800 clamp(9px,2.5cqw,12.5px)/1 var(--body);max-height:0;opacity:0;overflow:hidden;transition:max-height .5s var(--ease),opacity .4s ease,padding .5s var(--ease),margin .5s var(--ease)}
-.mo-chat .paid.on{max-height:40px;opacity:1;padding:8px 12px;margin-top:10px}
+.mo::before{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.045) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.045) 1px,transparent 1px);background-size:7cqw 7cqw;-webkit-mask-image:radial-gradient(75% 70% at 50% 45%,#000,transparent);mask-image:radial-gradient(75% 70% at 50% 45%,#000,transparent);z-index:-1}
+.mo::after{content:"";position:absolute;left:38%;top:58%;width:80cqw;height:80cqw;transform:translate(-50%,-50%);background:radial-gradient(circle,rgba(255,0,25,.26),transparent 60%);z-index:-1;animation:moglow 6s ease-in-out infinite}
+@keyframes moglow{50%{transform:translate(-46%,-54%) scale(1.08)}}
+.mo [data-at]{transition:opacity .5s cubic-bezier(.2,.8,.2,1),transform .7s cubic-bezier(.2,.8,.2,1)}
+.mo video{display:block;width:100%;height:100%;object-fit:cover;background:#000}
+.mo .glass{background:rgba(255,255,255,.07);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);box-shadow:inset 0 0 0 1px rgba(255,255,255,.12),0 12px 30px rgba(0,0,0,.35)}
+/* 1 · from idea to video, on a phone */
+.mo-ai .phone{position:absolute;left:6%;top:5%;height:90%;aspect-ratio:9/18.4;container-type:inline-size;background:#050507;border-radius:12cqw;padding:2.2%;box-shadow:0 24px 60px rgba(0,0,0,.6),inset 0 0 0 1.5px rgba(255,255,255,.14);animation:float 6s ease-in-out infinite}
+@media (min-width:640px){.mo-ai .phone{left:12%}}
+@keyframes float{50%{transform:translateY(-1.6%)}}
+.mo-ai .scr{position:relative;height:100%;border-radius:10cqw;overflow:hidden;background:linear-gradient(180deg,#14141b,#0d0d12);padding:9cqw 6cqw 6cqw;display:flex;flex-direction:column;gap:5cqw}
+.mo-ai .ai-top{display:flex;align-items:center;gap:3cqw;font:800 7cqw/1 var(--body)}
+.mo-ai .ai-top .lg{width:10cqw;aspect-ratio:1;border-radius:3cqw;display:grid;place-items:center;background:linear-gradient(135deg,#ff0019,#8a000d);font-size:6cqw}
+.mo-ai .pr{border-radius:5cqw;padding:4.5cqw;background:rgba(255,255,255,.06);box-shadow:inset 0 0 0 1px rgba(255,255,255,.1)}
+.mo-ai .pr small{display:block;font:700 5cqw/1 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:#9a99a6;margin-bottom:2.5cqw}
+.mo-ai .pr p{margin:0;min-height:22cqw;font:600 6.4cqw/1.38 var(--body);color:#fff}
+.mo-ai .caret{display:inline-block;width:.5cqw;min-width:1.5px;height:6cqw;background:#ff0019;vertical-align:-1cqw;margin-left:1px;animation:blink .9s steps(2) infinite}
+.mo-ai .go{align-self:stretch;text-align:center;padding:4.5cqw;border-radius:99px;background:linear-gradient(180deg,#ff0019,#c80014);font:800 6.4cqw/1 var(--body);box-shadow:0 8px 20px rgba(255,0,25,.35)}
+.mo-ai .go.on{animation:press .5s ease}
+@keyframes press{40%{transform:scale(.93)}}
+.mo-ai .stage{position:relative;flex:1;border-radius:6cqw;overflow:hidden;background:#0a0a0e;box-shadow:inset 0 0 0 1px rgba(255,255,255,.08)}
+.mo-ai .gen{position:absolute;inset:0;display:grid;place-items:center;align-content:center;gap:4cqw;opacity:0}
+.mo-ai .gen.on{opacity:1}
+.mo-ai .ring{width:34cqw;aspect-ratio:1;border-radius:50%;display:grid;place-items:center;background:conic-gradient(#ff0019 calc(var(--p,0)*1%),rgba(255,255,255,.1) 0);-webkit-mask:radial-gradient(farthest-side,transparent calc(100% - 3cqw),#000 calc(100% - 3cqw + 1px));mask:radial-gradient(farthest-side,transparent calc(100% - 3cqw),#000 calc(100% - 3cqw + 1px))}
+.mo-ai .pct{position:absolute;top:50%;left:50%;transform:translate(-50%,-90%);font:800 8cqw/1 var(--mono)}
+.mo-ai .gen small{font:600 5.4cqw/1.2 var(--body);color:#c9c8d2;margin-top:12cqw}
+.mo-ai .out{position:absolute;inset:0;opacity:0;transform:scale(1.08)}
+.mo-ai .out.on{opacity:1;transform:none}
+.mo-ai .out video{position:absolute;inset:0}
+.mo-ai .ok{position:absolute;left:4cqw;bottom:4cqw;padding:2.6cqw 4cqw;border-radius:99px;background:#1ea952;font:800 5.4cqw/1 var(--body);box-shadow:0 6px 14px rgba(0,0,0,.4)}
+.mo-ai .side{position:absolute;right:5%;top:5%;bottom:5%;width:43%;display:flex;flex-direction:column;justify-content:center;gap:clamp(8px,2.2cqw,14px)}
+@media (min-width:640px){.mo-ai .side{right:9%;width:36%}}
+.mo-ai .clock{padding:clamp(10px,2.8cqw,16px);border-radius:16px}
+.mo-ai .clock small{display:block;font:700 clamp(8px,2.3cqw,12px)/1.25 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:#a9a8b4}
+.mo-ai .clock b{display:block;margin-top:6px;font:400 clamp(30px,9cqw,52px)/1 var(--display);letter-spacing:-.02em;color:#fff;font-variant-numeric:tabular-nums}
+.mo-ai .clock .vs{display:block;margin-top:8px;font:700 clamp(9px,2.6cqw,13px)/1.3 var(--body);color:#a9a8b4;opacity:0;transform:translateY(8px)}
+.mo-ai .clock .vs.on{opacity:1;transform:none}
+.mo-ai .clock .vs s{text-decoration-color:#ff0019;text-decoration-thickness:2px}
+.mo-ai .ai-steps{display:grid;gap:clamp(5px,1.6cqw,9px)}
+.mo-ai .ai-steps span{display:flex;align-items:center;gap:8px;padding:clamp(6px,1.5cqw,9px) clamp(8px,2.2cqw,12px);border-radius:12px;font:700 clamp(9.5px,2.3cqw,13px)/1.15 var(--body);opacity:.28;transform:translateX(10px)}
+.mo-ai .ai-steps span.on{opacity:1;transform:none}
+.mo-ai .ai-steps span::before{content:"";width:clamp(14px,3.6cqw,20px);aspect-ratio:1;border-radius:50%;flex:none;background:rgba(255,255,255,.12) center/62% no-repeat;transition:background-color .3s}
+.mo-ai .ai-steps span.on::before{background-color:#1ea952;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='3.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12.5l4.5 4.5L19 7'/%3E%3C/svg%3E")}
+/* 2 · the race: classic software vs the method */
+.mo-race .rc-lanes{position:absolute;left:5%;right:5%;top:6%;display:grid;gap:clamp(8px,2.6cqw,14px)}
+@media (min-width:640px){.mo-race .rc-lanes{right:auto;width:48%;top:50%;transform:translateY(-50%)}}
+.mo-race .rc-lane{padding:clamp(9px,2.8cqw,16px);border-radius:16px}
+.mo-race .lh{display:flex;align-items:center;gap:8px}
+.mo-race .lh b{flex:1;font:800 clamp(10px,2.8cqw,15px)/1.2 var(--body)}
+.mo-race .apps{display:flex;gap:3px}
+.mo-race .app{width:clamp(16px,4.4cqw,24px);aspect-ratio:1;border-radius:5px;display:grid;place-items:center;font:800 clamp(7px,1.9cqw,10px)/1 var(--body);font-style:normal}
+.mo-race .ps{background:#001e36;color:#31a8ff;box-shadow:inset 0 0 0 1px #31a8ff}
+.mo-race .pr,.mo-race .ae{background:#00005b;color:#9999ff;box-shadow:inset 0 0 0 1px #9999ff}
+.mo-race .aic{width:clamp(18px,5cqw,26px);aspect-ratio:1;border-radius:7px;display:grid;place-items:center;background:linear-gradient(135deg,#ff0019,#8a000d);font-size:clamp(9px,2.6cqw,13px)}
+.mo-race .t{font:700 clamp(11px,3.2cqw,17px)/1 var(--mono);font-variant-numeric:tabular-nums}
+.mo-race .rc-bar{position:relative;height:clamp(6px,1.8cqw,10px);margin-top:clamp(7px,2cqw,11px);border-radius:9px;background:rgba(255,255,255,.08);overflow:hidden}
+.mo-race .rc-bar i{position:absolute;left:0;top:0;bottom:0;width:0;border-radius:inherit}
+.mo-race .slow{background:#6d6c78;transition:width 8.5s linear!important}
+.mo-race .slow.on{width:12%}
+.mo-race .fast{background:linear-gradient(90deg,#ff0019,#ff5a1f);box-shadow:0 0 14px rgba(255,0,25,.6);transition:width 2.4s cubic-bezier(.45,.05,.2,1)!important}
+.mo-race .fast.on{width:100%}
+.mo-race .ls{display:block;margin-top:clamp(6px,1.8cqw,9px);font:600 clamp(8.5px,2.3cqw,12px)/1.3 var(--body);color:#a9a8b4}
+.mo-race .ls.ok{color:#5fe39a;opacity:0}
+.mo-race .ls.ok.on{opacity:1}
+@keyframes rcspin{to{transform:rotate(360deg)}}
+.mo-race .spin{display:inline-block;width:.9em;height:.9em;border-radius:50%;border:2px solid #6d6c78;border-right-color:transparent;vertical-align:-.12em;margin-right:5px;animation:rcspin .9s linear infinite}
+.mo-race .tv{position:absolute;left:50%;bottom:6%;width:66%;transform:translateX(-50%) translateY(14px) scale(.94);aspect-ratio:16/9;border-radius:12px;overflow:hidden;background:#000;box-shadow:0 24px 50px rgba(0,0,0,.6),inset 0 0 0 1px rgba(255,255,255,.12);opacity:0}
+.mo-race .tv.on{opacity:1;transform:translateX(-50%)}
+@media (min-width:640px){.mo-race .tv{left:auto;right:5%;bottom:auto;top:50%;width:40%;transform:translateY(-44%) scale(.94)}.mo-race .tv.on{transform:translateY(-50%)}}
+.mo-race .stamp{position:absolute;right:6%;bottom:30%;padding:clamp(8px,2.4cqw,14px) clamp(10px,3cqw,18px);border-radius:14px;background:#ff0019;color:#fff;font:400 clamp(22px,7cqw,40px)/1 var(--display);box-shadow:0 14px 34px rgba(255,0,25,.45);opacity:0;transform:rotate(-8deg) scale(2.2)}
+.mo-race .stamp small{display:block;font:800 clamp(9px,2.4cqw,13px)/1 var(--body);margin-top:3px}
+.mo-race .stamp.on{opacity:1;transform:rotate(-8deg) scale(1);transition:opacity .2s ease,transform .45s cubic-bezier(.3,1.6,.5,1)!important}
+@media (min-width:640px){.mo-race .stamp{right:4%;bottom:10%}}
+/* 3 · deliver, get paid, get recommended */
+.mo-pay .lap{position:absolute;left:4%;top:7%;width:92%;container-type:inline-size}
+@media (min-width:640px){.mo-pay .lap{width:68%;top:9%}}
+.mo-pay .lscr{position:relative;aspect-ratio:16/10;border-radius:3cqw 3cqw 0 0;background:#050507;padding:2.2cqw;box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.14)}
+.mo-pay .ed{height:100%;border-radius:1.4cqw;overflow:hidden;background:#121218;display:grid;grid-template-rows:auto 1fr auto auto}
+.mo-pay .et{display:flex;align-items:center;gap:1.2cqw;padding:1.6cqw 2cqw;font:600 2.2cqw/1 var(--mono);color:#9a99a6;background:#18181f}
+.mo-pay .et i{width:1.6cqw;aspect-ratio:1;border-radius:50%;background:#3a3a44}
+.mo-pay .et i:first-child{background:#ff5f57}.mo-pay .et i:nth-child(2){background:#febc2e}.mo-pay .et i:nth-child(3){background:#28c840}
+.mo-pay .et span{margin-left:1cqw}
+.mo-pay .vw{position:relative;margin:1.6cqw 2cqw 0;border-radius:1cqw;overflow:hidden}
+.mo-pay .etl{position:relative;display:flex;gap:.8cqw;margin:1.6cqw 2cqw 0;height:3cqw}
+.mo-pay .etl i{flex:1;border-radius:.6cqw;background:#ff0019}.mo-pay .etl i:nth-child(2){background:#7aa7ff}.mo-pay .etl i:nth-child(3){background:#f5c542}
+.mo-pay .etl b{position:absolute;top:-1cqw;bottom:-1cqw;left:0;width:2px;background:#fff;animation:ph 3.4s linear infinite}
+@keyframes ph{to{left:100%}}
+.mo-pay .snd{position:relative;margin:1.8cqw 2cqw 2cqw;height:5.4cqw}
+.mo-pay .snd>*{position:absolute;inset:0;border-radius:99px;display:grid;place-items:center;font:800 2.6cqw/1 var(--body)}
+.mo-pay .snd .b{background:#ff0019}
+.mo-pay .snd .b.on{opacity:0}
+.mo-pay .snd .br{background:rgba(255,255,255,.1);overflow:hidden;opacity:0}
+.mo-pay .snd .br.on{opacity:1}
+.mo-pay .snd .br i{position:absolute;left:0;top:0;bottom:0;width:0;background:linear-gradient(90deg,#ff0019,#ff5a1f);transition:width 1.6s cubic-bezier(.4,0,.2,1)}
+.mo-pay .snd .br.on i{width:100%}
+.mo-pay .snd .ok{background:#1ea952;opacity:0;transform:scale(.85)}
+.mo-pay .snd .ok.on{opacity:1;transform:none}
+.mo-pay .lbase{height:2.6cqw;margin:0 -6%;border-radius:0 0 3cqw 3cqw;background:linear-gradient(#2a2a32,#16161b);box-shadow:0 18px 40px rgba(0,0,0,.6)}
+.mo-pay .ph{position:absolute;right:4%;bottom:4%;width:37%;aspect-ratio:9/16.5;container-type:inline-size;background:#050507;border-radius:9cqw;padding:2.6%;box-shadow:0 24px 60px rgba(0,0,0,.65),inset 0 0 0 1.5px rgba(255,255,255,.16);animation:float 6s ease-in-out -2s infinite}
+@media (min-width:640px){.mo-pay .ph{width:25%;right:5%;bottom:6%}}
+.mo-pay .ps2{height:100%;border-radius:7.4cqw;overflow:hidden;background:linear-gradient(170deg,#3a0a12,#120a10 55%,#0b0b10);padding:8cqw 4.5cqw;display:flex;flex-direction:column}
+.mo-pay .tm{text-align:center;font:300 15cqw/1 var(--body);letter-spacing:-.02em;margin-bottom:6cqw}
+.mo-pay .nts{display:flex;flex-direction:column-reverse;justify-content:flex-end}
+.mo-pay .nt{display:flex;align-items:center;gap:3cqw;padding:0 3.6cqw;border-radius:5cqw;background:rgba(255,255,255,.12);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);max-height:0;opacity:0;overflow:hidden;transform:translateY(-10px) scale(.96);transition:max-height .55s cubic-bezier(.2,.8,.2,1),opacity .4s ease,transform .55s cubic-bezier(.2,.8,.2,1),padding .55s cubic-bezier(.2,.8,.2,1),margin .55s cubic-bezier(.2,.8,.2,1)!important}
+.mo-pay .nt.on{max-height:40cqw;opacity:1;transform:none;padding:3.4cqw 3.6cqw;margin-bottom:3cqw}
+.mo-pay .ni{width:12cqw;aspect-ratio:1;border-radius:3.4cqw;display:grid;place-items:center;flex:none;font-size:6.4cqw}
+.mo-pay .ni.c{background:#1ea952}.mo-pay .ni.p{background:#ff0019}.mo-pay .ni.s{background:#f5c542}.mo-pay .ni.n{background:#3d7bff}
+.mo-pay .nt b{display:block;font:800 5.8cqw/1.2 var(--body)}
+.mo-pay .nt small{display:block;font:500 5.2cqw/1.3 var(--body);color:#dcdbe2}
+.mo-pay .nt em{font-style:normal;color:#a9a8b4;font-size:4.4cqw}
 @media (prefers-reduced-motion: reduce){.mo *{animation:none!important}}
 
 /* mobile sticky bar */
@@ -603,8 +609,8 @@ fbq('track', 'PageView');
 <section id="materiel">
   <div class="wrap need">
     <div class="rv">
-      <div class="mo mo-edit" data-dur="9000" aria-hidden="true"><div class="tools"><span class="tool" data-at="500">✨ <span data-i18n="mo_a1">Titres animés</span></span><span class="tool" data-at="1500">🎞️ <span data-i18n="mo_a2">Transitions</span></span><span class="tool" data-at="2500">🎵 <span data-i18n="mo_a3">Musique</span></span></div><div class="phone"><div class="scr"><div class="pv"><svg viewBox="0 0 100 46" style="" aria-hidden="true"><path d="M4 36c0-7 4-11 11-12l17-3c6-1 10-6 14-10h9c2 6 8 10 16 12l14 3c8 2 11 6 11 10v4H4z" fill="#fff"/><path d="M4 38h96v4c0 2-1 3-3 3H7c-2 0-3-1-3-3z" fill="#1d1d26"/><path d="M40 22l5 6M48 18l5 6M56 16l4 6" stroke="#e8102a" stroke-width="3" stroke-linecap="round"/></svg><span class="t t1" data-at="900" data-i18n="mo_a4">NOUVELLE</span><span class="t t2" data-at="1200" data-i18n="mo_a5">COLLECTION</span><span class="badge" data-at="2000">-30%</span></div><div class="tl"><div class="trk"><i class="c c1" data-at="300"></i><i class="c c2" data-at="700"></i><i class="c c3" data-at="1100"></i></div><div class="trk"><i class="c c4" data-at="900"></i><i class="c c5" data-at="1900"></i></div><div class="trk wav" data-at="2500"></div><span class="ph"></span></div><div class="ex"><span class="exb" data-at="4400" data-i18n="mo_a6">Exporter</span><span class="bar" data-at="4400"><i></i></span><span class="ok" data-at="6600" data-i18n="mo_a7">✓ Vidéo prête</span></div></div></div><div class="pub" data-at="7000"><b data-i18n="mo_a8">Prêt à publier</b><small>1080p · 9:16</small></div><span class="heart h1" data-at="7300">❤️</span><span class="heart h2" data-at="7300">🔥</span><span class="heart h3" data-at="7300">👍</span></div>
-      <p class="cap" data-i18n="ph_cap">Montage d'une vidéo produit, directement sur smartphone.</p>
+      <div class="mo mo-ai" data-dur="10000" aria-hidden="true"><div class="phone"><div class="scr"><div class="ai-top"><span class="lg">✦</span>Studio IA</div><div class="pr"><small data-i18n="mo1_lbl">Votre idée</small><p><span data-type="Pub de 15 s pour une boutique de baskets, style dynamique" data-type-en="15-second ad for a sneaker shop, dynamic style" data-type-at="300" data-type-dur="2000"></span><i class="caret"></i></p></div><span class="go" data-at="2450" data-i18n="mo1_go">Générer la vidéo ✨</span><div class="stage"><div class="gen" data-at="2700" data-until="5450"><div class="ring"></div><b class="pct" data-count="0,100,2700,2600,%" data-var="--p">0%</b><small data-i18n="mo1_gen">Montage en cours…</small></div><div class="out" data-at="5300"><video muted loop playsinline preload="none" poster="motion-mboa.jpg" src="motion-mboa.mp4"></video><span class="ok" data-i18n="mo1_ok">✓ Vidéo prête</span></div></div></div></div><div class="side"><div class="clock glass"><small data-i18n="mo1_clk">Première version en</small><b data-count="0,24,2700,2600,s">0 s</b><span class="vs" data-at="5800"><s data-i18n="mo1_vs">Méthode classique : 4 h</s></span></div><div class="ai-steps"><span class="glass" data-at="3200" data-i18n="mo1_s1">Montage &amp; rythme</span><span class="glass" data-at="3800" data-i18n="mo1_s2">Sous-titres</span><span class="glass" data-at="4400" data-i18n="mo1_s3">Musique &amp; voix off</span><span class="glass" data-at="5000" data-i18n="mo1_s4">Format 9:16 prêt</span></div></div></div></div>
+      <p class="cap" data-i18n="ph_cap">De l'idée à la vidéo, en quelques secondes, depuis un téléphone.</p>
     </div>
     <div>
       <div class="head rv" style="margin-bottom:0"><span class="eyebrow" data-i18n="ph_eye">Ce qu'il vous faut</span><h2 data-i18n="ph_h">Votre téléphone suffit pour commencer.</h2><p class="lead" data-i18n="ph_p">Pas besoin d'un ordinateur puissant ni de logiciels coûteux. La méthode est pensée pour être appliquée depuis un smartphone.</p></div>
@@ -708,8 +714,8 @@ fbq('track', 'PageView');
   <div class="wrap">
     <div class="head rv"><span class="eyebrow" data-i18n="mn_k">Bonus · Monétisation</span><h2 data-i18n="mn_h">Transformez la compétence en revenus.</h2><p class="lead" data-i18n="mn_p">Commerçants, restaurants, entreprises, églises, créateurs : tous ont besoin de vidéos, chaque semaine. Je vous montre comment trouver vos premiers clients et vous faire payer.</p></div>
     <div class="mphotos">
-      <figure class="rv"><div class="mo mo-shoot" data-dur="8000" aria-hidden="true"><div class="shop" data-at="2600"><span class="lamp" style="left:8%"></span><span class="lamp" style="left:58%"></span><span class="bag" style="left:11%;bottom:56%;background:#e8102a;color:#b00a1d"></span><span class="bag" style="left:29%;bottom:56%;background:#f5c542;color:#c99a1e"></span><svg class="shoe" viewBox="0 0 100 46" style="left:50%;bottom:55.6%" aria-hidden="true"><path d="M4 36c0-7 4-11 11-12l17-3c6-1 10-6 14-10h9c2 6 8 10 16 12l14 3c8 2 11 6 11 10v4H4z" fill="#ffffff"/><path d="M4 38h96v4c0 2-1 3-3 3H7c-2 0-3-1-3-3z" fill="#1d1d26"/><path d="M40 22l5 6M48 18l5 6M56 16l4 6" stroke="#e8102a" stroke-width="3" stroke-linecap="round"/></svg><span class="box" style="left:75%;bottom:56%"></span><svg class="shoe" viewBox="0 0 100 46" style="left:12%;bottom:21.6%" aria-hidden="true"><path d="M4 36c0-7 4-11 11-12l17-3c6-1 10-6 14-10h9c2 6 8 10 16 12l14 3c8 2 11 6 11 10v4H4z" fill="#1f7a5c"/><path d="M4 38h96v4c0 2-1 3-3 3H7c-2 0-3-1-3-3z" fill="#1d1d26"/><path d="M40 22l5 6M48 18l5 6M56 16l4 6" stroke="#f5c542" stroke-width="3" stroke-linecap="round"/></svg><span class="bag" style="left:40%;bottom:22%;background:#2b6ea8;color:#1f5582"></span><span class="bag" style="left:62%;bottom:22%;background:#f2efe9;color:#b9b1a4"></span><span class="sh s1"></span><span class="sh s2"></span></div><div class="vf"></div><span class="cr k1"></span><span class="cr k2"></span><span class="cr k3"></span><span class="cr k4"></span><span class="rec"><i></i>REC <span data-timer>00:00</span></span><span class="fmt">4K · 30 fps</span><span class="focus" data-at="900" style="left:48%;bottom:52%"></span><span class="zoom"><span class="z1">1x</span><span class="z2" data-at="2600">2x</span></span><span class="shutter"></span><span class="flash" data-at="5600"></span><span class="saved" data-at="5700" data-i18n="mo_b1">✓ Clip enregistré</span></div><figcaption class="cap" data-i18n="mn_c1">Tourner une vidéo pour une boutique, au smartphone.</figcaption></figure>
-      <figure class="rv"><div class="mo mo-chat" data-dur="11000" aria-hidden="true"><div class="chat"><div class="ch-h"><span class="av">M</span><span><b>Mboa Market</b><small data-i18n="mo_c0">en ligne</small></span></div><div class="msgs"><p class="m in" data-at="400" data-i18n="mo_c1">Bonjour ! Vous pouvez faire une vidéo pour ma boutique ?</p><p class="m out" data-at="1800" data-i18n="mo_c2">Oui ! Je vous l'envoie aujourd'hui 😉</p><div class="m out vid" data-at="3300"><span class="th"><b>▶</b></span><small><span data-i18n="mo_c3">Pub boutique</span> · 0:30</small></div><p class="typing" data-at="4700" data-until="6000"><i></i><i></i><i></i></p><p class="m in" data-at="6000" data-i18n="mo_c4">Waouh 🔥 C'est parfait !</p><p class="m in" data-at="7300" data-i18n="mo_c5">Je valide, j'envoie le paiement 👍</p><p class="paid" data-at="8600" data-i18n="mo_c6">✓ Paiement reçu</p></div></div></div><figcaption class="cap" data-i18n="mn_c2">Présenter le résultat au client et conclure.</figcaption></figure>
+      <figure class="rv"><div class="mo mo-race" data-dur="9500" aria-hidden="true"><div class="rc-lanes"><div class="rc-lane glass"><div class="lh"><span class="apps"><i class="app ps">Ps</i><i class="app pr">Pr</i><i class="app ae">Ae</i></span><b data-i18n="mo2_old">Montage classique</b><span class="t" data-count="0,47,200,9000,clock">00:00</span></div><div class="rc-bar"><i class="slow" data-at="200"></i></div><span class="ls"><i class="spin"></i><span data-i18n="mo2_old_s">Rendu en cours… encore 3 h 13 min</span></span></div><div class="rc-lane glass"><div class="lh"><span class="aic">✦</span><b data-i18n="mo2_new">Avec ma méthode</b><span class="t" data-count="0,24,200,2400,min">0 min</span></div><div class="rc-bar"><i class="fast" data-at="200"></i></div><span class="ls ok" data-at="2700" data-i18n="mo2_new_s">✓ Spot terminé et livré</span></div></div><div class="tv" data-at="2900"><video muted loop playsinline preload="none" poster="work-camairco.jpg" src="work-camairco.mp4"></video></div><div class="stamp" data-at="3500">10X<small data-i18n="mo2_stamp">plus vite</small></div></div><figcaption class="cap" data-i18n="mn_c1">Le même spot : 4 h avec les logiciels classiques, 24 min avec la méthode.</figcaption></figure>
+      <figure class="rv"><div class="mo mo-pay" data-dur="11000" aria-hidden="true"><div class="lap"><div class="lscr"><div class="ed"><div class="et"><i></i><i></i><i></i><span>Spot_Bovann_final.mp4</span></div><div class="vw"><video muted loop playsinline preload="none" poster="work-bovann.jpg" src="work-bovann.mp4"></video></div><div class="etl"><i></i><i></i><i></i><b></b></div><div class="snd"><span class="b" data-at="1000" data-i18n="mo3_send">Envoyer au client</span><span class="br" data-at="1000"><i></i></span><span class="ok" data-at="2700" data-i18n="mo3_sent">✓ Livré au client</span></div></div></div><div class="lbase"></div></div><div class="ph"><div class="ps2"><div class="tm">19:42</div><div class="nts"><div class="nt" data-at="3300"><span class="ni c">💬</span><span><b>Bovann Group</b><small data-i18n="mo3_n1">Waouh 🔥 C'est parfait, merci !</small></span></div><div class="nt" data-at="4700"><span class="ni p">💳</span><span><b data-i18n="mo3_n2">Paiement reçu</b><small>+ 25 000 FCFA <em data-i18n="mo3_ex">· exemple</em></small></span></div><div class="nt" data-at="6100"><span class="ni s">⭐</span><span><b>★★★★★</b><small data-i18n="mo3_n3">« Je vous recommande ! »</small></span></div><div class="nt" data-at="7500"><span class="ni n">📩</span><span><b data-i18n="mo3_n4">Nouvelle demande</b><small data-i18n="mo3_n4s">Un nouveau client vous écrit</small></span></div></div></div></div></div><figcaption class="cap" data-i18n="mn_c2">Livrer vite, se faire payer… et être recommandé.</figcaption></figure>
     </div>
     <div class="msteps">
       <div class="ms rv"><b>01</b><h3 data-i18n="ms1h">Trouver vos premiers clients</h3><p data-i18n="ms1p">Où les chercher, quoi leur montrer, comment les approcher.</p></div>
@@ -795,7 +801,7 @@ const EN = {
   hero_h1:'<span class="ln"><span style="--i:0">Edit your videos</span></span><span class="ln"><span style="--i:1"><span class="hl">10X</span> faster</span></span><span class="ln"><span style="--i:2" class="soft">with AI.</span></span>',
   hero_sub:"Learn video editing and motion design with the right tools, <b>even from your phone</b>. Then turn this skill into income.",
   limited:"Limited seats", hf1:"Works on a smartphone", hf2:"2 hours live", hf3:"Replay + PDF", hf4:"Private group", tl_role:"your trainer",
-  ph_cap:"Editing a product video, directly on a smartphone.", ph_eye:"What you need", ph_h:"Your phone is enough to get started.",
+  ph_cap:"From idea to video in seconds, from a phone.", ph_eye:"What you need", ph_h:"Your phone is enough to get started.",
   ph_p:"No powerful computer, no expensive software. The method is designed to be applied from a smartphone.",
   n1h:"A smartphone", n1p:"Android or iPhone. A computer is a plus, not a requirement.", n2h:"An internet connection", n2p:"To follow the live session and use the online tools.",
   n3h:"Two hours on Friday evening", n3p:"From 7 to 9 pm (GMT+1). The replay is included if you can't make it.", n4h:"No experience needed", n4p:"I start from zero and guide you step by step.",
@@ -824,7 +830,7 @@ const EN = {
   co1:"CEO of Boujieka Group", co2:"CEO of Boujieka Agency", co3:"CEO of Boujieka Academy", tr_faith:"Responsible, and a child of God.",
   mn_k:"Bonus · Monetisation", mn_h:"Turn the skill into income.",
   mn_p:"Shops, restaurants, companies, churches, creators: they all need videos, every week. I show you how to find your first clients and get paid.",
-  mn_c1:"Shooting a video for a shop, with a smartphone.", mn_c2:"Showing the result to the client and closing the deal.",
+  mn_c1:"The same ad: 4 h with classic software, 24 min with the method.", mn_c2:"Deliver fast, get paid… and get recommended.",
   ms1h:"Find your first clients", ms1p:"Where to look, what to show them, how to approach them.", ms2h:"Set your prices", ms2p:"Present a clear offer, at the right price for your market.", ms3h:"Deliver fast, keep clients", ms3p:"Deliver the same day and bring your clients back.",
   mn_big:"200,000 – 500,000 FCFA", mn_small:"per month: the goal presented in the masterclass", mn_d:"Income depends on your work and your market. No amount is guaranteed.",
   of_eye:"Your seat", of_h:"One pack, everything included.", pk_name:"Masterclass pack",
@@ -836,8 +842,9 @@ const EN = {
   fq_h:"Your questions, my answers.",
   faq:'<details open><summary>Can I really do everything with my phone?</summary><p>Yes. You can follow the live session and apply the method from your smartphone. A computer is a plus, not a requirement: right after the masterclass, you can get started with your phone.</p></details><details><summary>I live outside Cameroon. How does it work?</summary><p>No problem: the masterclass is 100% online. The price is in FCFA, and the site shows you an estimate in your currency and the live time in your local time. The available payment methods are shown on the payment page.</p></details><details><summary>I have never edited a video. Is this for me?</summary><p>Yes. I start from zero and show you every step live, from raw footage to the final video.</p></details><details><summary>How does the masterclass work?</summary><p>It is 100% online and live, on Friday October 16 from 7 to 9 pm (GMT+1). The link is shared in the private group.</p></details><details><summary>What if I miss the live session?</summary><p>The replay is available in the private group, with the slides PDF.</p></details><details><summary>When do I get access?</summary><p>Right after payment, you get direct access to the masterclass private group.</p></details><details><summary>Are the tools paid?</summary><p>Many tools have a free version to get started. I tell you which ones to use depending on your budget.</p></details><details><summary>Will I really be able to make money?</summary><p>Companies need videos. I show you how to find clients, set your prices and deliver fast. Your results will depend on your work: no income is guaranteed.</p></details>',
   micro:"🔒 Secure payment · Mobile Money or card · Instant access to the private group", fx_lbl:"See the price in your currency:", fx_note:"Indicative amount. Payment is made in FCFA; the final conversion depends on your payment method.",
-  mo_a1:"Animated titles", mo_a2:"Transitions", mo_a3:"Music", mo_a4:"NEW", mo_a5:"COLLECTION", mo_a6:"Export", mo_a7:"✓ Video ready", mo_a8:"Ready to post", mo_b1:"✓ Clip saved",
-  mo_c0:"online", mo_c1:"Hi! Can you make a video for my shop?", mo_c2:"Yes! I'll send it to you today 😉", mo_c3:"Shop ad", mo_c4:"Wow 🔥 It's perfect!", mo_c5:"Approved, sending the payment 👍", mo_c6:"✓ Payment received",
+  mo1_lbl:"Your idea", mo1_go:"Generate the video ✨", mo1_gen:"Editing in progress…", mo1_ok:"✓ Video ready", mo1_clk:"First draft in", mo1_vs:"Classic method: 4 h", mo1_s1:"Editing &amp; pacing", mo1_s2:"Subtitles", mo1_s3:"Music &amp; voice-over", mo1_s4:"9:16 format ready",
+  mo2_old:"Classic editing", mo2_old_s:"Rendering… 3 h 13 min left", mo2_new:"With my method", mo2_new_s:"✓ Ad finished and delivered", mo2_stamp:"faster",
+  mo3_send:"Send to client", mo3_sent:"✓ Delivered", mo3_n1:"Wow 🔥 It's perfect, thank you!", mo3_n2:"Payment received", mo3_ex:"· example", mo3_n3:"“I recommend you!”", mo3_n4:"New request", mo3_n4s:"A new client is writing to you",
   cb_text:'<span class="l">Free WhatsApp community <b>LE DIGITAL POUR TOUS</b>: artificial intelligence, digital marketing, content creation and much more.</span><span class="s"><b>LE DIGITAL POUR TOUS</b><br>AI · Marketing · Content</span>', cb_btn:"Join for free",
   fn_eye:"Friday, October 16 · 7 pm", fn_h:"Your phone is enough. All you need is your seat.", fn_p:"15,000 FCFA instead of 25,000 FCFA while seats last. Replay and PDF included.",
   partners:"Partners", foot:"© 2026 Roger BOUJIEKA · Boujieka Academy · Masterclass “Video editing &amp; Motion Design with AI”", mbar_s:"INSTEAD OF 25,000"
@@ -1077,23 +1084,33 @@ const BOOKINGS = [];
   const go = document.querySelector('.cbar .go'); if (go) go.addEventListener('click', () => track('Lead', { content_name: 'Communauté LE DIGITAL POUR TOUS' }));
   const wa = document.querySelector('.wa-float'); if (wa) wa.addEventListener('click', () => track('Contact'));
 })();
-/* ---------- motion illustrations: play each scene's timeline while it is on screen ---------- */
+/* ---------- motion illustrations: each scene plays its timeline while it is on screen ----------
+   data-at / data-until: "on" class between these times (ms) · data-type: typed text ·
+   data-count="from,to,start,duration,unit": animated number (data-var also sets a CSS variable on the parent). */
 (function () {
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const ease = x => 1 - Math.pow(1 - x, 3), clamp = x => Math.max(0, Math.min(1, x));
+  const fmt = (v, u) => u === '%' ? v + '%' : u === 's' ? v + ' s' : u === 'min' ? v + ' min'
+    : u === 'clock' ? String(Math.floor(v / 60)).padStart(2, '0') + ':' + String(v % 60).padStart(2, '0') : String(v);
   document.querySelectorAll('.mo[data-dur]').forEach(sc => {
     const dur = +sc.dataset.dur;
     const items = [...sc.querySelectorAll('[data-at]')].map(el => ({ el, at: +el.dataset.at, until: +(el.dataset.until || 0) }));
-    const timers = [...sc.querySelectorAll('[data-timer]')];
+    const types = [...sc.querySelectorAll('[data-type]')].map(el => ({ el, at: +el.dataset.typeAt, d: +el.dataset.typeDur }));
+    const counts = [...sc.querySelectorAll('[data-count]')].map(el => { const [a, b, st, d, u] = el.dataset.count.split(','); return { el, a: +a, b: +b, st: +st, d: +d, u, v: el.dataset.var }; });
+    const vids = [...sc.querySelectorAll('video')];
     const set = t => {
       items.forEach(i => i.el.classList.toggle('on', t >= i.at && (!i.until || t < i.until)));
-      timers.forEach(el => { el.textContent = '00:' + String(Math.floor(t / 1000)).padStart(2, '0'); });
+      const en = document.documentElement.lang === 'en';
+      types.forEach(x => { const txt = (en && x.el.dataset.typeEn) || x.el.dataset.type; x.el.textContent = txt.slice(0, Math.round(txt.length * clamp((t - x.at) / x.d))); });
+      counts.forEach(c => { const k = c.u === 'clock' ? clamp((t - c.st) / c.d) : ease(clamp((t - c.st) / c.d)); const val = Math.round(c.a + (c.b - c.a) * k); c.el.textContent = fmt(val, c.u); if (c.v) c.el.parentElement.style.setProperty(c.v, val); });
     };
     if (reduce || !('IntersectionObserver' in window)) { set(dur - 1); return; }
     let vis = false, t0 = 0;
     const frame = now => { if (!vis) return; set((now - t0) % dur); requestAnimationFrame(frame); };
     new IntersectionObserver(es => {
       const v = es[0].isIntersecting;
-      if (v && !vis) { vis = true; t0 = performance.now(); requestAnimationFrame(frame); } else if (!v) vis = false;
+      if (v && !vis) { vis = true; t0 = performance.now(); requestAnimationFrame(frame); vids.forEach(x => x.play().catch(() => {})); }
+      else if (!v && vis) { vis = false; vids.forEach(x => x.pause()); }
     }, { threshold: .2 }).observe(sc);
   });
 })();
