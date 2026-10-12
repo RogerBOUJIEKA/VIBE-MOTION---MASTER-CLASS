@@ -4,7 +4,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#0a0a0d">
-<link rel="icon" href="logo_rb.png">
+<link rel="icon" href="favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="canonical" href="https://www.rogerboujieka.com/">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://www.rogerboujieka.com/">
@@ -388,6 +391,115 @@ footer{padding:18px 16px 110px;text-align:center;color:var(--faint);font-size:12
 .fxsel select{font:700 13px var(--body);color:var(--fg);background:var(--bg2);border:1px solid var(--line2);border-radius:10px;padding:7px 10px;max-width:230px}
 .fxnote{font-size:12px;color:var(--faint);line-height:1.45}
 
+/* motion illustrations (replace the photos): pure HTML/CSS, driven by a tiny timeline */
+.mo{position:relative;overflow:hidden;aspect-ratio:1/1;border-radius:22px;background:radial-gradient(120% 90% at 50% 0%,#1f1f29 0%,#0c0c11 62%);color:#f5f4f7;box-shadow:var(--shadow);isolation:isolate;container-type:inline-size;font-family:var(--body);line-height:1.2}
+@media (min-width:640px){.mo{aspect-ratio:16/10}}
+.mo::before{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.05) 1px,transparent 1px);background-size:8cqw 8cqw;-webkit-mask-image:radial-gradient(70% 70% at 50% 45%,#000,transparent);mask-image:radial-gradient(70% 70% at 50% 45%,#000,transparent);z-index:-1}
+.mo::after{content:"";position:absolute;left:50%;top:55%;width:70cqw;height:70cqw;transform:translate(-50%,-50%);background:radial-gradient(circle,rgba(232,16,42,.28),transparent 62%);z-index:-1}
+.mo [data-at]{transition:opacity .45s var(--ease),transform .6s var(--ease)}
+/* A · editing on a phone */
+.mo-edit .phone{position:absolute;left:50%;top:6%;height:88%;aspect-ratio:9/18.6;container-type:inline-size;transform:translateX(-50%);background:#050507;border-radius:clamp(14px,4.4cqw,26px);padding:1.4%;box-shadow:0 20px 50px rgba(0,0,0,.55),inset 0 0 0 1.5px rgba(255,255,255,.12)}
+.mo-edit .scr{position:relative;height:100%;border-radius:clamp(11px,3.6cqw,21px);overflow:hidden;background:#111116;display:grid;grid-template-rows:56% 1fr auto;gap:3%;padding:4% 4% 5%}
+.mo-edit .pv{position:relative;border-radius:8px;overflow:hidden;background:linear-gradient(160deg,#ff5a3c 0%,#c40d24 55%,#5a0412 100%)}
+.mo-edit .pv svg{position:absolute;left:8%;right:8%;bottom:14%;width:84%;filter:drop-shadow(0 6px 8px rgba(0,0,0,.35));animation:shoe 3s ease-in-out infinite}
+@keyframes shoe{50%{transform:translateY(-4%) rotate(-3deg)}}
+.mo-edit .t{position:absolute;left:8%;font:900 9.6cqw/1 var(--display);letter-spacing:.02em;color:#fff;opacity:0;transform:translateX(-30%)}
+.mo-edit .t.on{opacity:1;transform:none}
+.mo-edit .t1{top:9%}.mo-edit .t2{top:24%;color:#ffd84d}
+.mo-edit .badge{position:absolute;right:6%;top:40%;width:26%;aspect-ratio:1;border-radius:50%;display:grid;place-items:center;background:#fff;color:#c40d24;font:900 7cqw/1 var(--body);opacity:0;transform:scale(0) rotate(-30deg)}
+.mo-edit .badge.on{opacity:1;transform:none}
+.mo-edit .tl{position:relative;display:grid;align-content:center;gap:9%;padding:0 2%}
+.mo-edit .trk{position:relative;height:5.4cqw;border-radius:3px;background:rgba(255,255,255,.06);display:flex;gap:3%}
+.mo-edit .c{display:block;height:100%;border-radius:3px;transform:scaleX(0);transform-origin:left;opacity:0}
+.mo-edit .c.on{transform:none;opacity:1}
+.mo-edit .c1{width:34%;background:#e8102a}.mo-edit .c2{width:28%;background:#ff7a59}.mo-edit .c3{width:30%;background:#f5c542}
+.mo-edit .c4{width:40%;background:#7aa7ff;margin-left:10%}.mo-edit .c5{width:30%;background:#c9a7ff}
+.mo-edit .wav{background:repeating-linear-gradient(90deg,rgba(30,169,82,.9) 0 2px,transparent 2px 4px);opacity:0;transform:scaleX(0);transform-origin:left}
+.mo-edit .wav.on{opacity:.9;transform:none}
+.mo-edit .ph{position:absolute;top:-8%;bottom:-8%;left:2%;width:2px;background:#fff;box-shadow:0 0 8px #fff;animation:ph 3.2s linear infinite}
+@keyframes ph{to{left:96%}}
+.mo-edit .ex{position:relative;height:14cqw}
+.mo-edit .ex>*{position:absolute;inset:0;border-radius:999px;display:grid;place-items:center;font:800 6.6cqw/1 var(--body)}
+.mo-edit .exb{background:#e8102a;color:#fff;opacity:1}
+.mo-edit .exb.on{opacity:0}
+.mo-edit .bar{background:rgba(255,255,255,.1);overflow:hidden;opacity:0}
+.mo-edit .bar.on{opacity:1}
+.mo-edit .bar i{position:absolute;left:0;top:0;bottom:0;width:0;background:linear-gradient(90deg,#e8102a,#ff7a59);transition:width 2s linear}
+.mo-edit .bar.on i{width:100%}
+.mo-edit .ok{background:#1ea952;color:#fff;opacity:0;transform:scale(.8)}
+.mo-edit .ok.on{opacity:1;transform:none}
+.mo-edit .tools{position:absolute;left:3.5%;top:16%;display:grid;gap:clamp(6px,2.4cqw,14px)}
+.mo-edit .tool{display:flex;align-items:center;gap:6px;padding:clamp(5px,1.6cqw,9px) clamp(7px,2.2cqw,12px);border-radius:999px;background:rgba(255,255,255,.08);box-shadow:inset 0 0 0 1px rgba(255,255,255,.12);font:700 clamp(9px,2.5cqw,13px)/1 var(--body);white-space:nowrap;opacity:0;transform:translateX(-24px)}
+.mo-edit .tool.on{opacity:1;transform:none}
+.mo-edit .pub{position:absolute;right:3.5%;bottom:14%;padding:clamp(7px,2.2cqw,12px) clamp(9px,2.8cqw,15px);border-radius:14px;background:#fff;color:#0d0d12;box-shadow:0 14px 30px rgba(0,0,0,.4);opacity:0;transform:translateY(16px) scale(.92)}
+.mo-edit .pub.on{opacity:1;transform:none}
+.mo-edit .pub b{display:block;font:800 clamp(9px,2.6cqw,14px)/1.2 var(--body)}
+.mo-edit .pub small{display:block;font:600 clamp(8px,2.1cqw,11px)/1.2 var(--body);color:#6b6a75;margin-top:3px}
+.mo-edit .heart{position:absolute;right:12%;bottom:30%;font-size:clamp(12px,3.6cqw,20px);opacity:0}
+.mo-edit .heart.on{animation:heart 1.8s ease-out forwards}
+.mo-edit .h2.on{animation-delay:.25s}.mo-edit .h3.on{animation-delay:.5s}
+@keyframes heart{0%{opacity:0;transform:translate(0,0) scale(.6)}20%{opacity:1}100%{opacity:0;transform:translate(-30%,-260%) scale(1.15)}}
+@media (max-width:639px){.mo-edit .tools{top:auto;bottom:6%;left:3%}.mo-edit .tool{font-size:9px;padding:5px 7px}.mo-edit .pub{bottom:auto;top:10%;right:3%}}
+/* B · shooting in a shop */
+.mo-shoot{background:linear-gradient(180deg,#3b2a20 0%,#26180f 70%,#1a100a 100%)}
+.mo-shoot::before,.mo-shoot::after{display:none}
+.mo-shoot .shop{position:absolute;inset:0;transform-origin:62% 46%}
+.mo-shoot .shop.on{transform:scale(1.32);transition:transform 1.6s cubic-bezier(.4,0,.2,1)}
+.mo-shoot .lamp{position:absolute;top:0;width:30%;height:60%;background:radial-gradient(60% 80% at 50% 0%,rgba(255,214,150,.35),transparent 70%)}
+.mo-shoot .sh{position:absolute;left:6%;right:6%;height:2.2%;background:linear-gradient(#8a6142,#5a3c27);border-radius:2px;box-shadow:0 6px 10px rgba(0,0,0,.35)}
+.mo-shoot .s1{top:44%}.mo-shoot .s2{top:78%}
+.mo-shoot .bag{position:absolute;width:13%;aspect-ratio:1/.85;border-radius:10% 10% 16% 16%;box-shadow:inset -6px -6px 0 rgba(0,0,0,.18)}
+.mo-shoot .bag::before{content:"";position:absolute;left:24%;right:24%;top:-32%;height:40%;border:clamp(2px,.8cqw,4px) solid currentColor;border-bottom:0;border-radius:50% 50% 0 0}
+.mo-shoot .shoe{position:absolute;width:17%}
+.mo-shoot .box{position:absolute;width:11%;aspect-ratio:1/1.1;border-radius:4px;background:#f2efe9;box-shadow:inset -5px -5px 0 rgba(0,0,0,.12)}
+.mo-shoot .vf{position:absolute;inset:0;pointer-events:none;background-image:linear-gradient(90deg,transparent calc(33.33% - .5px),rgba(255,255,255,.22) calc(33.33% - .5px) calc(33.33% + .5px),transparent calc(33.33% + .5px) calc(66.66% - .5px),rgba(255,255,255,.22) calc(66.66% - .5px) calc(66.66% + .5px),transparent calc(66.66% + .5px)),linear-gradient(transparent calc(33.33% - .5px),rgba(255,255,255,.22) calc(33.33% - .5px) calc(33.33% + .5px),transparent calc(33.33% + .5px) calc(66.66% - .5px),rgba(255,255,255,.22) calc(66.66% - .5px) calc(66.66% + .5px),transparent calc(66.66% + .5px))}
+.mo-shoot .cr{position:absolute;width:7%;aspect-ratio:1;border:2px solid rgba(255,255,255,.85)}
+.mo-shoot .k1{left:4%;top:5%;border-right:0;border-bottom:0}.mo-shoot .k2{right:4%;top:5%;border-left:0;border-bottom:0}.mo-shoot .k3{left:4%;bottom:5%;border-right:0;border-top:0}.mo-shoot .k4{right:4%;bottom:5%;border-left:0;border-top:0}
+.mo-shoot .rec{position:absolute;left:7%;top:8%;display:flex;align-items:center;gap:6px;padding:4px 8px;border-radius:6px;background:rgba(0,0,0,.45);font:800 clamp(9px,2.6cqw,13px)/1 var(--mono);letter-spacing:.06em}
+.mo-shoot .rec i{width:clamp(7px,2cqw,10px);aspect-ratio:1;border-radius:50%;background:#ff2a3c;animation:blink 1s steps(2) infinite}
+.mo-shoot .fmt{position:absolute;right:7%;top:8%;padding:4px 8px;border-radius:6px;background:rgba(0,0,0,.45);font:700 clamp(8px,2.2cqw,12px)/1 var(--mono)}
+.mo-shoot .focus{position:absolute;left:52%;top:20%;width:22%;aspect-ratio:1;border:2px solid #ffd84d;border-radius:6px;opacity:0;transform:scale(1.5)}
+.mo-shoot .focus.on{opacity:1;transform:none;animation:fpulse 1.2s ease-in-out .6s 2}
+@keyframes fpulse{50%{transform:scale(.92)}}
+.mo-shoot .zoom{position:absolute;left:calc(50% + clamp(24px,7.5cqw,40px));bottom:calc(5% + clamp(3px,1cqw,6px));display:flex;gap:6px;padding:4px;border-radius:999px;background:rgba(0,0,0,.45)}
+.mo-shoot .zoom span{width:clamp(20px,6cqw,30px);aspect-ratio:1;border-radius:50%;display:grid;place-items:center;font:800 clamp(8px,2.2cqw,11px)/1 var(--body);color:#fff}
+.mo-shoot .z1{background:rgba(255,255,255,.18)}
+.mo-shoot .z2.on{background:#ffd84d;color:#1a100a}
+.mo-shoot .shutter{position:absolute;left:50%;bottom:5%;width:clamp(30px,9cqw,46px);aspect-ratio:1;transform:translateX(-50%);border-radius:50%;border:3px solid #fff;display:grid;place-items:center}
+.mo-shoot .shutter::after{content:"";width:62%;aspect-ratio:1;border-radius:28%;background:#ff2a3c;animation:rpulse 1.6s ease-in-out infinite}
+@keyframes rpulse{50%{transform:scale(.82)}}
+.mo-shoot .flash{position:absolute;inset:0;background:#fff;opacity:0;pointer-events:none}
+.mo-shoot .flash.on{animation:flash .6s ease-out forwards}
+@keyframes flash{0%{opacity:.75}100%{opacity:0}}
+.mo-shoot .saved{position:absolute;left:50%;top:42%;transform:translate(-50%,10px);padding:clamp(7px,2cqw,11px) clamp(10px,3cqw,16px);border-radius:999px;background:#1ea952;color:#fff;font:800 clamp(10px,2.8cqw,14px)/1 var(--body);white-space:nowrap;opacity:0;box-shadow:0 12px 26px rgba(0,0,0,.4)}
+.mo-shoot .saved.on{opacity:1;transform:translate(-50%,0)}
+/* C · delivering to the client */
+.mo-chat .chat{position:absolute;left:50%;top:5%;bottom:5%;width:min(80%,74cqw);transform:translateX(-50%);border-radius:18px;background:#101318;box-shadow:0 20px 50px rgba(0,0,0,.5),inset 0 0 0 1px rgba(255,255,255,.08);display:flex;flex-direction:column;overflow:hidden}
+@media (min-width:640px){.mo-chat .chat{width:62%}}
+.mo-chat .ch-h{display:flex;align-items:center;gap:8px;padding:clamp(7px,2.2cqw,11px) clamp(9px,2.6cqw,13px);background:#181c23;border-bottom:1px solid rgba(255,255,255,.06)}
+.mo-chat .av{width:clamp(22px,6.4cqw,32px);aspect-ratio:1;border-radius:50%;display:grid;place-items:center;background:linear-gradient(135deg,#f5c542,#e8102a);color:#fff;font:900 clamp(10px,3cqw,15px)/1 var(--body);flex:none}
+.mo-chat .ch-h b{display:block;font:800 clamp(10px,2.8cqw,14px)/1.2 var(--body)}
+.mo-chat .ch-h small{display:block;font:600 clamp(8px,2.1cqw,11px)/1.2 var(--body);color:#1ea952}
+.mo-chat .msgs>*{flex-shrink:0}
+.mo-chat .msgs{flex:1;display:flex;flex-direction:column;justify-content:flex-end;gap:0;padding:2% 4% 4%;overflow:hidden}
+.mo-chat .m{max-width:80%;margin:0;padding:0 clamp(8px,2.4cqw,12px);border-radius:14px;font:500 clamp(9.5px,2.7cqw,13.5px)/1.35 var(--body);max-height:0;opacity:0;overflow:hidden;transform:translateY(8px);transition:max-height .5s var(--ease),opacity .4s ease,transform .5s var(--ease),padding .5s var(--ease),margin .5s var(--ease)}
+.mo-chat .m.on{max-height:120px;opacity:1;transform:none;padding-top:clamp(6px,1.8cqw,9px);padding-bottom:clamp(6px,1.8cqw,9px);margin-top:clamp(5px,1.6cqw,8px)}
+.mo-chat .in{align-self:flex-start;background:#232832;border-bottom-left-radius:4px}
+.mo-chat .out{align-self:flex-end;background:#1d6b47;border-bottom-right-radius:4px}
+.mo-chat .vid{padding-left:clamp(4px,1.2cqw,6px)!important;padding-right:clamp(4px,1.2cqw,6px)!important}
+.mo-chat .vid .th{position:relative;display:block;width:clamp(110px,34cqw,190px);aspect-ratio:16/9;border-radius:10px;background:#000 url(motion-mboa.jpg) center/cover}
+.mo-chat .vid .th b{position:absolute;inset:0;margin:auto;width:28%;aspect-ratio:1;border-radius:50%;display:grid;place-items:center;background:rgba(0,0,0,.55);font-size:clamp(9px,2.6cqw,13px)}
+.mo-chat .vid.on{max-height:240px}
+.mo-chat .vid small{display:block;margin-top:4px;font:600 clamp(8px,2.1cqw,11px)/1.2 var(--body);opacity:.85}
+.mo-chat .typing{align-self:flex-start;display:flex;gap:4px;margin:0;padding:0 10px;border-radius:14px;background:#232832;max-height:0;opacity:0;overflow:hidden;transition:max-height .3s ease,opacity .3s ease,padding .3s ease,margin .3s ease}
+.mo-chat .typing.on{max-height:40px;opacity:1;padding:9px 10px;margin-top:6px}
+.mo-chat .typing i{width:6px;height:6px;border-radius:50%;background:#9aa0aa;animation:dot 1s ease-in-out infinite}
+.mo-chat .typing i:nth-child(2){animation-delay:.15s}.mo-chat .typing i:nth-child(3){animation-delay:.3s}
+@keyframes dot{50%{transform:translateY(-4px);opacity:.5}}
+.mo-chat .paid{align-self:center;margin:0;padding:0 12px;border-radius:999px;background:rgba(30,169,82,.18);color:#5fe39a;font:800 clamp(9px,2.5cqw,12.5px)/1 var(--body);max-height:0;opacity:0;overflow:hidden;transition:max-height .5s var(--ease),opacity .4s ease,padding .5s var(--ease),margin .5s var(--ease)}
+.mo-chat .paid.on{max-height:40px;opacity:1;padding:8px 12px;margin-top:10px}
+@media (prefers-reduced-motion: reduce){.mo *{animation:none!important}}
+
 /* mobile sticky bar */
 .mbar{position:fixed;left:10px;right:10px;bottom:calc(10px + env(safe-area-inset-bottom,0px));z-index:60;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:9px 9px 9px 16px;border-radius:999px;background:color-mix(in srgb,var(--card) 92%,transparent);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);box-shadow:0 14px 40px rgba(0,0,0,.25),inset 0 0 0 1px var(--line2);transform:translateY(140%);transition:transform .45s var(--ease)}
 .mbar.show{transform:none}
@@ -491,7 +603,7 @@ fbq('track', 'PageView');
 <section id="materiel">
   <div class="wrap need">
     <div class="rv">
-      <div class="photo"><img src="photo-phone.webp" alt="" loading="lazy" width="960" height="540"></div>
+      <div class="mo mo-edit" data-dur="9000" aria-hidden="true"><div class="tools"><span class="tool" data-at="500">✨ <span data-i18n="mo_a1">Titres animés</span></span><span class="tool" data-at="1500">🎞️ <span data-i18n="mo_a2">Transitions</span></span><span class="tool" data-at="2500">🎵 <span data-i18n="mo_a3">Musique</span></span></div><div class="phone"><div class="scr"><div class="pv"><svg viewBox="0 0 100 46" style="" aria-hidden="true"><path d="M4 36c0-7 4-11 11-12l17-3c6-1 10-6 14-10h9c2 6 8 10 16 12l14 3c8 2 11 6 11 10v4H4z" fill="#fff"/><path d="M4 38h96v4c0 2-1 3-3 3H7c-2 0-3-1-3-3z" fill="#1d1d26"/><path d="M40 22l5 6M48 18l5 6M56 16l4 6" stroke="#e8102a" stroke-width="3" stroke-linecap="round"/></svg><span class="t t1" data-at="900" data-i18n="mo_a4">NOUVELLE</span><span class="t t2" data-at="1200" data-i18n="mo_a5">COLLECTION</span><span class="badge" data-at="2000">-30%</span></div><div class="tl"><div class="trk"><i class="c c1" data-at="300"></i><i class="c c2" data-at="700"></i><i class="c c3" data-at="1100"></i></div><div class="trk"><i class="c c4" data-at="900"></i><i class="c c5" data-at="1900"></i></div><div class="trk wav" data-at="2500"></div><span class="ph"></span></div><div class="ex"><span class="exb" data-at="4400" data-i18n="mo_a6">Exporter</span><span class="bar" data-at="4400"><i></i></span><span class="ok" data-at="6600" data-i18n="mo_a7">✓ Vidéo prête</span></div></div></div><div class="pub" data-at="7000"><b data-i18n="mo_a8">Prêt à publier</b><small>1080p · 9:16</small></div><span class="heart h1" data-at="7300">❤️</span><span class="heart h2" data-at="7300">🔥</span><span class="heart h3" data-at="7300">👍</span></div>
       <p class="cap" data-i18n="ph_cap">Montage d'une vidéo produit, directement sur smartphone.</p>
     </div>
     <div>
@@ -596,8 +708,8 @@ fbq('track', 'PageView');
   <div class="wrap">
     <div class="head rv"><span class="eyebrow" data-i18n="mn_k">Bonus · Monétisation</span><h2 data-i18n="mn_h">Transformez la compétence en revenus.</h2><p class="lead" data-i18n="mn_p">Commerçants, restaurants, entreprises, églises, créateurs : tous ont besoin de vidéos, chaque semaine. Je vous montre comment trouver vos premiers clients et vous faire payer.</p></div>
     <div class="mphotos">
-      <figure class="rv"><img src="photo-shoot.webp" alt="" loading="lazy" width="960" height="540"><figcaption class="cap" data-i18n="mn_c1">Tourner une vidéo pour une boutique, au smartphone.</figcaption></figure>
-      <figure class="rv"><img src="photo-client.webp" alt="" loading="lazy" width="960" height="540"><figcaption class="cap" data-i18n="mn_c2">Présenter le résultat au client et conclure.</figcaption></figure>
+      <figure class="rv"><div class="mo mo-shoot" data-dur="8000" aria-hidden="true"><div class="shop" data-at="2600"><span class="lamp" style="left:8%"></span><span class="lamp" style="left:58%"></span><span class="bag" style="left:11%;bottom:56%;background:#e8102a;color:#b00a1d"></span><span class="bag" style="left:29%;bottom:56%;background:#f5c542;color:#c99a1e"></span><svg class="shoe" viewBox="0 0 100 46" style="left:50%;bottom:55.6%" aria-hidden="true"><path d="M4 36c0-7 4-11 11-12l17-3c6-1 10-6 14-10h9c2 6 8 10 16 12l14 3c8 2 11 6 11 10v4H4z" fill="#ffffff"/><path d="M4 38h96v4c0 2-1 3-3 3H7c-2 0-3-1-3-3z" fill="#1d1d26"/><path d="M40 22l5 6M48 18l5 6M56 16l4 6" stroke="#e8102a" stroke-width="3" stroke-linecap="round"/></svg><span class="box" style="left:75%;bottom:56%"></span><svg class="shoe" viewBox="0 0 100 46" style="left:12%;bottom:21.6%" aria-hidden="true"><path d="M4 36c0-7 4-11 11-12l17-3c6-1 10-6 14-10h9c2 6 8 10 16 12l14 3c8 2 11 6 11 10v4H4z" fill="#1f7a5c"/><path d="M4 38h96v4c0 2-1 3-3 3H7c-2 0-3-1-3-3z" fill="#1d1d26"/><path d="M40 22l5 6M48 18l5 6M56 16l4 6" stroke="#f5c542" stroke-width="3" stroke-linecap="round"/></svg><span class="bag" style="left:40%;bottom:22%;background:#2b6ea8;color:#1f5582"></span><span class="bag" style="left:62%;bottom:22%;background:#f2efe9;color:#b9b1a4"></span><span class="sh s1"></span><span class="sh s2"></span></div><div class="vf"></div><span class="cr k1"></span><span class="cr k2"></span><span class="cr k3"></span><span class="cr k4"></span><span class="rec"><i></i>REC <span data-timer>00:00</span></span><span class="fmt">4K · 30 fps</span><span class="focus" data-at="900" style="left:48%;bottom:52%"></span><span class="zoom"><span class="z1">1x</span><span class="z2" data-at="2600">2x</span></span><span class="shutter"></span><span class="flash" data-at="5600"></span><span class="saved" data-at="5700" data-i18n="mo_b1">✓ Clip enregistré</span></div><figcaption class="cap" data-i18n="mn_c1">Tourner une vidéo pour une boutique, au smartphone.</figcaption></figure>
+      <figure class="rv"><div class="mo mo-chat" data-dur="11000" aria-hidden="true"><div class="chat"><div class="ch-h"><span class="av">M</span><span><b>Mboa Market</b><small data-i18n="mo_c0">en ligne</small></span></div><div class="msgs"><p class="m in" data-at="400" data-i18n="mo_c1">Bonjour ! Vous pouvez faire une vidéo pour ma boutique ?</p><p class="m out" data-at="1800" data-i18n="mo_c2">Oui ! Je vous l'envoie aujourd'hui 😉</p><div class="m out vid" data-at="3300"><span class="th"><b>▶</b></span><small><span data-i18n="mo_c3">Pub boutique</span> · 0:30</small></div><p class="typing" data-at="4700" data-until="6000"><i></i><i></i><i></i></p><p class="m in" data-at="6000" data-i18n="mo_c4">Waouh 🔥 C'est parfait !</p><p class="m in" data-at="7300" data-i18n="mo_c5">Je valide, j'envoie le paiement 👍</p><p class="paid" data-at="8600" data-i18n="mo_c6">✓ Paiement reçu</p></div></div></div><figcaption class="cap" data-i18n="mn_c2">Présenter le résultat au client et conclure.</figcaption></figure>
     </div>
     <div class="msteps">
       <div class="ms rv"><b>01</b><h3 data-i18n="ms1h">Trouver vos premiers clients</h3><p data-i18n="ms1p">Où les chercher, quoi leur montrer, comment les approcher.</p></div>
@@ -724,6 +836,8 @@ const EN = {
   fq_h:"Your questions, my answers.",
   faq:'<details open><summary>Can I really do everything with my phone?</summary><p>Yes. You can follow the live session and apply the method from your smartphone. A computer is a plus, not a requirement: right after the masterclass, you can get started with your phone.</p></details><details><summary>I live outside Cameroon. How does it work?</summary><p>No problem: the masterclass is 100% online. The price is in FCFA, and the site shows you an estimate in your currency and the live time in your local time. The available payment methods are shown on the payment page.</p></details><details><summary>I have never edited a video. Is this for me?</summary><p>Yes. I start from zero and show you every step live, from raw footage to the final video.</p></details><details><summary>How does the masterclass work?</summary><p>It is 100% online and live, on Friday October 16 from 7 to 9 pm (GMT+1). The link is shared in the private group.</p></details><details><summary>What if I miss the live session?</summary><p>The replay is available in the private group, with the slides PDF.</p></details><details><summary>When do I get access?</summary><p>Right after payment, you get direct access to the masterclass private group.</p></details><details><summary>Are the tools paid?</summary><p>Many tools have a free version to get started. I tell you which ones to use depending on your budget.</p></details><details><summary>Will I really be able to make money?</summary><p>Companies need videos. I show you how to find clients, set your prices and deliver fast. Your results will depend on your work: no income is guaranteed.</p></details>',
   micro:"🔒 Secure payment · Mobile Money or card · Instant access to the private group", fx_lbl:"See the price in your currency:", fx_note:"Indicative amount. Payment is made in FCFA; the final conversion depends on your payment method.",
+  mo_a1:"Animated titles", mo_a2:"Transitions", mo_a3:"Music", mo_a4:"NEW", mo_a5:"COLLECTION", mo_a6:"Export", mo_a7:"✓ Video ready", mo_a8:"Ready to post", mo_b1:"✓ Clip saved",
+  mo_c0:"online", mo_c1:"Hi! Can you make a video for my shop?", mo_c2:"Yes! I'll send it to you today 😉", mo_c3:"Shop ad", mo_c4:"Wow 🔥 It's perfect!", mo_c5:"Approved, sending the payment 👍", mo_c6:"✓ Payment received",
   cb_text:'<span class="l">Free WhatsApp community <b>LE DIGITAL POUR TOUS</b>: artificial intelligence, digital marketing, content creation and much more.</span><span class="s"><b>LE DIGITAL POUR TOUS</b><br>AI · Marketing · Content</span>', cb_btn:"Join for free",
   fn_eye:"Friday, October 16 · 7 pm", fn_h:"Your phone is enough. All you need is your seat.", fn_p:"15,000 FCFA instead of 25,000 FCFA while seats last. Replay and PDF included.",
   partners:"Partners", foot:"© 2026 Roger BOUJIEKA · Boujieka Academy · Masterclass “Video editing &amp; Motion Design with AI”", mbar_s:"INSTEAD OF 25,000"
@@ -962,6 +1076,26 @@ const BOOKINGS = [];
   }));
   const go = document.querySelector('.cbar .go'); if (go) go.addEventListener('click', () => track('Lead', { content_name: 'Communauté LE DIGITAL POUR TOUS' }));
   const wa = document.querySelector('.wa-float'); if (wa) wa.addEventListener('click', () => track('Contact'));
+})();
+/* ---------- motion illustrations: play each scene's timeline while it is on screen ---------- */
+(function () {
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  document.querySelectorAll('.mo[data-dur]').forEach(sc => {
+    const dur = +sc.dataset.dur;
+    const items = [...sc.querySelectorAll('[data-at]')].map(el => ({ el, at: +el.dataset.at, until: +(el.dataset.until || 0) }));
+    const timers = [...sc.querySelectorAll('[data-timer]')];
+    const set = t => {
+      items.forEach(i => i.el.classList.toggle('on', t >= i.at && (!i.until || t < i.until)));
+      timers.forEach(el => { el.textContent = '00:' + String(Math.floor(t / 1000)).padStart(2, '0'); });
+    };
+    if (reduce || !('IntersectionObserver' in window)) { set(dur - 1); return; }
+    let vis = false, t0 = 0;
+    const frame = now => { if (!vis) return; set((now - t0) % dur); requestAnimationFrame(frame); };
+    new IntersectionObserver(es => {
+      const v = es[0].isIntersecting;
+      if (v && !vis) { vis = true; t0 = performance.now(); requestAnimationFrame(frame); } else if (!v) vis = false;
+    }, { threshold: .2 }).observe(sc);
+  });
 })();
 </script>
 </body>
