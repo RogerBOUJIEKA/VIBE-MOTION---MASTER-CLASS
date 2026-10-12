@@ -405,8 +405,23 @@ footer{padding:18px 16px 110px;text-align:center;color:var(--faint);font-size:12
   .marquee .track{animation:none}
 }
 </style>
+<!-- Meta Pixel Code -->
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '1454801303232892');
+fbq('track', 'PageView');
+</script>
+<!-- End Meta Pixel Code -->
 </head>
 <body>
+<noscript><img height="1" width="1" style="display:none" alt="" src="https://www.facebook.com/tr?id=1454801303232892&ev=PageView&noscript=1"></noscript>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
   <symbol id="i-phone" viewBox="0 0 24 24"><rect x="6.5" y="2.5" width="11" height="19" rx="2.8"/><path d="M10.5 18.3h3"/></symbol>
   <symbol id="i-wifi" viewBox="0 0 24 24"><path d="M2.5 9a15 15 0 0 1 19 0M5.5 12.6a10 10 0 0 1 13 0M8.6 16.1a5 5 0 0 1 6.8 0"/><circle cx="12" cy="19.4" r=".9"/></symbol>
@@ -934,6 +949,19 @@ const BOOKINGS = [];
     el.textContent = (en ? '🕒 In your time zone: ' : '🕒 À votre heure locale : ') + t; el.hidden = false;
   }
   window.ltRender = render; render();
+})();
+/* ---------- Meta Pixel events ----------
+   InitiateCheckout: booking buttons (the page waits 250 ms so the event is sent before leaving for Chariow).
+   Lead: "join the free community". Contact: WhatsApp button. */
+(function () {
+  const track = (ev, data) => { try { if (window.fbq) fbq('track', ev, data || {}); } catch (e) {} };
+  document.querySelectorAll('.js-cta').forEach(a => a.addEventListener('click', e => {
+    if (!window.fbq || e.ctrlKey || e.metaKey || e.shiftKey || e.button === 1) { track('InitiateCheckout', { content_name: 'Masterclass Montage IA' }); return; }
+    track('InitiateCheckout', { content_name: 'Masterclass Montage IA' });
+    e.preventDefault(); const url = a.href; setTimeout(() => { location.href = url; }, 250);
+  }));
+  const go = document.querySelector('.cbar .go'); if (go) go.addEventListener('click', () => track('Lead', { content_name: 'Communauté LE DIGITAL POUR TOUS' }));
+  const wa = document.querySelector('.wa-float'); if (wa) wa.addEventListener('click', () => track('Contact'));
 })();
 </script>
 </body>
