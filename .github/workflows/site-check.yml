@@ -42,3 +42,16 @@ jobs:
       - name: GitHub Pages settings
         env: { GH_TOKEN: '${{ github.token }}' }
         run: gh api repos/${{ github.repository }}/pages || true
+      - name: Live version
+        run: |
+          # wait (max 4 min) until the published page is the light version
+          for i in $(seq 1 24); do
+            html=$(curl -sS --compressed -m 20 "https://www.rogerboujieka.com/?v=$RANDOM")
+            if echo "$html" | grep -q 'data-poster=' && ! echo "$html" | grep -q 'fonts.googleapis'; then echo "live page is the light version (try $i)"; break; fi
+            sleep 10
+          done
+          echo "google fonts links: $(echo "$html" | grep -c 'fonts.googleapis')"
+          echo "deferred video thumbnails: $(echo "$html" | grep -o 'data-poster=' | wc -l)"
+          curl -sS -o /dev/null -D - --compressed https://www.rogerboujieka.com/ | grep -iE '^(http|content-encoding|cache-control|age|x-cache|last-modified)'
+          curl -sS -o /dev/null --compressed -w 'html over the wire: %{size_download} bytes in %{time_total}s\n' https://www.rogerboujieka.com/
+          for f in roger.webp thumbs/work-bovann.jpg fonts/inter-tight.woff2; do curl -sS -o /dev/null -w "$f: %{http_code} %{size_download} bytes\n" https://www.rogerboujieka.com/$f; done
