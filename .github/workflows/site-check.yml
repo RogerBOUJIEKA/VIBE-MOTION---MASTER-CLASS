@@ -1,0 +1,44 @@
+# Checks from the outside that the domain resolves and the site answers fast.
+name: site check
+on:
+  workflow_dispatch:
+  push:
+    paths: ['.github/workflows/site-check.yml']
+permissions:
+  contents: read
+  pages: read
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: DNS
+        run: |
+          sudo apt-get -qq install -y dnsutils >/dev/null 2>&1 || true
+          for h in rogerboujieka.com www.rogerboujieka.com; do
+            for t in NS A AAAA CNAME CAA; do
+              echo "== $h $t (8.8.8.8)"; dig +short @8.8.8.8 $h $t
+              echo "== $h $t (1.1.1.1)"; dig +short @1.1.1.1 $h $t
+            done
+          done
+          NS=$(dig +short @8.8.8.8 rogerboujieka.com NS | head -1)
+          echo "== authoritative $NS"
+          for h in rogerboujieka.com www.rogerboujieka.com; do for t in A AAAA CNAME; do echo "-- $h $t"; dig +short @$NS $h $t; done; done
+      - name: HTTP
+        run: |
+          for u in https://rogerboujieka.com/ https://www.rogerboujieka.com/ http://rogerboujieka.com/ http://www.rogerboujieka.com/ https://rogerboujieka.github.io/VIBE-MOTION---MASTER-CLASS/; do
+            echo "== $u"
+            curl -sS -o /dev/null -m 25 -w 'code=%{http_code} ip=%{remote_ip} dns=%{time_namelookup}s connect=%{time_connect}s tls=%{time_appconnect}s first_byte=%{time_starttransfer}s total=%{time_total}s redirect=%{redirect_url}\n' "$u" || true
+          done
+          echo "== follow redirects from the apex (what Facebook opens)"
+          curl -sSL -o /dev/null -m 40 -w 'final=%{url_effective} code=%{http_code} redirects=%{num_redirects} total=%{time_total}s size=%{size_download}\n' https://rogerboujieka.com/ || true
+          for ip in $(dig +short @8.8.8.8 rogerboujieka.com A); do echo "== apex via $ip"; curl -sS -o /dev/null -m 15 --resolve rogerboujieka.com:443:$ip -w 'code=%{http_code} connect=%{time_connect}s total=%{time_total}s\n' https://rogerboujieka.com/ || true; done
+          for ip in $(dig +short @8.8.8.8 rogerboujieka.com AAAA); do echo "== apex has IPv6 $ip"; whois $ip 2>/dev/null | grep -iE 'netname|org-name|descr' | head -3; done
+      - name: TLS certificates
+        run: |
+          for h in rogerboujieka.com www.rogerboujieka.com; do
+            echo "== $h"
+            echo | timeout 20 openssl s_client -connect $h:443 -servername $h 2>/dev/null | openssl x509 -noout -subject -issuer -dates -ext subjectAltName 2>&1 || echo "no certificate"
+          done
+      - name: GitHub Pages settings
+        env: { GH_TOKEN: '${{ github.token }}' }
+        run: gh api repos/${{ github.repository }}/pages || true
