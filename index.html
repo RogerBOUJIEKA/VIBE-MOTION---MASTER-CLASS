@@ -132,10 +132,9 @@ p{margin:0}
 /* hero card: portrait (nothing on the face) + editing timeline */
 .hcard{border-radius:26px;overflow:hidden;background:var(--card);box-shadow:var(--shadow),inset 0 0 0 1px var(--line);max-width:460px;width:100%;justify-self:center}
 .pic{position:relative;aspect-ratio:1/1.16;overflow:hidden;background:radial-gradient(110% 85% at 50% 100%,#e3061b 0%,#b00416 50%,#5a0009 100%);isolation:isolate}
-.pic .rg{position:absolute;left:50%;top:44%;width:var(--s);aspect-ratio:1;border-radius:50%;border:1px solid rgba(255,255,255,.22);transform:translate(-50%,-50%) scale(.6);opacity:0;animation:ring 1.4s var(--ease) forwards,breathe 6s ease-in-out 1.4s infinite;z-index:-1}
-.pic .rg:nth-child(2){animation-delay:.12s,1.52s}.pic .rg:nth-child(3){animation-delay:.24s,1.64s}
-@keyframes ring{to{transform:translate(-50%,-50%) scale(1);opacity:1}}
-@keyframes breathe{50%{transform:translate(-50%,-50%) scale(1.04)}}
+.pic .rg{position:absolute;left:50%;top:44%;width:118%;aspect-ratio:1;border-radius:50%;border:3px solid rgba(255,255,255,.6);transform:translate(-50%,-50%) scale(.22);opacity:0;animation:ripple 3.2s linear infinite;z-index:-1;will-change:transform,opacity}
+.pic .rg:nth-child(2){animation-delay:-.8s}.pic .rg:nth-child(3){animation-delay:-1.6s}.pic .rg:nth-child(4){animation-delay:-2.4s}
+@keyframes ripple{0%{transform:translate(-50%,-50%) scale(.22);opacity:0}15%{opacity:.85}100%{transform:translate(-50%,-50%) scale(1.1);opacity:0}}
 /* the cutout is full-bleed: both arms and the bottom edge sit on the frame edges */
 .pic img{position:absolute;left:-6%;bottom:0;width:112%;max-width:none;transform:translateY(5%);opacity:0;animation:rise 1.1s var(--ease) .25s forwards}
 @keyframes rise{to{transform:none;opacity:1}}
@@ -661,7 +660,7 @@ fbq('track', 'PageView');
       </div>
     </div>
     <div class="hcard in" style="--d:.15s">
-      <div class="pic"><span class="rg" style="--s:56%"></span><span class="rg" style="--s:78%"></span><span class="rg" style="--s:100%"></span><img src="roger.webp" alt="Roger BOUJIEKA" width="800" height="800" fetchpriority="high"></div>
+      <div class="pic"><span class="rg"></span><span class="rg"></span><span class="rg"></span><span class="rg"></span><img src="roger.webp" alt="Roger BOUJIEKA" width="1254" height="1254" fetchpriority="high"></div>
       <div class="tl" aria-hidden="true">
         <div class="tl-h"><span><b>Roger BOUJIEKA</b> · <span data-i18n="tl_role">votre formateur</span></span><span class="tc js-tc">00:00:00</span></div>
         <div class="tl-b">
@@ -773,7 +772,7 @@ fbq('track', 'PageView');
 
     <div class="panel" role="tabpanel" id="p-formateur" aria-labelledby="tab-formateur" hidden>
       <div class="trainer">
-        <div class="portrait"><img src="roger.webp" alt="Roger BOUJIEKA" loading="lazy" decoding="async" width="800" height="800"></div>
+        <div class="portrait"><img src="roger.webp" alt="Roger BOUJIEKA" loading="lazy" decoding="async" width="1254" height="1254"></div>
         <div>
           <h3>Roger BOUJIEKA</h3>
           <p class="lead" style="margin-top:12px" data-i18n="tr_p">Entrepreneur web, expert en intelligence artificielle, en montage vidéo, en motion design et en marketing digital. Je crée chaque jour des vidéos et des campagnes pour des marques et des entreprises, et je vous transmets exactement ce qui marche.</p>
@@ -992,6 +991,18 @@ tabs.forEach((t, i) => {
 });
 addEventListener('resize', moveInd);
 if (document.fonts) document.fonts.ready.then(moveInd);
+
+/* ---------- FAQ: one answer open at a time ---------- */
+(function () {
+  const faq = document.querySelector('.faq'); if (!faq) return;
+  faq.addEventListener('toggle', e => {
+    const d = e.target; if (d.tagName !== 'DETAILS' || !d.open) return;
+    faq.querySelectorAll('details[open]').forEach(o => { if (o !== d) o.open = false; });
+    // if closing an answer above pushed this question off screen, bring it back into view
+    const top = d.getBoundingClientRect().top;
+    if (top < 70) scrollBy({ top: top - 80, behavior: 'smooth' });
+  }, true);
+})();
 
 /* ---------- light first load: video thumbnails are fetched only when about to be seen ---------- */
 (function () {
