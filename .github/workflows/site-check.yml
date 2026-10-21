@@ -65,3 +65,12 @@ jobs:
           done
           echo "== live page wording"
           curl -sS --compressed https://www.rogerboujieka.com/ | grep -oE 'Formation vidéo · Accès immédiat|J.accède à la formation|<title>[^<]*' | sort | uniq -c
+      - name: Chariow checkout as a phone browser
+        run: |
+          UA='Mozilla/5.0 (Linux; Android 13; SM-A145F) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0.0.0 Mobile Safari/537.36'
+          for u in https://rogerboujieka237.mychariow.shop/prd_gy9104l1/checkout https://rogerboujieka237.mychariow.shop/prd_gy9104l1 https://rogerboujieka237.mychariow.shop/; do
+            echo "== $u"
+            curl -sS -L -m 30 -A "$UA" -H 'Accept: text/html,application/xhtml+xml' -H 'Accept-Language: fr-FR,fr;q=0.9' -D /tmp/h.txt -o /tmp/c.html -w 'code=%{http_code} final=%{url_effective} size=%{size_download}\n' "$u" || true
+            grep -iE '^(HTTP|server|location|x-powered|cf-ray|content-type)' /tmp/h.txt | head -8
+            python3 -c "import re,html;t=open('/tmp/c.html',encoding='utf-8',errors='ignore').read();m=re.search(r'<title>(.*?)</title>',t,re.S);print('title:',m.group(1).strip()[:120] if m else '-');x=re.sub(r'<script.*?</script>|<style.*?</style>','',t,flags=re.S);x=html.unescape(re.sub(r'<[^>]+>',' ',x));print('text:',re.sub(r'\\s+',' ',x).strip()[:700])"
+          done
