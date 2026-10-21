@@ -55,3 +55,13 @@ jobs:
           curl -sS -o /dev/null -D - --compressed https://www.rogerboujieka.com/ | grep -iE '^(http|content-encoding|cache-control|age|x-cache|last-modified)'
           curl -sS -o /dev/null --compressed -w 'html over the wire: %{size_download} bytes in %{time_total}s\n' https://www.rogerboujieka.com/
           for f in roger.webp thumbs/work-bovann.jpg fonts/inter-tight.woff2; do curl -sS -o /dev/null -w "$f: %{http_code} %{size_download} bytes\n" https://www.rogerboujieka.com/$f; done
+      - name: Old copies and links
+        run: |
+          for u in https://rogerboujieka.github.io/ https://rogerboujieka.github.io/RogerBOUJIEKA/ https://rogerboujieka.github.io/RogerBOUJIEKA/masterclass-ia/ https://www.rogerboujieka.com/masterclass-ia/ https://rogerboujieka237.mychariow.shop/prd_gy9104l1/checkout; do
+            echo "== $u"
+            curl -sSL -m 25 -o /tmp/p.html -w 'code=%{http_code} final=%{url_effective}\n' "$u" || true
+            echo "title: $(grep -o '<title>[^<]*' /tmp/p.html | head -1)"
+            echo "mentions masterclass: $(grep -oi 'masterclass' /tmp/p.html | wc -l) · vendredi/octobre: $(grep -oiE 'vendredi|octobre' /tmp/p.html | wc -l) · formation: $(grep -oi 'formation' /tmp/p.html | wc -l)"
+          done
+          echo "== live page wording"
+          curl -sS --compressed https://www.rogerboujieka.com/ | grep -oE 'Formation vidéo · Accès immédiat|J.accède à la formation|<title>[^<]*' | sort | uniq -c
