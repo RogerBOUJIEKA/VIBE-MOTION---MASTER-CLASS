@@ -12,6 +12,9 @@ permissions:
 jobs:
   check:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash {0}
     steps:
       - name: DNS
         run: |
@@ -99,4 +102,13 @@ jobs:
           for u in https://vibe-motion-master-class.vercel.app https://vibe-motion---master-class.vercel.app https://vibe-motion-master-class-rogerboujieka.vercel.app; do
             curl -sSL -m 20 -o /tmp/v.html -w "$u code=%{http_code} final=%{url_effective}\n" "$u" || true
             echo "   title: $(grep -o '<title>[^<]*' /tmp/v.html | head -1) · formation hero: $(grep -c 'Formation vidéo · Accès immédiat' /tmp/v.html)"
+          done
+      - name: What Vercel serves on the apex
+        run: |
+          UA='Mozilla/5.0 (Linux; Android 13; SM-A145F) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0.0.0 Mobile Safari/537.36'
+          for u in https://rogerboujieka.com/ https://www.rogerboujieka.com/; do
+            echo "== $u (phone browser)"
+            curl -sS -L -m 25 -A "$UA" -H 'Accept: text/html' -D /tmp/h.txt -o /tmp/a.html -w 'code=%{http_code} final=%{url_effective}\n' "$u"
+            grep -iE '^(HTTP|server|x-vercel|location|cache-control)' /tmp/h.txt | head -8
+            echo "title: $(grep -o '<title>[^<]*' /tmp/a.html | head -1) · formation hero: $(grep -c 'Formation vidéo · Accès immédiat' /tmp/a.html) · checkpoint: $(grep -ci 'checkpoint\|challenge' /tmp/a.html)"
           done
