@@ -7,6 +7,8 @@ on:
 permissions:
   contents: read
   pages: read
+  deployments: read
+  statuses: read
 jobs:
   check:
     runs-on: ubuntu-latest
@@ -82,3 +84,19 @@ jobs:
           grep -oiE '"(statusCode|status|message|error|digest|code)"[^,}]{0,120}|Application error[^<]{0,120}|Internal Server Error|Something went wrong[^<]{0,80}|maintenance[^<"]{0,80}|suspend[^<"]{0,80}|introuvable[^<"]{0,80}|not found[^<"]{0,60}' /tmp/c.html | sort | uniq -c | head -20
           echo "--- other Chariow pages for comparison"
           for u in https://chariow.com/ https://www.chariow.com/ https://app.chariow.com/; do curl -sS -o /dev/null -m 25 -A "$UA" -w "$u code=%{http_code}\n" "$u" || true; done
+      - name: Vercel
+        env: { GH_TOKEN: '${{ github.token }}' }
+        run: |
+          echo "--- deployments reported to GitHub"
+          gh api "repos/${{ github.repository }}/deployments?per_page=5" --jq '.[] | "\(.created_at) env=\(.environment) creator=\(.creator.login) sha=\(.sha[0:7]) id=\(.id)"' || true
+          for id in $(gh api "repos/${{ github.repository }}/deployments?per_page=3" --jq '.[].id' 2>/dev/null); do
+            gh api "repos/${{ github.repository }}/deployments/$id/statuses" --jq '.[0] | "  status=\(.state) url=\(.environment_url // .target_url)"' || true
+          done
+          echo "--- commit statuses on main"
+          gh api "repos/${{ github.repository }}/commits/main/status" --jq '.statuses[] | "\(.context) \(.state) \(.target_url)"' || true
+          gh api "repos/${{ github.repository }}/commits/main/check-runs" --jq '.check_runs[] | "\(.name) \(.conclusion) \(.details_url)"' || true
+          echo "--- candidate vercel addresses"
+          for u in https://vibe-motion-master-class.vercel.app https://vibe-motion---master-class.vercel.app https://vibe-motion-master-class-rogerboujieka.vercel.app; do
+            curl -sSL -m 20 -o /tmp/v.html -w "$u code=%{http_code} final=%{url_effective}\n" "$u" || true
+            echo "   title: $(grep -o '<title>[^<]*' /tmp/v.html | head -1) · formation hero: $(grep -c 'Formation vidéo · Accès immédiat' /tmp/v.html)"
+          done
