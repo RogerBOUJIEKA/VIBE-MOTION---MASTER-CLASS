@@ -117,3 +117,15 @@ jobs:
             grep -iE '^(HTTP|server|x-vercel|location|cache-control)' /tmp/h.txt | head -8
             echo "title: $(grep -o '<title>[^<]*' /tmp/a.html | head -1) · formation hero: $(grep -c 'Formation vidéo · Accès immédiat' /tmp/a.html) · checkpoint: $(grep -ci 'checkpoint\|challenge' /tmp/a.html)"
           done
+      - name: Chariow product thumbnail format
+        continue-on-error: true
+        run: |
+          UA='Mozilla/5.0 (Linux; Android 13; SM-A145F) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0.0.0 Mobile Safari/537.36'
+          curl -sS -L -m 30 -A "$UA" -o /tmp/s.html https://rogerboujieka237.mychariow.shop/
+          echo "--- product images on the shop page"
+          grep -oE '<img[^>]*>' /tmp/s.html | grep -iE 'prd|product|cover|thumb|media|cdn' | head -6 | cut -c1-400
+          echo "--- aspect ratio hints"
+          grep -oE 'aspect-\[[^]]*\]|aspect-(square|video)|aspect-ratio:[^;"]*' /tmp/s.html | sort | uniq -c | head -10
+          for u in $(grep -oE 'https://[^" ]+\.(png|jpe?g|webp)' /tmp/s.html | grep -viE 'logo|favicon|flag|icon' | sort -u | head -4); do
+            curl -sS -m 20 -o /tmp/i.bin "$u" && python3 -c "from PIL import Image;im=Image.open('/tmp/i.bin');print('$u'[:110], im.size)" 2>/dev/null || echo "$u (not readable)"
+          done
