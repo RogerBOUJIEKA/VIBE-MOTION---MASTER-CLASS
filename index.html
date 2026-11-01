@@ -82,7 +82,8 @@ p{margin:0}
 .btn-red:hover{transform:translateY(-2px);box-shadow:0 18px 44px rgba(227,6,27,.42),inset 0 1px 0 rgba(255,255,255,.3)}
 .btn-red::after,.btn-white::after{content:"";position:absolute;inset:0;background:linear-gradient(100deg,transparent 30%,rgba(255,255,255,.45) 50%,transparent 70%);transform:translateX(-120%);animation:shine 4.2s ease-in-out infinite 1.2s}
 @keyframes shine{0%,62%{transform:translateX(-120%)}82%,100%{transform:translateX(120%)}}
-.btn .arr{width:26px;height:26px;border-radius:50%;background:#fff;color:#b00416;display:grid;place-items:center;font-size:15px;flex:none}
+.btn .arr{width:26px;height:26px;border-radius:50%;background:#fff;color:#b00416;position:relative;display:block;font-size:0;line-height:0;color:#b00416;flex:none}
+.btn .arr::before{content:"";position:absolute;inset:0;margin:auto;width:60%;height:60%;background:currentColor;-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 12h15M13 5.5 19.5 12 13 18.5'/%3E%3C/svg%3E") center/contain no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 12h15M13 5.5 19.5 12 13 18.5'/%3E%3C/svg%3E") center/contain no-repeat}
 .btn-full{width:100%}
 .btn-white{background:#fff;color:#0d0d12}
 .btn-white .arr{background:#e3061b;color:#fff}
@@ -603,7 +604,8 @@ footer{padding:18px 16px 110px;text-align:center;color:var(--faint);font-size:12
 .cd-n b{color:#fff}
 .cd.c{margin-inline:auto}
 .offer-cd .cd{max-width:none;margin:18px 0 6px}
-.mbar .p small.mcd{display:inline-block;margin-top:5px;padding:3px 7px;border-radius:6px;background:#e3061b;color:#fff;font-weight:800;font-variant-numeric:tabular-nums}
+.mbar .pr{display:flex;align-items:center;gap:8px;white-space:nowrap}
+.mbar .p small.mcd{display:inline-block;margin:0;padding:4px 7px;border-radius:6px;background:#e3061b;color:#fff;font:800 10px/1 var(--mono);letter-spacing:.02em;font-variant-numeric:tabular-nums}
 /* clean video player for YouTube links: no YouTube title, channel or links */
 .yt{position:relative;display:block;width:100%;aspect-ratio:16/9;padding:0;border:0;cursor:pointer;overflow:hidden;border-radius:18px;background:#000;box-shadow:0 18px 50px rgba(0,0,0,.22),inset 0 0 0 1px var(--line);-webkit-user-select:none;user-select:none}
 .work .yt{border-radius:16px}
@@ -945,7 +947,7 @@ fbq('track', 'PageView');
 
 <div class="toast" id="toast" role="status" aria-live="polite" hidden><span class="t-ic"></span><span class="t-tx"><b></b><small></small></span><button class="t-x" type="button" aria-label="Fermer">✕</button></div>
 <a class="wa-float" href="https://wa.me/237678594247?text=Bonjour%20Roger%2C%20j%27ai%20une%20question%20sur%20la%20formation%20Montage%20vid%C3%A9o%20%26%20Motion%20Design%20avec%20l%27IA." target="_blank" rel="noopener" aria-label="Envoyer un message à Roger BOUJIEKA sur WhatsApp" title="WhatsApp"><svg class="wa-ic" aria-hidden="true"><use href="#i-wa"/></svg></a>
-<div class="mbar" id="mbar"><div class="p">15 000 FCFA<small data-i18n="mbar_s">AU LIEU DE 25 000 FCFA</small><small class="mcd">⏳ <span class="js-cd-hms">10:00:00</span></small></div><a class="btn btn-red js-cta" href="https://rogerboujieka237.mychariow.shop/prd_gy9104l1/checkout"><span data-i18n="cta_short">Je m'inscris</span><span class="arr">→</span></a></div>
+<div class="mbar" id="mbar"><div class="p"><span class="pr">15 000 FCFA<small class="mcd">⏳ <span class="js-cd-hms">10:00:00</span></small></span><small data-i18n="mbar_s">AU LIEU DE 25 000 FCFA</small></div><a class="btn btn-red js-cta" href="https://rogerboujieka237.mychariow.shop/prd_gy9104l1/checkout"><span data-i18n="cta_short">Je m'inscris</span><span class="arr">→</span></a></div>
 
 <script>
 /* ===== Configuration =====
