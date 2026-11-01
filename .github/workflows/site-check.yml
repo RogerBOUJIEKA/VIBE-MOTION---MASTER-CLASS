@@ -63,7 +63,7 @@ jobs:
       - name: Old copies and links
         continue-on-error: true
         run: |
-          for u in https://rogerboujieka.github.io/ https://rogerboujieka.github.io/RogerBOUJIEKA/ https://rogerboujieka.github.io/RogerBOUJIEKA/masterclass-ia/ https://www.rogerboujieka.com/masterclass-ia/ https://rogerboujieka237.mychariow.shop/prd_gy9104l1/checkout; do
+          for u in https://rogerboujieka.github.io/ https://rogerboujieka.github.io/RogerBOUJIEKA/ https://rogerboujieka.github.io/RogerBOUJIEKA/masterclass-ia/ https://www.rogerboujieka.com/masterclass-ia/ https://rogerboujieka237.mychariow.shop/prd_9wrq07d2/checkout; do
             echo "== $u"
             curl -sSL -m 25 -o /tmp/p.html -w 'code=%{http_code} final=%{url_effective}\n' "$u" || true
             echo "title: $(grep -o '<title>[^<]*' /tmp/p.html | head -1)"
@@ -75,7 +75,7 @@ jobs:
         continue-on-error: true
         run: |
           UA='Mozilla/5.0 (Linux; Android 13; SM-A145F) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0.0.0 Mobile Safari/537.36'
-          for u in https://rogerboujieka237.mychariow.shop/prd_gy9104l1/checkout https://rogerboujieka237.mychariow.shop/prd_gy9104l1 https://rogerboujieka237.mychariow.shop/; do
+          for u in https://rogerboujieka237.mychariow.shop/prd_9wrq07d2/checkout https://rogerboujieka237.mychariow.shop/prd_9wrq07d2 https://rogerboujieka237.mychariow.shop/; do
             echo "== $u"
             curl -sS -L -m 30 -A "$UA" -H 'Accept: text/html,application/xhtml+xml' -H 'Accept-Language: fr-FR,fr;q=0.9' -D /tmp/h.txt -o /tmp/c.html -w 'code=%{http_code} final=%{url_effective} size=%{size_download}\n' "$u" || true
             grep -iE '^(HTTP|server|location|x-powered|cf-ray|content-type)' /tmp/h.txt | head -8
@@ -85,7 +85,7 @@ jobs:
         continue-on-error: true
         run: |
           UA='Mozilla/5.0 (Linux; Android 13; SM-A145F) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0.0.0 Mobile Safari/537.36'
-          curl -sS -L -m 30 -A "$UA" -o /tmp/c.html https://rogerboujieka237.mychariow.shop/prd_gy9104l1/checkout || true
+          curl -sS -L -m 30 -A "$UA" -o /tmp/c.html https://rogerboujieka237.mychariow.shop/prd_9wrq07d2/checkout || true
           echo "--- hints inside the checkout error page"
           grep -oiE '"(statusCode|status|message|error|digest|code)"[^,}]{0,120}|Application error[^<]{0,120}|Internal Server Error|Something went wrong[^<]{0,80}|maintenance[^<"]{0,80}|suspend[^<"]{0,80}|introuvable[^<"]{0,80}|not found[^<"]{0,60}' /tmp/c.html | sort | uniq -c | head -20
           echo "--- other Chariow pages for comparison"
@@ -122,7 +122,7 @@ jobs:
         run: |
           UA='Mozilla/5.0 (Linux; Android 13; SM-A145F) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0.0.0 Mobile Safari/537.36'
           curl -sS -L -m 30 -A "$UA" -o /tmp/s.html https://rogerboujieka237.mychariow.shop/
-          curl -sS -L -m 30 -A "$UA" -o /tmp/p.html https://rogerboujieka237.mychariow.shop/prd_gy9104l1
+          curl -sS -L -m 30 -A "$UA" -o /tmp/p.html https://rogerboujieka237.mychariow.shop/prd_9wrq07d2
           timeout 120 python3 - <<'PY'
           import re, struct, urllib.request
           def size(b):
