@@ -306,7 +306,7 @@ p{margin:0}
 
 
 /* faq */
-.faq{display:grid;gap:10px;max-width:820px}
+.faq{display:grid;gap:10px;max-width:820px;margin-inline:auto}
 .faq details{border-radius:16px;background:var(--card);box-shadow:inset 0 0 0 1px var(--line);overflow:hidden}
 .faq summary{cursor:pointer;list-style:none;padding:17px 52px 17px 18px;position:relative;font:700 16px/1.4 var(--body)}
 .faq summary::-webkit-details-marker{display:none}
@@ -581,7 +581,7 @@ footer{padding:18px 16px 110px;text-align:center;color:var(--faint);font-size:12
 
 /* scroll reveal */
 /* promo countdown */
-.cd{position:relative;width:100%;max-width:520px;margin-top:20px;padding:18px 18px 16px;border-radius:22px;color:#fff;background:radial-gradient(120% 90% at 100% 0%,rgba(227,6,27,.38),transparent 60%),linear-gradient(160deg,#17171e,#08080b);box-shadow:0 22px 50px rgba(0,0,0,.35),0 0 0 1px rgba(227,6,27,.55),0 0 34px rgba(227,6,27,.22);overflow:hidden;text-align:left}
+.pcd{position:relative;width:100%;max-width:520px;margin-top:20px;padding:18px 18px 16px;border-radius:22px;color:#fff;background:radial-gradient(120% 90% at 100% 0%,rgba(227,6,27,.38),transparent 60%),linear-gradient(160deg,#17171e,#08080b);box-shadow:0 22px 50px rgba(0,0,0,.35),0 0 0 1px rgba(227,6,27,.55),0 0 34px rgba(227,6,27,.22);overflow:hidden;text-align:left}
 .cd-top{display:flex;align-items:center;justify-content:space-between;gap:10px}
 .cd-live{display:inline-flex;align-items:center;gap:8px;font:800 12px/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:#ff5a68}
 .cd-live i{width:9px;height:9px;border-radius:50%;background:#ff2d3f;box-shadow:0 0 0 0 rgba(255,45,63,.7);animation:cdPulse 1.4s infinite}
@@ -602,10 +602,11 @@ footer{padding:18px 16px 110px;text-align:center;color:var(--faint);font-size:12
 .cd-bar i{display:block;height:100%;width:100%;border-radius:inherit;background:linear-gradient(90deg,#ff5a68,#e3061b);box-shadow:0 0 12px rgba(227,6,27,.8);transition:width 1s linear}
 .cd-n{margin:10px 0 0;font:600 13px/1.4 var(--body);color:rgba(255,255,255,.72)}
 .cd-n b{color:#fff}
-.cd.c{margin-inline:auto}
-.offer-cd .cd{max-width:none;margin:18px 0 6px}
-.mbar .pr{display:flex;align-items:center;gap:8px;white-space:nowrap}
-.mbar .p small.mcd{display:inline-block;margin:0;padding:4px 7px;border-radius:6px;background:#e3061b;color:#fff;font:800 10px/1 var(--mono);letter-spacing:.02em;font-variant-numeric:tabular-nums}
+.pcd.c{margin-inline:auto}
+.final .pcd .cd-h,.final .pcd .cd-n{text-align:center}
+.offer-cd .pcd{max-width:none;margin:18px 0 6px}
+.mbar .pr{display:flex;align-items:center;gap:7px;white-space:nowrap}
+.mbar .p small.mcd{display:inline-block;margin:0;padding:3px 5px;border-radius:5px;background:#e3061b;color:#fff;font:700 9px/1 var(--mono);letter-spacing:0;font-variant-numeric:tabular-nums}
 /* clean video player for YouTube links: no YouTube title, channel or links */
 .yt{position:relative;display:block;width:100%;aspect-ratio:16/9;padding:0;border:0;cursor:pointer;overflow:hidden;border-radius:18px;background:#000;box-shadow:0 18px 50px rgba(0,0,0,.22),inset 0 0 0 1px var(--line);-webkit-user-select:none;user-select:none}
 .work .yt{border-radius:16px}
@@ -713,7 +714,7 @@ fbq('track', 'PageView');
       <h1 class="h1" data-i18n="hero_h1"><span class="ln"><span style="--i:0">Montez vos vidéos</span></span><span class="ln"><span style="--i:1"><span class="hl">10X</span> plus vite</span></span><span class="ln"><span style="--i:2" class="soft">avec l'IA.</span></span></h1>
       <p class="lead sub in" style="--d:.5s" data-i18n="hero_sub">Apprenez le montage vidéo et le motion design avec les bons outils, <b>même depuis votre téléphone</b>. Puis transformez cette compétence en revenus.</p>
       <div class="price-line in" style="--d:.6s"><span class="price-now">15 000<small>FCFA</small></span><span class="price-was">25 000 FCFA</span><span class="tag" data-i18n="limited">Prix promo</span></div>
-      <div class="in" style="--d:.65s"><div class="cd" role="timer"><div class="cd-top"><span class="cd-live"><i></i><span data-i18n="cd_live">Offre limitée</span></span><span class="cd-off">-40%</span></div><div class="cd-h" data-i18n="cd_h">Le prix promo expire dans :</div><div class="cd-t js-cd"><div class="u"><b>10</b><small data-i18n="cd_uh">HEURES</small></div><span class="sep">:</span><div class="u"><b>00</b><small data-i18n="cd_um">MINUTES</small></div><span class="sep">:</span><div class="u"><b>00</b><small data-i18n="cd_us">SECONDES</small></div></div><div class="cd-bar"><i class="js-cd-bar"></i></div><p class="cd-n" data-i18n="cd_n"><b>15 000 FCFA au lieu de 25 000.</b> Passé ce délai, ce prix n'est plus garanti.</p></div></div>
+      <div class="in" style="--d:.65s"><div class="pcd" role="timer"><div class="cd-top"><span class="cd-live"><i></i><span data-i18n="cd_live">Offre limitée</span></span><span class="cd-off">-40%</span></div><div class="cd-h" data-i18n="cd_h">Le prix promo expire dans :</div><div class="cd-t js-cd"><div class="u"><b>10</b><small data-i18n="cd_uh">HEURES</small></div><span class="sep">:</span><div class="u"><b>00</b><small data-i18n="cd_um">MINUTES</small></div><span class="sep">:</span><div class="u"><b>00</b><small data-i18n="cd_us">SECONDES</small></div></div><div class="cd-bar"><i class="js-cd-bar"></i></div><p class="cd-n" data-i18n="cd_n"><b>15 000 FCFA au lieu de 25 000.</b> Passé ce délai, ce prix n'est plus garanti.</p></div></div>
       <div class="fx js-fx" hidden></div>
       <div class="in" style="--d:.7s"><a class="btn btn-red btn-full js-cta" href="https://rogerboujieka237.mychariow.shop/prd_gy9104l1/checkout"><span data-i18n="cta_main">J'accède à la formation</span><span class="arr">→</span></a><p class="micro" data-i18n="micro">🔒 Paiement sécurisé · Mobile Money ou carte · Accès immédiat à la formation</p></div>
       <div class="facts in" style="--d:.8s">
@@ -894,7 +895,7 @@ fbq('track', 'PageView');
     <div class="pack rv">
       <div class="tp"><span class="nm" data-i18n="pk_name">Formation complète</span><span class="tag" data-i18n="limited">Prix promo</span></div>
       <div class="price"><b>15 000</b><em>FCFA</em><span class="price-was">25 000 FCFA</span></div>
-      <div class="offer-cd"><div class="cd" role="timer"><div class="cd-top"><span class="cd-live"><i></i><span data-i18n="cd_live">Offre limitée</span></span><span class="cd-off">-40%</span></div><div class="cd-h" data-i18n="cd_h">Le prix promo expire dans :</div><div class="cd-t js-cd"><div class="u"><b>10</b><small data-i18n="cd_uh">HEURES</small></div><span class="sep">:</span><div class="u"><b>00</b><small data-i18n="cd_um">MINUTES</small></div><span class="sep">:</span><div class="u"><b>00</b><small data-i18n="cd_us">SECONDES</small></div></div><div class="cd-bar"><i class="js-cd-bar"></i></div><p class="cd-n" data-i18n="cd_n"><b>15 000 FCFA au lieu de 25 000.</b> Passé ce délai, ce prix n'est plus garanti.</p></div></div>
+      <div class="offer-cd"><div class="pcd" role="timer"><div class="cd-top"><span class="cd-live"><i></i><span data-i18n="cd_live">Offre limitée</span></span><span class="cd-off">-40%</span></div><div class="cd-h" data-i18n="cd_h">Le prix promo expire dans :</div><div class="cd-t js-cd"><div class="u"><b>10</b><small data-i18n="cd_uh">HEURES</small></div><span class="sep">:</span><div class="u"><b>00</b><small data-i18n="cd_um">MINUTES</small></div><span class="sep">:</span><div class="u"><b>00</b><small data-i18n="cd_us">SECONDES</small></div></div><div class="cd-bar"><i class="js-cd-bar"></i></div><p class="cd-n" data-i18n="cd_n"><b>15 000 FCFA au lieu de 25 000.</b> Passé ce délai, ce prix n'est plus garanti.</p></div></div>
       <div class="fxbox"><span class="js-fx2"></span><label class="fxsel"><span data-i18n="fx_lbl">Voir le prix dans votre devise :</span><select id="fx-cur"></select></label><small class="fxnote" data-i18n="fx_note" hidden>Montant indicatif. Le paiement se fait en FCFA ; la conversion finale dépend de votre moyen de paiement.</small></div>
       <ul data-i18n="pk_list"><li>La formation vidéo complète (environ 2 h), disponible tout de suite</li><li class="phl">À suivre et à appliquer depuis votre smartphone</li><li>Des rushes au spot en motion design, étape par étape</li><li>Le bonus monétisation : trouver des clients et vendre la compétence</li><li>Le PDF des présentations</li><li>Les ressources de la formation</li><li>L'accès au groupe privé après le paiement</li></ul>
       <a class="btn btn-red btn-full js-cta" id="buy" href="https://rogerboujieka237.mychariow.shop/prd_gy9104l1/checkout"><span data-i18n="cta_buy">J'accède à la formation</span><span class="arr">→</span></a>
@@ -908,7 +909,7 @@ fbq('track', 'PageView');
 <!-- FAQ -->
 <section id="faq" class="alt">
   <div class="wrap">
-    <div class="head rv"><span class="eyebrow">FAQ</span><h2 data-i18n="fq_h">Vos questions, mes réponses.</h2></div>
+    <div class="head center rv"><span class="eyebrow">FAQ</span><h2 data-i18n="fq_h">Vos questions, mes réponses.</h2></div>
     <div class="faq rv" data-i18n="faq">
       <details open><summary>Puis-je vraiment tout faire avec mon téléphone ?</summary><p>Oui. Vous pouvez regarder la formation et appliquer la méthode depuis votre smartphone. Un ordinateur est un plus, pas une obligation : dès la fin de la formation, vous pouvez vous lancer avec votre téléphone.</p></details>
       <details><summary>J'habite hors du Cameroun. Comment ça se passe ?</summary><p>Aucun problème : la formation est 100 % en ligne. Le prix est en FCFA, et le site vous affiche une estimation dans votre devise. Les moyens de paiement disponibles s'affichent sur la page de paiement.</p></details>
@@ -929,7 +930,7 @@ fbq('track', 'PageView');
       <span class="eyebrow" data-i18n="fn_eye">Accès immédiat</span>
       <h2 data-i18n="fn_h">Votre téléphone suffit. Commencez aujourd'hui.</h2>
       <p data-i18n="fn_p">15 000 FCFA au lieu de 25 000 FCFA. Formation vidéo, PDF, ressources et groupe privé inclus.</p>
-      <div class="cd c" role="timer"><div class="cd-top"><span class="cd-live"><i></i><span data-i18n="cd_live">Offre limitée</span></span><span class="cd-off">-40%</span></div><div class="cd-h" data-i18n="cd_h">Le prix promo expire dans :</div><div class="cd-t js-cd"><div class="u"><b>10</b><small data-i18n="cd_uh">HEURES</small></div><span class="sep">:</span><div class="u"><b>00</b><small data-i18n="cd_um">MINUTES</small></div><span class="sep">:</span><div class="u"><b>00</b><small data-i18n="cd_us">SECONDES</small></div></div><div class="cd-bar"><i class="js-cd-bar"></i></div><p class="cd-n" data-i18n="cd_n"><b>15 000 FCFA au lieu de 25 000.</b> Passé ce délai, ce prix n'est plus garanti.</p></div>
+      <div class="pcd c" role="timer"><div class="cd-top"><span class="cd-live"><i></i><span data-i18n="cd_live">Offre limitée</span></span><span class="cd-off">-40%</span></div><div class="cd-h" data-i18n="cd_h">Le prix promo expire dans :</div><div class="cd-t js-cd"><div class="u"><b>10</b><small data-i18n="cd_uh">HEURES</small></div><span class="sep">:</span><div class="u"><b>00</b><small data-i18n="cd_um">MINUTES</small></div><span class="sep">:</span><div class="u"><b>00</b><small data-i18n="cd_us">SECONDES</small></div></div><div class="cd-bar"><i class="js-cd-bar"></i></div><p class="cd-n" data-i18n="cd_n"><b>15 000 FCFA au lieu de 25 000.</b> Passé ce délai, ce prix n'est plus garanti.</p></div>
       <a class="btn btn-white js-cta" href="https://rogerboujieka237.mychariow.shop/prd_gy9104l1/checkout"><span data-i18n="cta_main">J'accède à la formation</span><span class="arr">→</span></a>
     </div>
   </div>
