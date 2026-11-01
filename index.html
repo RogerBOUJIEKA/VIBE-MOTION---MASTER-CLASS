@@ -598,7 +598,7 @@ footer{padding:18px 16px 110px;text-align:center;color:var(--faint);font-size:12
 .yt:hover .pl{transform:scale(1.08)}
 /* latest works, shown high on the page */
 .feat-g{display:grid;gap:14px;grid-template-columns:1fr}
-@media (min-width:700px){.feat-g{grid-template-columns:1fr 1fr}.feat-g .fv:first-child{grid-column:span 2}}
+@media (min-width:700px){.feat-g{grid-template-columns:1fr 1fr}.feat-g .fv:first-child:nth-last-child(odd){grid-column:span 2}}
 .fv{margin:0;position:relative}
 .fv video{width:100%;aspect-ratio:16/9;object-fit:contain;background:#000;border-radius:18px;box-shadow:0 18px 50px rgba(0,0,0,.22),inset 0 0 0 1px var(--line)}
 .fv .nw{position:absolute;top:12px;left:12px;z-index:2;pointer-events:none}
@@ -703,6 +703,7 @@ fbq('track', 'PageView');
     <div class="head rv"><span class="eyebrow" data-i18n="ft_eye">Nouveau · Mes dernières réalisations</span><h2 data-i18n="ft_h">Des spots réalisés pour de vrais clients.</h2><p class="lead" data-i18n="ft_p">Motion design, voix off, musique et effets sonores. Voici exactement ce que vous apprendrez à créer dans la formation.</p></div>
     <div class="feat-g">
       <figure class="fv rv"><span class="tag nw" data-i18n="f_new">Nouveau</span><button class="yt" type="button" data-yt="IHRFvM2n8Ws" aria-label="▶ Spectacle Cabrel Tindo"><img loading="lazy" decoding="async" src="https://i.ytimg.com/vi/IHRFvM2n8Ws/hqdefault.jpg" alt=""><i class="pl" aria-hidden="true"></i></button><figcaption><b data-i18n="f4">Spectacle Cabrel Tindo</b><span data-i18n="f4s">Spot spectacle · motion design</span></figcaption></figure>
+      <figure class="fv rv"><span class="tag nw" data-i18n="f_new">Nouveau</span><button class="yt" type="button" data-yt="4abyQA1a9h8" aria-label="▶ Croisade Bafoussam pour Jésus"><img loading="lazy" decoding="async" src="https://i.ytimg.com/vi/4abyQA1a9h8/hqdefault.jpg" alt=""><i class="pl" aria-hidden="true"></i></button><figcaption><b data-i18n="f1">Croisade Bafoussam pour Jésus</b><span data-i18n="f1s">Événement chrétien · spot complet</span></figcaption></figure>
     </div>
     <div class="feat-cta rv"><a class="btn btn-red js-cta" href="https://rogerboujieka237.mychariow.shop/prd_gy9104l1/checkout"><span data-i18n="ft_cta">Je veux apprendre à faire ça</span><span class="arr">→</span></a><a class="lk js-allworks" href="#details" data-i18n="ft_all">Voir toutes mes réalisations</a></div>
   </div>
@@ -788,6 +789,7 @@ fbq('track', 'PageView');
     <div class="panel" role="tabpanel" id="p-realisations" aria-labelledby="tab-realisations" hidden>
       <div class="works">
         <figure class="work big"><button class="yt" type="button" data-yt="IHRFvM2n8Ws" aria-label="▶ Spectacle Cabrel Tindo"><img loading="lazy" decoding="async" src="https://i.ytimg.com/vi/IHRFvM2n8Ws/hqdefault.jpg" alt=""><i class="pl" aria-hidden="true"></i></button><figcaption><b data-i18n="f4">Spectacle Cabrel Tindo</b><span data-i18n="f4s">Spot spectacle · motion design</span></figcaption></figure>
+        <figure class="work big"><button class="yt" type="button" data-yt="4abyQA1a9h8" aria-label="▶ Croisade Bafoussam pour Jésus"><img loading="lazy" decoding="async" src="https://i.ytimg.com/vi/4abyQA1a9h8/hqdefault.jpg" alt=""><i class="pl" aria-hidden="true"></i></button><figcaption><b data-i18n="f1">Croisade Bafoussam pour Jésus</b><span data-i18n="f1s">Événement chrétien · spot complet</span></figcaption></figure>
         <figure class="work big"><video controls playsinline preload="none" data-manual data-poster="spot-16x9.jpg"><source src="spot-16x9.mp4" type="video/mp4"></video><figcaption><b data-i18n="w7">Spot de la formation</b><span data-i18n="w7s">Motion design · format YouTube · 1:28</span></figcaption></figure>
         <figure class="work big"><video muted loop playsinline preload="none" data-poster="work-camairco.jpg"><source src="work-camairco.mp4" type="video/mp4"></video><figcaption><b data-i18n="w1">Spot Camair-Co</b><span data-i18n="w1s">Compagnie aérienne</span></figcaption></figure>
         <figure class="work big"><video muted loop playsinline preload="none" data-poster="work-bovann.jpg"><source src="work-bovann.mp4" type="video/mp4"></video><figcaption><b data-i18n="w2">Spot Bovann Group</b><span data-i18n="w2s">Entreprise</span></figcaption></figure>
