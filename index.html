@@ -580,22 +580,57 @@ footer{padding:18px 16px 110px;text-align:center;color:var(--faint);font-size:12
 
 /* scroll reveal */
 /* promo countdown */
-.cd{display:inline-flex;align-items:center;flex-wrap:wrap;gap:10px 12px;margin-top:16px;padding:10px 12px 10px 14px;border-radius:16px;background:var(--red-soft);box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--red) 30%,transparent)}
-.cd .lb{font:800 14px/1.25 var(--body);color:var(--red-ink)}
-.cd .t{display:inline-flex;gap:6px}
-.cd .t span{min-width:48px;padding:8px 6px 6px;border-radius:10px;background:var(--red);color:#fff;text-align:center}
-.cd .t b{display:block;font:700 21px/1 var(--mono);font-variant-numeric:tabular-nums}
-.cd .t small{display:block;font:700 9px/1.2 var(--mono);letter-spacing:.08em;opacity:.85;margin-top:4px}
-.cd.c{justify-content:center}
-.final .cd{background:rgba(255,255,255,.14);box-shadow:inset 0 0 0 1px rgba(255,255,255,.3)}.final .cd .lb{color:#fff}.final .cd .t span{background:#fff;color:#b00416}
-.mbar .p small.mcd{color:var(--red-ink);font-variant-numeric:tabular-nums}
-/* YouTube cards: thumbnail first, player loads on tap */
-.yt{position:relative;display:block;width:100%;aspect-ratio:16/9;padding:0;border:0;cursor:pointer;overflow:hidden;border-radius:18px;background:#000;box-shadow:0 18px 50px rgba(0,0,0,.22),inset 0 0 0 1px var(--line)}
+.cd{position:relative;width:100%;max-width:520px;margin-top:20px;padding:18px 18px 16px;border-radius:22px;color:#fff;background:radial-gradient(120% 90% at 100% 0%,rgba(227,6,27,.38),transparent 60%),linear-gradient(160deg,#17171e,#08080b);box-shadow:0 22px 50px rgba(0,0,0,.35),0 0 0 1px rgba(227,6,27,.55),0 0 34px rgba(227,6,27,.22);overflow:hidden;text-align:left}
+.cd-top{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.cd-live{display:inline-flex;align-items:center;gap:8px;font:800 12px/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:#ff5a68}
+.cd-live i{width:9px;height:9px;border-radius:50%;background:#ff2d3f;box-shadow:0 0 0 0 rgba(255,45,63,.7);animation:cdPulse 1.4s infinite}
+@keyframes cdPulse{70%{box-shadow:0 0 0 10px rgba(255,45,63,0)}100%{box-shadow:0 0 0 0 rgba(255,45,63,0)}}
+.cd-off{padding:6px 10px;border-radius:999px;background:#e3061b;font:800 13px/1 var(--body);color:#fff;box-shadow:0 6px 18px rgba(227,6,27,.45)}
+.cd-h{margin-top:12px;font:800 17px/1.25 var(--body);color:#fff}
+.cd-t{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;align-items:start;gap:6px;margin-top:12px}
+.cd-t .u{display:flex;flex-direction:column;align-items:center;gap:7px}
+.cd-t b{position:relative;display:block;width:100%;padding:14px 0 12px;border-radius:14px;text-align:center;font:400 clamp(34px,10vw,46px)/1 var(--display);font-variant-numeric:tabular-nums;letter-spacing:.02em;color:#fff;background:linear-gradient(180deg,#2a2a33 0 50%,#202028 50% 100%);box-shadow:inset 0 1px 0 rgba(255,255,255,.12),0 8px 18px rgba(0,0,0,.4)}
+.cd-t b::after{content:"";position:absolute;left:0;right:0;top:50%;height:1px;background:rgba(0,0,0,.55)}
+.cd-t small{font:700 10px/1 var(--mono);letter-spacing:.14em;color:rgba(255,255,255,.62)}
+.cd-t .sep{padding-top:12px;font:400 clamp(28px,8vw,38px)/1 var(--display);color:#e3061b;animation:cdBlink 1s steps(1) infinite}
+@keyframes cdBlink{50%{opacity:.25}}
+.cd-t .u:last-child b{background:linear-gradient(180deg,#f0182c 0 50%,#d10418 50% 100%);box-shadow:inset 0 1px 0 rgba(255,255,255,.25),0 8px 22px rgba(227,6,27,.45)}
+.cd-t .u:last-child b.tk{animation:cdTick .35s ease-out}
+@keyframes cdTick{0%{transform:scale(1.08)}100%{transform:none}}
+.cd-bar{height:6px;margin-top:16px;border-radius:999px;background:rgba(255,255,255,.1);overflow:hidden}
+.cd-bar i{display:block;height:100%;width:100%;border-radius:inherit;background:linear-gradient(90deg,#ff5a68,#e3061b);box-shadow:0 0 12px rgba(227,6,27,.8);transition:width 1s linear}
+.cd-n{margin:10px 0 0;font:600 13px/1.4 var(--body);color:rgba(255,255,255,.72)}
+.cd-n b{color:#fff}
+.cd.c{margin-inline:auto}
+.offer-cd .cd{max-width:none;margin:18px 0 6px}
+.mbar .p small.mcd{display:inline-block;margin-top:5px;padding:3px 7px;border-radius:6px;background:#e3061b;color:#fff;font-weight:800;font-variant-numeric:tabular-nums}
+/* clean video player for YouTube links: no YouTube title, channel or links */
+.yt{position:relative;display:block;width:100%;aspect-ratio:16/9;padding:0;border:0;cursor:pointer;overflow:hidden;border-radius:18px;background:#000;box-shadow:0 18px 50px rgba(0,0,0,.22),inset 0 0 0 1px var(--line);-webkit-user-select:none;user-select:none}
 .work .yt{border-radius:16px}
-.yt img,.yt iframe{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border:0}
-.yt .pl{position:absolute;left:50%;top:50%;width:72px;height:72px;margin:-36px 0 0 -36px;border-radius:50%;background:var(--red);box-shadow:0 10px 30px rgba(227,6,27,.45);transition:transform .2s}
+.yt .th{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:3;transition:opacity .3s}
+.yt .host{position:absolute;left:0;right:0;top:-90px;bottom:-90px;z-index:1;pointer-events:none}
+.yt .host iframe{width:100%;height:100%;border:0}
+.yt .shield{position:absolute;inset:0;z-index:2}
+.yt .pl{position:absolute;left:50%;top:50%;z-index:4;width:72px;height:72px;margin:-36px 0 0 -36px;border-radius:50%;background:var(--red);box-shadow:0 10px 30px rgba(227,6,27,.45);transition:transform .2s,opacity .2s;pointer-events:none}
 .yt .pl::after{content:"";position:absolute;left:29px;top:22px;border-style:solid;border-width:14px 0 14px 22px;border-color:transparent transparent transparent #fff}
 .yt:hover .pl{transform:scale(1.08)}
+.yt.on .pl{opacity:0}
+.yt.on.paused .pl{opacity:1}
+.yt.on .th{opacity:0;pointer-events:none}
+.yt.on.ended .th,.yt.on.paused .th{opacity:1}
+.yt .ld{position:absolute;left:50%;top:50%;z-index:5;width:44px;height:44px;margin:-22px 0 0 -22px;border-radius:50%;border:3px solid rgba(255,255,255,.25);border-top-color:#fff;animation:ytSpin .8s linear infinite;display:none}
+.yt.loading .ld{display:block}.yt.loading .pl{opacity:0}
+@keyframes ytSpin{to{transform:rotate(360deg)}}
+.yt .bar{position:absolute;left:0;right:0;bottom:0;z-index:6;display:flex;align-items:center;gap:10px;padding:22px 12px 10px;background:linear-gradient(transparent,rgba(0,0,0,.75));opacity:0;transition:opacity .25s}
+.yt.on .bar{opacity:1}
+.yt.on.playing:not(.hover) .bar{opacity:0}
+.yt .bar button{display:grid;place-items:center;width:34px;height:34px;padding:0;border:0;border-radius:50%;background:rgba(255,255,255,.16);color:#fff;cursor:pointer;font:700 14px/1 var(--body)}
+.yt .bar .pg{flex:1;height:5px;border-radius:999px;background:rgba(255,255,255,.25);cursor:pointer;position:relative}
+.yt .bar .pg i{position:absolute;left:0;top:0;bottom:0;width:0;border-radius:inherit;background:#e3061b}
+.yt .bar .tm{font:700 11px/1 var(--mono);color:#fff;min-width:74px;text-align:right;font-variant-numeric:tabular-nums}
+.yt:fullscreen{border-radius:0;aspect-ratio:auto}
+.yt .snd{position:absolute;right:12px;top:12px;z-index:6;display:none;padding:9px 13px;border:0;border-radius:999px;background:#e3061b;color:#fff;font:800 13px/1 var(--body);cursor:pointer;box-shadow:0 8px 20px rgba(0,0,0,.35)}
+.yt.muted .snd{display:block}
 /* latest works, shown high on the page */
 .feat-g{display:grid;gap:14px;grid-template-columns:1fr}
 @media (min-width:700px){.feat-g{grid-template-columns:1fr 1fr}.feat-g .fv:first-child:nth-last-child(odd){grid-column:span 2}}
@@ -666,7 +701,7 @@ fbq('track', 'PageView');
       <h1 class="h1" data-i18n="hero_h1"><span class="ln"><span style="--i:0">Montez vos vidéos</span></span><span class="ln"><span style="--i:1"><span class="hl">10X</span> plus vite</span></span><span class="ln"><span style="--i:2" class="soft">avec l'IA.</span></span></h1>
       <p class="lead sub in" style="--d:.5s" data-i18n="hero_sub">Apprenez le montage vidéo et le motion design avec les bons outils, <b>même depuis votre téléphone</b>. Puis transformez cette compétence en revenus.</p>
       <div class="price-line in" style="--d:.6s"><span class="price-now">15 000<small>FCFA</small></span><span class="price-was">25 000 FCFA</span><span class="tag" data-i18n="limited">Prix promo</span></div>
-      <div class="in" style="--d:.65s"><div class="cd" role="timer"><span class="lb" data-i18n="cd_lbl">⏳ La promo se termine dans</span><span class="t js-cd"><span><b>10</b><small>H</small></span><span><b>00</b><small>MIN</small></span><span><b>00</b><small>SEC</small></span></span></div></div>
+      <div class="in" style="--d:.65s"><div class="cd" role="timer"><div class="cd-top"><span class="cd-live"><i></i><span data-i18n="cd_live">Offre limitée</span></span><span class="cd-off">-40%</span></div><div class="cd-h" data-i18n="cd_h">Le prix promo expire dans :</div><div class="cd-t js-cd"><div class="u"><b>10</b><small data-i18n="cd_uh">HEURES</small></div><span class="sep">:</span><div class="u"><b>00</b><small data-i18n="cd_um">MINUTES</small></div><span class="sep">:</span><div class="u"><b>00</b><small data-i18n="cd_us">SECONDES</small></div></div><div class="cd-bar"><i class="js-cd-bar"></i></div><p class="cd-n" data-i18n="cd_n"><b>15 000 FCFA au lieu de 25 000.</b> Passé ce délai, ce prix n'est plus garanti.</p></div></div>
       <div class="fx js-fx" hidden></div>
       <div class="in" style="--d:.7s"><a class="btn btn-red btn-full js-cta" href="https://rogerboujieka237.mychariow.shop/prd_gy9104l1/checkout"><span data-i18n="cta_main">J'accède à la formation</span><span class="arr">→</span></a><p class="micro" data-i18n="micro">🔒 Paiement sécurisé · Mobile Money ou carte · Accès immédiat à la formation</p></div>
       <div class="facts in" style="--d:.8s">
@@ -702,8 +737,8 @@ fbq('track', 'PageView');
   <div class="wrap">
     <div class="head rv"><span class="eyebrow" data-i18n="ft_eye">Nouveau · Mes dernières réalisations</span><h2 data-i18n="ft_h">Des spots réalisés pour de vrais clients.</h2><p class="lead" data-i18n="ft_p">Motion design, voix off, musique et effets sonores. Voici exactement ce que vous apprendrez à créer dans la formation.</p></div>
     <div class="feat-g">
-      <figure class="fv rv"><span class="tag nw" data-i18n="f_new">Nouveau</span><button class="yt" type="button" data-yt="IHRFvM2n8Ws" aria-label="▶ Spectacle Cabrel Tindo"><img loading="lazy" decoding="async" src="https://i.ytimg.com/vi/IHRFvM2n8Ws/hqdefault.jpg" alt=""><i class="pl" aria-hidden="true"></i></button><figcaption><b data-i18n="f4">Spectacle Cabrel Tindo</b><span data-i18n="f4s">Spot spectacle · motion design</span></figcaption></figure>
-      <figure class="fv rv"><span class="tag nw" data-i18n="f_new">Nouveau</span><button class="yt" type="button" data-yt="4abyQA1a9h8" aria-label="▶ Croisade Bafoussam pour Jésus"><img loading="lazy" decoding="async" src="https://i.ytimg.com/vi/4abyQA1a9h8/hqdefault.jpg" alt=""><i class="pl" aria-hidden="true"></i></button><figcaption><b data-i18n="f1">Croisade Bafoussam pour Jésus</b><span data-i18n="f1s">Événement chrétien · spot complet</span></figcaption></figure>
+      <figure class="fv rv"><span class="tag nw" data-i18n="f_new">Nouveau</span><div class="yt" role="button" tabindex="0" data-yt="IHRFvM2n8Ws" aria-label="▶ Spectacle Cabrel Tindo"><img class="th" loading="lazy" decoding="async" src="https://i.ytimg.com/vi/IHRFvM2n8Ws/hqdefault.jpg" alt=""><i class="pl" aria-hidden="true"></i><i class="ld" aria-hidden="true"></i></div><figcaption><b data-i18n="f4">Spectacle Cabrel Tindo</b><span data-i18n="f4s">Spot spectacle · motion design</span></figcaption></figure>
+      <figure class="fv rv"><span class="tag nw" data-i18n="f_new">Nouveau</span><div class="yt" role="button" tabindex="0" data-yt="4abyQA1a9h8" aria-label="▶ Croisade Bafoussam pour Jésus"><img class="th" loading="lazy" decoding="async" src="https://i.ytimg.com/vi/4abyQA1a9h8/hqdefault.jpg" alt=""><i class="pl" aria-hidden="true"></i><i class="ld" aria-hidden="true"></i></div><figcaption><b data-i18n="f1">Croisade Bafoussam pour Jésus</b><span data-i18n="f1s">Événement chrétien · spot complet</span></figcaption></figure>
     </div>
     <div class="feat-cta rv"><a class="btn btn-red js-cta" href="https://rogerboujieka237.mychariow.shop/prd_gy9104l1/checkout"><span data-i18n="ft_cta">Je veux apprendre à faire ça</span><span class="arr">→</span></a><a class="lk js-allworks" href="#details" data-i18n="ft_all">Voir toutes mes réalisations</a></div>
   </div>
@@ -788,8 +823,8 @@ fbq('track', 'PageView');
 
     <div class="panel" role="tabpanel" id="p-realisations" aria-labelledby="tab-realisations" hidden>
       <div class="works">
-        <figure class="work big"><button class="yt" type="button" data-yt="IHRFvM2n8Ws" aria-label="▶ Spectacle Cabrel Tindo"><img loading="lazy" decoding="async" src="https://i.ytimg.com/vi/IHRFvM2n8Ws/hqdefault.jpg" alt=""><i class="pl" aria-hidden="true"></i></button><figcaption><b data-i18n="f4">Spectacle Cabrel Tindo</b><span data-i18n="f4s">Spot spectacle · motion design</span></figcaption></figure>
-        <figure class="work big"><button class="yt" type="button" data-yt="4abyQA1a9h8" aria-label="▶ Croisade Bafoussam pour Jésus"><img loading="lazy" decoding="async" src="https://i.ytimg.com/vi/4abyQA1a9h8/hqdefault.jpg" alt=""><i class="pl" aria-hidden="true"></i></button><figcaption><b data-i18n="f1">Croisade Bafoussam pour Jésus</b><span data-i18n="f1s">Événement chrétien · spot complet</span></figcaption></figure>
+        <figure class="work big"><div class="yt" role="button" tabindex="0" data-yt="IHRFvM2n8Ws" aria-label="▶ Spectacle Cabrel Tindo"><img class="th" loading="lazy" decoding="async" src="https://i.ytimg.com/vi/IHRFvM2n8Ws/hqdefault.jpg" alt=""><i class="pl" aria-hidden="true"></i><i class="ld" aria-hidden="true"></i></div><figcaption><b data-i18n="f4">Spectacle Cabrel Tindo</b><span data-i18n="f4s">Spot spectacle · motion design</span></figcaption></figure>
+        <figure class="work big"><div class="yt" role="button" tabindex="0" data-yt="4abyQA1a9h8" aria-label="▶ Croisade Bafoussam pour Jésus"><img class="th" loading="lazy" decoding="async" src="https://i.ytimg.com/vi/4abyQA1a9h8/hqdefault.jpg" alt=""><i class="pl" aria-hidden="true"></i><i class="ld" aria-hidden="true"></i></div><figcaption><b data-i18n="f1">Croisade Bafoussam pour Jésus</b><span data-i18n="f1s">Événement chrétien · spot complet</span></figcaption></figure>
         <figure class="work big"><video controls playsinline preload="none" data-manual data-poster="spot-16x9.jpg"><source src="spot-16x9.mp4" type="video/mp4"></video><figcaption><b data-i18n="w7">Spot de la formation</b><span data-i18n="w7s">Motion design · format YouTube · 1:28</span></figcaption></figure>
         <figure class="work big"><video muted loop playsinline preload="none" data-poster="work-camairco.jpg"><source src="work-camairco.mp4" type="video/mp4"></video><figcaption><b data-i18n="w1">Spot Camair-Co</b><span data-i18n="w1s">Compagnie aérienne</span></figcaption></figure>
         <figure class="work big"><video muted loop playsinline preload="none" data-poster="work-bovann.jpg"><source src="work-bovann.mp4" type="video/mp4"></video><figcaption><b data-i18n="w2">Spot Bovann Group</b><span data-i18n="w2s">Entreprise</span></figcaption></figure>
@@ -840,7 +875,7 @@ fbq('track', 'PageView');
     <div class="pack rv">
       <div class="tp"><span class="nm" data-i18n="pk_name">Formation complète</span><span class="tag" data-i18n="limited">Prix promo</span></div>
       <div class="price"><b>15 000</b><em>FCFA</em><span class="price-was">25 000 FCFA</span></div>
-      <div class="cd" role="timer"><span class="lb" data-i18n="cd_lbl">⏳ La promo se termine dans</span><span class="t js-cd"><span><b>10</b><small>H</small></span><span><b>00</b><small>MIN</small></span><span><b>00</b><small>SEC</small></span></span></div>
+      <div class="offer-cd"><div class="cd" role="timer"><div class="cd-top"><span class="cd-live"><i></i><span data-i18n="cd_live">Offre limitée</span></span><span class="cd-off">-40%</span></div><div class="cd-h" data-i18n="cd_h">Le prix promo expire dans :</div><div class="cd-t js-cd"><div class="u"><b>10</b><small data-i18n="cd_uh">HEURES</small></div><span class="sep">:</span><div class="u"><b>00</b><small data-i18n="cd_um">MINUTES</small></div><span class="sep">:</span><div class="u"><b>00</b><small data-i18n="cd_us">SECONDES</small></div></div><div class="cd-bar"><i class="js-cd-bar"></i></div><p class="cd-n" data-i18n="cd_n"><b>15 000 FCFA au lieu de 25 000.</b> Passé ce délai, ce prix n'est plus garanti.</p></div></div>
       <div class="fxbox"><span class="js-fx2"></span><label class="fxsel"><span data-i18n="fx_lbl">Voir le prix dans votre devise :</span><select id="fx-cur"></select></label><small class="fxnote" data-i18n="fx_note" hidden>Montant indicatif. Le paiement se fait en FCFA ; la conversion finale dépend de votre moyen de paiement.</small></div>
       <ul data-i18n="pk_list"><li>La formation vidéo complète (environ 2 h), disponible tout de suite</li><li class="phl">À suivre et à appliquer depuis votre smartphone</li><li>Des rushes au spot en motion design, étape par étape</li><li>Le bonus monétisation : trouver des clients et vendre la compétence</li><li>Le PDF des présentations</li><li>Les ressources de la formation</li><li>L'accès au groupe privé après le paiement</li></ul>
       <a class="btn btn-red btn-full js-cta" id="buy" href="https://rogerboujieka237.mychariow.shop/prd_gy9104l1/checkout"><span data-i18n="cta_buy">J'accède à la formation</span><span class="arr">→</span></a>
@@ -875,7 +910,7 @@ fbq('track', 'PageView');
       <span class="eyebrow" data-i18n="fn_eye">Accès immédiat</span>
       <h2 data-i18n="fn_h">Votre téléphone suffit. Commencez aujourd'hui.</h2>
       <p data-i18n="fn_p">15 000 FCFA au lieu de 25 000 FCFA. Formation vidéo, PDF, ressources et groupe privé inclus.</p>
-      <div class="cd c" role="timer"><span class="lb" data-i18n="cd_lbl">⏳ La promo se termine dans</span><span class="t js-cd"><span><b>10</b><small>H</small></span><span><b>00</b><small>MIN</small></span><span><b>00</b><small>SEC</small></span></span></div>
+      <div class="cd c" role="timer"><div class="cd-top"><span class="cd-live"><i></i><span data-i18n="cd_live">Offre limitée</span></span><span class="cd-off">-40%</span></div><div class="cd-h" data-i18n="cd_h">Le prix promo expire dans :</div><div class="cd-t js-cd"><div class="u"><b>10</b><small data-i18n="cd_uh">HEURES</small></div><span class="sep">:</span><div class="u"><b>00</b><small data-i18n="cd_um">MINUTES</small></div><span class="sep">:</span><div class="u"><b>00</b><small data-i18n="cd_us">SECONDES</small></div></div><div class="cd-bar"><i class="js-cd-bar"></i></div><p class="cd-n" data-i18n="cd_n"><b>15 000 FCFA au lieu de 25 000.</b> Passé ce délai, ce prix n'est plus garanti.</p></div>
       <a class="btn btn-white js-cta" href="https://rogerboujieka237.mychariow.shop/prd_gy9104l1/checkout"><span data-i18n="cta_main">J'accède à la formation</span><span class="arr">→</span></a>
     </div>
   </div>
@@ -952,7 +987,7 @@ const EN = {
   mo3_send:"Send to client", mo3_sent:"✓ Delivered", mo3_n1:"Wow 🔥 It's perfect, thank you!", mo3_n2:"Payment received", mo3_ex:"· example", mo3_n3:"“I recommend you!”", mo3_n4:"New request", mo3_n4s:"A new client is writing to you",
   cb_text:'<span class="l">Free WhatsApp community <b>LE DIGITAL POUR TOUS</b>: artificial intelligence, digital marketing, content creation and much more.</span><span class="s"><b>LE DIGITAL POUR TOUS</b><br>AI · Marketing · Content</span>', cb_btn:"Join for free",
   fn_eye:"Instant access", fn_h:"Your phone is enough. Start today.", fn_p:"15,000 FCFA instead of 25,000 FCFA. Video course, PDF, resources and private group included.",
-  partners:"Partners", foot:"© 2026 Roger BOUJIEKA · Boujieka Academy · Course “Video editing &amp; Motion Design with AI”", mbar_s:"INSTEAD OF 25,000 FCFA", cd_lbl:"⏳ The promo ends in", f_new:"New", ft_eye:"New · My latest work", ft_h:"Ads made for real clients.", ft_p:"Motion design, voice-over, music and sound effects. This is exactly what you will learn to create in the course.", ft_cta:"I want to learn to do this", ft_all:"See all my work", f1:"Bafoussam for Jesus crusade", f1s:"Christian event · full ad", f2:"Grand Closing Night", f2s:"Event ad", f3:"Free buses", f3s:"Announcement", f4:"Cabrel Tindo show", f4s:"Show ad · motion design"
+  partners:"Partners", foot:"© 2026 Roger BOUJIEKA · Boujieka Academy · Course “Video editing &amp; Motion Design with AI”", mbar_s:"INSTEAD OF 25,000 FCFA", cd_live:"Limited offer", cd_h:"The promo price expires in:", cd_uh:"HOURS", cd_um:"MINUTES", cd_us:"SECONDS", cd_n:"<b>15,000 FCFA instead of 25,000.</b> After this, this price is no longer guaranteed.", f_new:"New", ft_eye:"New · My latest work", ft_h:"Ads made for real clients.", ft_p:"Motion design, voice-over, music and sound effects. This is exactly what you will learn to create in the course.", ft_cta:"I want to learn to do this", ft_all:"See all my work", f1:"Bafoussam for Jesus crusade", f1s:"Christian event · full ad", f2:"Grand Closing Night", f2s:"Event ad", f3:"Free buses", f3s:"Announcement", f4:"Cabrel Tindo show", f4s:"Show ad · motion design"
 };
 
 /* ---------- language ---------- */
@@ -1041,18 +1076,73 @@ if (document.fonts) document.fonts.ready.then(moveInd);
   function tick() {
     const t = Math.floor((CYCLE - (Date.now() - start) % CYCLE) / 1000);
     const v = [Math.floor(t / 3600), Math.floor(t % 3600 / 60), t % 60].map(pad);
-    boxes.forEach(b => b.querySelectorAll('b').forEach((el, i) => { el.textContent = v[i]; }));
+    boxes.forEach(b => b.querySelectorAll('b').forEach((el, i) => { if (el.textContent !== v[i]) { el.textContent = v[i]; if (i === 2) { el.classList.remove('tk'); void el.offsetWidth; el.classList.add('tk'); } } }));
+    document.querySelectorAll('.js-cd-bar').forEach(b => { b.style.width = (t / (CYCLE / 1000) * 100).toFixed(2) + '%'; });
     lines.forEach(l => { l.textContent = v.join(':'); });
   }
   tick(); setInterval(tick, 1000);
 })();
 
-/* ---------- YouTube cards: swap the thumbnail for the player on tap ---------- */
-document.querySelectorAll('.yt').forEach(b => b.addEventListener('click', () => {
-  document.querySelectorAll('.yt iframe').forEach(f => { const o = f.parentNode; o.innerHTML = o.dataset.thumb; });
-  b.dataset.thumb = b.innerHTML;
-  b.innerHTML = '<iframe src="https://www.youtube-nocookie.com/embed/' + b.dataset.yt + '?autoplay=1&rel=0&playsinline=1" title="YouTube" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe>';
-}));
+/* ---------- clean player for YouTube videos: our own controls, YouTube title, channel and links hidden ---------- */
+(function () {
+  const cards = document.querySelectorAll('.yt'); if (!cards.length) return;
+  let api = null;
+  const loadApi = () => api || (api = new Promise(res => {
+    window.onYouTubeIframeAPIReady = res;
+    const sc = document.createElement('script'); sc.src = 'https://www.youtube.com/iframe_api'; document.head.appendChild(sc);
+  }));
+  const fmt = t => { t = Math.max(0, Math.floor(t || 0)); return Math.floor(t / 60) + ':' + String(t % 60).padStart(2, '0'); };
+  const all = [];
+  cards.forEach(c => {
+    let pl = null, timer = null;
+    const set = (k, on) => c.classList.toggle(k, on);
+    function build() {
+      const host = document.createElement('div'); host.className = 'host'; const slot = document.createElement('div'); host.appendChild(slot);
+      const shield = document.createElement('div'); shield.className = 'shield';
+      const bar = document.createElement('div'); bar.className = 'bar';
+      bar.innerHTML = '<button type="button" class="pp" aria-label="Lecture / pause">❚❚</button><div class="pg"><i></i></div><span class="tm">0:00 / 0:00</span><button type="button" class="mu" aria-label="Son">🔊</button>' + (c.requestFullscreen ? '<button type="button" class="fs" aria-label="Plein écran">⛶</button>' : '');
+      const snd = document.createElement('button'); snd.type = 'button'; snd.className = 'snd'; snd.textContent = document.documentElement.lang === 'en' ? '🔊 Tap for sound' : '🔊 Activer le son';
+      c.append(host, shield, bar, snd);
+      shield.addEventListener('click', e => { e.stopPropagation(); toggle(); });
+      bar.addEventListener('click', e => e.stopPropagation());
+      bar.querySelector('.pp').addEventListener('click', toggle);
+      bar.querySelector('.mu').addEventListener('click', () => { if (pl.isMuted()) { pl.unMute(); set('muted', false); } else pl.mute(); sync(); });
+      const fs = bar.querySelector('.fs'); if (fs) fs.addEventListener('click', () => document.fullscreenElement ? document.exitFullscreen() : c.requestFullscreen());
+      bar.querySelector('.pg').addEventListener('click', e => { const r = e.currentTarget.getBoundingClientRect(); pl.seekTo((e.clientX - r.left) / r.width * pl.getDuration(), true); });
+      snd.addEventListener('click', e => { e.stopPropagation(); pl.unMute(); pl.setVolume(100); set('muted', false); sync(); });
+      let hv; c.addEventListener('pointermove', () => { set('hover', true); clearTimeout(hv); hv = setTimeout(() => set('hover', false), 2200); });
+      set('loading', true);
+      loadApi().then(() => {
+        pl = new YT.Player(slot, { videoId: c.dataset.yt, host: 'https://www.youtube-nocookie.com',
+          playerVars: { autoplay: 1, controls: 0, rel: 0, playsinline: 1, iv_load_policy: 3, disablekb: 1, fs: 0, modestbranding: 1, cc_load_policy: 0 },
+          events: {
+            onReady: e => { e.target.playVideo(); setTimeout(() => { if (pl.getPlayerState() !== 1) { pl.mute(); pl.playVideo(); set('muted', true); } }, 1500); },
+            onStateChange: e => {
+              const st = e.data; set('loading', st === 3 || st === -1); set('playing', st === 1); set('paused', st === 2); set('ended', st === 0);
+              if (st === 1) all.forEach(o => { if (o.p && o.p !== pl && o.p.getPlayerState() === 1) o.p.pauseVideo(); });
+              if (st === 0) pl.seekTo(0, true), pl.pauseVideo();
+              sync();
+            } } });
+        entry.p = pl;
+        timer = setInterval(sync, 500);
+      });
+    }
+    const entry = { p: null }; all.push(entry);
+    function sync() {
+      if (!pl || !pl.getDuration) return;
+      const d = pl.getDuration() || 0, t = pl.getCurrentTime() || 0;
+      c.querySelector('.pg i').style.width = d ? (t / d * 100) + '%' : 0;
+      c.querySelector('.tm').textContent = fmt(t) + ' / ' + fmt(d);
+      c.querySelector('.pp').textContent = pl.getPlayerState() === 1 ? '❚❚' : '▶';
+      c.querySelector('.mu').textContent = pl.isMuted() ? '🔇' : '🔊';
+    }
+    function toggle() { if (!pl) return; pl.getPlayerState() === 1 ? pl.pauseVideo() : pl.playVideo(); }
+    function start() { if (c.classList.contains('on')) return toggle(); set('on', true); build(); }
+    c.addEventListener('click', start);
+    c.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); start(); } });
+  });
+  document.querySelectorAll('[role="tab"]').forEach(t => t.addEventListener('click', () => all.forEach(o => { if (o.p && o.p.pauseVideo) o.p.pauseVideo(); })));
+})();
 
 /* ---------- "see all my work" opens the works tab ---------- */
 document.querySelectorAll('.js-allworks').forEach(a => a.addEventListener('click', e => {
