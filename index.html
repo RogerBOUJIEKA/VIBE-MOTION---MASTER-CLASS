@@ -317,7 +317,7 @@ p{margin:0}
 
 /* final */
 .final .box{position:relative;overflow:hidden;border-radius:30px;padding:clamp(28px,6vw,64px) clamp(20px,5vw,56px);text-align:center;color:#fff;background:radial-gradient(120% 120% at 50% 0%,#e3061b 0%,#b00416 52%,#6e000f 100%);display:grid;justify-items:center;gap:14px}
-.final .box::before{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.07) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.07) 1px,transparent 1px);background-size:44px 44px;-webkit-mask-image:radial-gradient(70% 60% at 50% 40%,#000,transparent);mask-image:radial-gradient(70% 60% at 50% 40%,#000,transparent);animation:drift 14s linear infinite}
+.final .box::before{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.07) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.07) 1px,transparent 1px);background-size:44px 44px;-webkit-mask-image:radial-gradient(70% 60% at 50% 40%,#000,transparent);mask-image:radial-gradient(70% 60% at 50% 40%,#000,transparent)}
 @keyframes drift{to{background-position:44px 44px}}
 .final .box>*{position:relative}
 .final .eyebrow{color:#fff}.final .eyebrow::before{background:#fff;box-shadow:0 0 0 4px rgba(255,255,255,.25)}
@@ -342,8 +342,8 @@ footer{padding:18px 16px 110px;text-align:center;color:var(--faint);font-size:12
 @media (min-width:860px){.wa-float{bottom:22px;right:22px;width:44px;height:44px}.wa-float .wa-ic{width:23px;height:23px}}
 
 /* community bar, pinned at the top (inside the sticky header) */
-.cbar{display:grid;grid-template-rows:0fr;transition:grid-template-rows .5s var(--ease)}
-.cbar.on{grid-template-rows:1fr}
+.cbar{position:absolute;left:0;right:0;top:100%;opacity:0;transform:translateY(-10px);pointer-events:none;transition:opacity .35s var(--ease),transform .5s var(--ease)}
+.cbar.on{opacity:1;transform:none;pointer-events:auto}
 .cbar[hidden]{display:none}
 .cbar>.in{overflow:hidden}
 .cbar .row{display:flex;align-items:center;gap:10px;padding:7px 12px 7px 14px;background:#e9f8ef;color:#0d2a18;border-bottom:1px solid rgba(30,169,82,.25)}
@@ -584,8 +584,9 @@ footer{padding:18px 16px 110px;text-align:center;color:var(--faint);font-size:12
 .pcd{position:relative;width:100%;max-width:520px;margin-top:20px;padding:18px 18px 16px;border-radius:22px;color:#fff;background:radial-gradient(120% 90% at 100% 0%,rgba(227,6,27,.38),transparent 60%),linear-gradient(160deg,#17171e,#08080b);box-shadow:0 22px 50px rgba(0,0,0,.35),0 0 0 1px rgba(227,6,27,.55),0 0 34px rgba(227,6,27,.22);overflow:hidden;text-align:left}
 .cd-top{display:flex;align-items:center;justify-content:space-between;gap:10px}
 .cd-live{display:inline-flex;align-items:center;gap:8px;font:800 12px/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:#ff5a68}
-.cd-live i{width:9px;height:9px;border-radius:50%;background:#ff2d3f;box-shadow:0 0 0 0 rgba(255,45,63,.7);animation:cdPulse 1.4s infinite}
-@keyframes cdPulse{70%{box-shadow:0 0 0 10px rgba(255,45,63,0)}100%{box-shadow:0 0 0 0 rgba(255,45,63,0)}}
+.cd-live i{position:relative;width:9px;height:9px;border-radius:50%;background:#ff2d3f}
+.cd-live i::after{content:"";position:absolute;inset:0;border-radius:50%;background:rgba(255,45,63,.7);animation:cdPulse 1.4s ease-out infinite}
+@keyframes cdPulse{0%{transform:scale(1);opacity:.8}70%,100%{transform:scale(3.2);opacity:0}}
 .cd-off{padding:6px 10px;border-radius:999px;background:#e3061b;font:800 13px/1 var(--body);color:#fff;box-shadow:0 6px 18px rgba(227,6,27,.45)}
 .cd-h{margin-top:12px;font:800 17px/1.25 var(--body);color:#fff}
 .cd-t{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;align-items:start;gap:6px;margin-top:12px}
@@ -634,6 +635,10 @@ footer{padding:18px 16px 110px;text-align:center;color:var(--faint);font-size:12
 .yt:fullscreen{border-radius:0;aspect-ratio:auto}
 .yt .snd{position:absolute;right:12px;top:12px;z-index:6;display:none;padding:9px 13px;border:0;border-radius:999px;background:#e3061b;color:#fff;font:800 13px/1 var(--body);cursor:pointer;box-shadow:0 8px 20px rgba(0,0,0,.35)}
 .yt.muted .snd{display:block}
+/* blocks far below the fold are laid out only when the visitor gets close: faster first load */
+#materiel,#video,#details,#revenus,#offre,#faq,#final,footer{content-visibility:auto;contain-intrinsic-size:auto 900px}
+/* animations pause while their block is off screen, so scrolling stays smooth */
+.zz *,.zz *::before,.zz *::after{animation-play-state:paused!important}
 /* guarantees: lifetime access, free updates, WhatsApp support */
 .gx{display:grid;gap:12px;max-width:860px;margin:0 auto}
 @media (min-width:760px){.gx{grid-template-columns:repeat(3,1fr)}}
@@ -704,8 +709,10 @@ footer{padding:18px 16px 110px;text-align:center;color:var(--faint);font-size:12
 @keyframes nwRing{0%{transform:scale(.4);opacity:.9}100%{transform:scale(1.6);opacity:0}}
 @keyframes nwIn{from{opacity:0;transform:translateY(-8px)}}
 .work .nw{top:10px;left:10px;padding:7px 11px 7px 10px;font-size:10.5px}
-.fv:not(.seen) .yt,.fy:not(.seen) .yt{animation:nwGlow 2.2s ease-in-out infinite}
-@keyframes nwGlow{0%,100%{box-shadow:0 18px 50px rgba(0,0,0,.22),0 0 0 2px rgba(227,6,27,.55)}50%{box-shadow:0 18px 50px rgba(0,0,0,.22),0 0 0 2px rgba(227,6,27,.95),0 0 28px rgba(227,6,27,.55)}}
+.fv:not(.seen) .yt,.fy:not(.seen) .yt{box-shadow:0 18px 50px rgba(0,0,0,.22),0 0 0 2px rgba(227,6,27,.55)}
+.fv:not(.seen)::after,.fy:not(.seen)::after{content:"";position:absolute;left:0;top:0;width:100%;aspect-ratio:16/9;border-radius:18px;box-shadow:0 0 0 2px #e3061b,0 0 28px rgba(227,6,27,.6);opacity:0;pointer-events:none;z-index:1;animation:nwGlow 2.2s ease-in-out infinite}
+.fy:not(.seen)::after{border-radius:16px}
+@keyframes nwGlow{50%{opacity:1}}
 .seen .nw{opacity:0;transform:translateY(-8px)}
 .fv figcaption{display:flex;flex-direction:column;margin-top:10px;font:800 16px/1.25 var(--body)}
 .fv figcaption span{font:600 13px/1.3 var(--body);color:var(--faint);margin-top:2px}
@@ -783,7 +790,7 @@ fbq('track', 'PageView');
       </div>
     </div>
     <div class="hcard in" style="--d:.15s">
-      <div class="pic"><span class="rg"></span><span class="rg"></span><span class="rg"></span><span class="rg"></span><img src="roger.webp" alt="Roger BOUJIEKA" width="1254" height="1254" fetchpriority="high"></div>
+      <div class="pic"><span class="rg"></span><span class="rg"></span><span class="rg"></span><span class="rg"></span><img src="roger.webp" alt="Roger BOUJIEKA" width="1000" height="1000" fetchpriority="high"></div>
       <div class="tl" aria-hidden="true">
         <div class="tl-h"><span><b>Roger BOUJIEKA</b> · <span data-i18n="tl_role">votre formateur</span></span><span class="tc js-tc">00:00:00</span></div>
         <div class="tl-b">
@@ -1196,7 +1203,7 @@ if (document.fonts) document.fonts.ready.then(moveInd);
     document.querySelectorAll('.js-cd-bar').forEach(b => { b.style.width = (t / (CYCLE / 1000) * 100).toFixed(2) + '%'; });
     lines.forEach(l => { l.textContent = v.join(':'); });
   }
-  tick(); setInterval(tick, 1000);
+  tick(); setInterval(() => { if (!document.hidden) tick(); }, 1000);
 })();
 
 /* ---------- clean player for YouTube videos: our own controls, YouTube title, channel and links hidden ---------- */
@@ -1272,6 +1279,13 @@ if (document.fonts) document.fonts.ready.then(moveInd);
   addEventListener('scroll', () => { if (!raf) raf = requestAnimationFrame(upd); }, { passive: true }); upd();
 })();
 
+/* ---------- performance: pause CSS animations in blocks that are off screen ---------- */
+(function () {
+  if (!('IntersectionObserver' in window)) return;
+  const io = new IntersectionObserver(es => es.forEach(e => e.target.classList.toggle('zz', !e.isIntersecting)), { rootMargin: '150px 0px' });
+  document.querySelectorAll('main > section, main > div, .marquee, footer').forEach(el => io.observe(el));
+})();
+
 /* ---------- "see all my work" opens the works tab ---------- */
 document.querySelectorAll('.js-allworks').forEach(a => a.addEventListener('click', e => {
   const t = document.getElementById('tab-realisations'); if (!t) return;
@@ -1298,16 +1312,17 @@ document.querySelectorAll('.js-allworks').forEach(a => a.addEventListener('click
   const lanes = document.querySelector('.js-lanes'), ph = document.querySelector('.js-ph'), tc = document.querySelector('.js-tc');
   const clips = [...lanes.querySelectorAll('.clip')].map(c => ({ el: c, s: parseFloat(c.style.getPropertyValue('--s')), w: parseFloat(c.style.getPropertyValue('--w')) }));
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches, PERIOD = 11000, LEN = 88;
-  let visible = true, t0 = performance.now();
+  let visible = true, t0 = performance.now(), lw = lanes.clientWidth;
+  addEventListener('resize', () => { lw = lanes.clientWidth; }); if (document.fonts) document.fonts.ready.then(() => { lw = lanes.clientWidth; });
   function draw(p) {
-    ph.style.transform = `translateX(${p * lanes.clientWidth}px)`;
+    ph.style.transform = `translateX(${p * lw}px)`;
     const sec = p * LEN, fr = Math.floor((sec % 1) * 30);
     tc.textContent = `00:${pad(Math.floor(sec / 60))}:${pad(Math.floor(sec % 60))}:${pad(fr)}`;
     const x = p * 100; clips.forEach(c => c.el.classList.toggle('on', x >= c.s && x < c.s + c.w));
   }
   if (reduce) { draw(.36); return; }
-  function loop(now) { if (visible) draw(((now - t0) % PERIOD) / PERIOD); requestAnimationFrame(loop); }
-  if ('IntersectionObserver' in window) new IntersectionObserver(es => { visible = es[0].isIntersecting; }).observe(lanes);
+  function loop(now) { if (!visible) return; draw(((now - t0) % PERIOD) / PERIOD); requestAnimationFrame(loop); }
+  if ('IntersectionObserver' in window) new IntersectionObserver(es => { const v = es[0].isIntersecting; if (v && !visible) { visible = true; requestAnimationFrame(loop); } else if (!v) visible = false; }).observe(lanes);
   requestAnimationFrame(loop);
 })();
 
@@ -1326,7 +1341,9 @@ document.querySelectorAll('.js-allworks').forEach(a => a.addEventListener('click
   if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   const vh = innerHeight;
   const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.remove('pre'); io.unobserve(e.target); } }), { rootMargin: '0px 0px -8% 0px' });
-  document.querySelectorAll('.rv').forEach(el => { if (el.getBoundingClientRect().top > vh) { el.classList.add('pre'); io.observe(el); } });
+  // read every position first, then write, so the browser lays the page out once
+  const below = [...document.querySelectorAll('.rv')].filter(el => el.getBoundingClientRect().top > vh);
+  below.forEach(el => { el.classList.add('pre'); io.observe(el); });
 })();
 
 /* ---------- init ---------- */
@@ -1468,8 +1485,8 @@ const BOOKINGS = [];
     const set = t => {
       items.forEach(i => i.el.classList.toggle('on', t >= i.at && (!i.until || t < i.until)));
       const en = document.documentElement.lang === 'en';
-      types.forEach(x => { const txt = (en && x.el.dataset.typeEn) || x.el.dataset.type; x.el.textContent = txt.slice(0, Math.round(txt.length * clamp((t - x.at) / x.d))); });
-      counts.forEach(c => { const k = c.u === 'clock' ? clamp((t - c.st) / c.d) : ease(clamp((t - c.st) / c.d)); const val = Math.round(c.a + (c.b - c.a) * k); c.el.textContent = fmt(val, c.u); if (c.v) c.el.parentElement.style.setProperty(c.v, val); });
+      types.forEach(x => { const txt = (en && x.el.dataset.typeEn) || x.el.dataset.type; const tv = txt.slice(0, Math.round(txt.length * clamp((t - x.at) / x.d))); if (x.el.textContent !== tv) x.el.textContent = tv; });
+      counts.forEach(c => { const k = c.u === 'clock' ? clamp((t - c.st) / c.d) : ease(clamp((t - c.st) / c.d)); const val = Math.round(c.a + (c.b - c.a) * k); const fv = fmt(val, c.u); if (c.el.textContent !== fv) c.el.textContent = fv; if (c.v) c.el.parentElement.style.setProperty(c.v, val); });
     };
     if (reduce || !('IntersectionObserver' in window)) { set(dur - 1); return; }
     let vis = false, t0 = 0;
