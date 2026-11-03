@@ -636,9 +636,48 @@ footer{padding:18px 16px 110px;text-align:center;color:var(--faint);font-size:12
 .yt .snd{position:absolute;right:12px;top:12px;z-index:6;display:none;padding:9px 13px;border:0;border-radius:999px;background:#e3061b;color:#fff;font:800 13px/1 var(--body);cursor:pointer;box-shadow:0 8px 20px rgba(0,0,0,.35)}
 .yt.muted .snd{display:block}
 /* blocks far below the fold are laid out only when the visitor gets close: faster first load */
-#materiel,#video,#details,#revenus,#offre,#faq,#final,footer{content-visibility:auto;contain-intrinsic-size:auto 900px}
+#pour-qui,#materiel,#video,#details,#revenus,#offre,#faq,#final,footer{content-visibility:auto;contain-intrinsic-size:auto 900px}
 /* animations pause while their block is off screen, so scrolling stays smooth */
 .zz *,.zz *::before,.zz *::after{animation-play-state:paused!important}
+/* powered by Claude Opus 5.5: dark band, rings rising from below */
+.op{position:relative;overflow:hidden;color:#fff;background:#0d0f14;text-align:center;isolation:isolate}
+.op-bg{position:absolute;inset:0;z-index:-1;pointer-events:none}
+.op-bg i{position:absolute;left:50%;bottom:-62%;width:150%;max-width:1500px;aspect-ratio:1;margin-left:-75%;border-radius:50%;border:2px solid rgba(232,118,72,.42);opacity:0;transform:scale(.25);animation:opRing 9s linear infinite}
+@media (min-width:1000px){.op-bg i{width:1500px;margin-left:-750px;bottom:-900px}}
+.op-bg i:nth-child(2n){border-color:rgba(255,255,255,.14)}
+.op-bg i:nth-child(2){animation-delay:-1.5s}.op-bg i:nth-child(3){animation-delay:-3s}.op-bg i:nth-child(4){animation-delay:-4.5s}.op-bg i:nth-child(5){animation-delay:-6s}.op-bg i:nth-child(6){animation-delay:-7.5s}
+@keyframes opRing{0%{transform:scale(.25);opacity:0}15%{opacity:1}100%{transform:scale(1.15);opacity:0}}
+.op-bg b{position:absolute;left:50%;top:-20%;width:900px;height:600px;margin-left:-450px;background:radial-gradient(closest-side,rgba(232,118,72,.28),transparent);opacity:.9}
+.op-in{max-width:1080px;margin:0 auto;display:flex;flex-direction:column;align-items:center}
+.op-eye{font:800 15px/1.2 var(--body);letter-spacing:.14em;color:#f2a07b}
+.op-t{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:4px 14px;margin:14px 0 0;font:900 clamp(46px,9vw,104px)/1 var(--body);letter-spacing:-.045em}
+.op-c{color:#f5f6fa}
+.op-o{background:linear-gradient(180deg,#ffb27d,#ff6a1f 60%,#e8551a);-webkit-background-clip:text;background-clip:text;color:transparent}
+.op-sp{width:clamp(44px,10vw,84px);height:auto;color:#e07a56;animation:opSpin 18s linear infinite}
+@keyframes opSpin{to{transform:rotate(360deg)}}
+.op-p{max-width:760px;margin:22px 0 0;font:500 clamp(16px,2.2vw,20px)/1.55 var(--body);color:rgba(255,255,255,.82)}
+.op-p b{color:#fff}
+.op-f{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin:22px 0 0;padding:0;list-style:none}
+.op-f li{padding:9px 14px;border-radius:999px;font:700 13px/1 var(--body);color:#fff;background:rgba(255,255,255,.07);box-shadow:inset 0 0 0 1px rgba(255,255,255,.14)}
+.op .btn{margin-top:28px}
+.op-n{margin:14px 0 0;font:600 14px/1.45 var(--body);color:rgba(255,255,255,.7)}
+.op-tm{margin:18px 0 0;font:500 11px/1.4 var(--body);color:rgba(255,255,255,.4)}
+/* who it's for */
+.wg{display:grid;gap:14px}
+@media (min-width:700px){.wg{grid-template-columns:repeat(2,1fr)}}
+@media (min-width:1020px){.wg{grid-template-columns:repeat(3,1fr)}}
+.wc{position:relative;display:flex;flex-direction:column;padding:22px 20px 20px;border-radius:22px;background:var(--card);box-shadow:inset 0 0 0 1px var(--line2),0 12px 30px rgba(0,0,0,.06);overflow:hidden;transition:transform .3s var(--ease),box-shadow .3s}
+.wc::before{content:"";position:absolute;left:0;top:0;right:0;height:3px;background:linear-gradient(90deg,#e3061b,#ff5a68);opacity:.9}
+@media (hover:hover){.wc:hover{transform:translateY(-4px);box-shadow:inset 0 0 0 1px rgba(227,6,27,.45),0 18px 40px rgba(0,0,0,.12)}}
+.wc-i{display:grid;place-items:center;width:52px;height:52px;border-radius:16px;font-size:26px;line-height:1;background:var(--red-soft);box-shadow:inset 0 0 0 1px rgba(227,6,27,.25)}
+.wc h3{margin:16px 0 0;font:800 19px/1.25 var(--body)}
+.wc p{margin:8px 0 0;font:500 14.5px/1.55 var(--body);color:var(--muted)}
+.wc-k{margin-top:16px;font:700 11px/1.2 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--red-ink)}
+.wc ul{display:grid;gap:9px;margin:10px 0 0;padding:0;list-style:none}
+.wc li{position:relative;padding-left:26px;font:600 14px/1.45 var(--body)}
+.wc li::before{content:"";position:absolute;left:0;top:1px;width:18px;height:18px;border-radius:50%;background:#e3061b url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='3.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12.5l4.5 4.5L19 7.5'/%3E%3C/svg%3E") center/11px no-repeat}
+.wh-note{max-width:760px;margin:26px auto 0;padding:16px 20px;border-radius:18px;text-align:center;font:500 15px/1.55 var(--body);color:var(--muted);background:var(--bg2);box-shadow:inset 0 0 0 1px var(--line)}
+.wh-note b{color:var(--text,inherit)}
 /* guarantees: lifetime access, free updates, WhatsApp support */
 .gx{display:grid;gap:12px;max-width:860px;margin:0 auto}
 @media (min-width:760px){.gx{grid-template-columns:repeat(3,1fr)}}
@@ -824,6 +863,42 @@ fbq('track', 'PageView');
       <figure class="fv rv"><span class="nw" data-i18n="f_new"><i></i>Nouvelle réalisation</span><div class="yt" role="button" tabindex="0" data-yt="Web3N01yUVA" aria-label="▶ Motion design App Mr N"><img class="th" loading="lazy" decoding="async" src="https://i.ytimg.com/vi/Web3N01yUVA/hqdefault.jpg" alt=""><i class="pl" aria-hidden="true"></i><i class="ld" aria-hidden="true"></i></div><figcaption><b data-i18n="f7">Motion design App Mr N</b><span data-i18n="f7s">Application mobile · motion design</span></figcaption></figure>
     </div>
     <div class="feat-cta rv"><a class="btn btn-red js-cta" href="https://rogerboujieka237.mychariow.shop/prd_9wrq07d2/checkout"><span data-i18n="ft_cta">Je veux apprendre à faire ça</span><span class="arr">→</span></a><a class="lk js-allworks" href="#details" data-i18n="ft_all">Voir toutes mes réalisations</a></div>
+  </div>
+</section>
+
+<!-- POWERED BY CLAUDE OPUS 5.5 -->
+<section id="opus" class="op">
+  <div class="op-bg" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><b></b></div>
+  <div class="wrap">
+    <div class="op-in rv">
+      <span class="op-eye" data-i18n="op_eye">Mes vidéos sont réalisées avec</span>
+      <h2 class="op-t"><span class="op-c">Claude</span><svg class="op-sp" viewBox="0 0 100 100" aria-hidden="true"><g stroke="currentColor" stroke-width="9" stroke-linecap="round"><line x1="63.9" y1="51.8" x2="95.6" y2="56.0"/><line x1="61.1" y1="58.5" x2="81.8" y2="74.3"/><line x1="55.4" y1="62.9" x2="67.6" y2="92.5"/><line x1="48.2" y1="63.9" x2="44.8" y2="89.7"/><line x1="41.5" y1="61.1" x2="22.0" y2="86.5"/><line x1="37.1" y1="55.4" x2="13.1" y2="65.3"/><line x1="36.1" y1="48.2" x2="4.4" y2="44.0"/><line x1="38.9" y1="41.5" x2="18.2" y2="25.7"/><line x1="44.6" y1="37.1" x2="32.4" y2="7.5"/><line x1="51.8" y1="36.1" x2="55.2" y2="10.3"/><line x1="58.5" y1="38.9" x2="78.0" y2="13.5"/><line x1="62.9" y1="44.6" x2="86.9" y2="34.7"/></g></svg><span class="op-o">OPUS 5.5</span></h2>
+      <p class="op-p" data-i18n="op_p">Dans la formation, c'est <b>Claude Opus 5.5</b> qui monte vos vidéos et vos motion designs. <b>iziVoice</b> lui apporte les voix off, la musique et les sons, directement depuis Claude.</p>
+      <ul class="op-f">
+        <li data-i18n="op_f1">Montage et motion design</li>
+        <li data-i18n="op_f2">Voix off et musique avec iziVoice</li>
+        <li data-i18n="op_f3">Formats YouTube et réseaux sociaux</li>
+      </ul>
+      <a class="btn btn-red js-cta" href="https://rogerboujieka237.mychariow.shop/prd_9wrq07d2/checkout"><span data-i18n="op_cta">J'apprends avec Claude Opus 5.5</span><span class="arr">→</span></a>
+      <p class="op-n" data-i18n="op_n">Je vous montre pas à pas comment y accéder, dès le module 4.</p>
+      <p class="op-tm" data-i18n="op_tm">Claude et Opus sont des marques d'Anthropic. Formation indépendante, non affiliée à Anthropic.</p>
+    </div>
+  </div>
+</section>
+
+<!-- WHO IT'S FOR -->
+<section id="pour-qui">
+  <div class="wrap">
+    <div class="head center rv"><span class="eyebrow" data-i18n="wh_eye">Pour qui ?</span><h2 data-i18n="wh_h">Cette formation est faite pour vous si…</h2><p class="lead" data-i18n="wh_p">Vous avez besoin de vidéos professionnelles, pour votre activité, votre église, votre organisation ou vos clients. Aucune expérience requise : je pars de zéro.</p></div>
+    <div class="wg">
+      <article class="wc rv"><span class="wc-i" aria-hidden="true">💼</span><h3 data-i18n="wh0t">Entrepreneurs et commerçants</h3><p data-i18n="wh0d">Vous vendez un produit ou un service et vous payez un monteur à chaque vidéo, ou vous ne publiez presque rien.</p><span class="wc-k" data-i18n="wh_k">Avec la formation, vous allez :</span><ul data-i18n="wh0l"><li>Créer vos publicités et vos statuts WhatsApp vous-même</li><li>Présenter vos produits avec des vidéos qui donnent envie d'acheter</li><li>Publier régulièrement sans exploser votre budget</li></ul></article>
+      <article class="wc rv"><span class="wc-i" aria-hidden="true">⛪</span><h3 data-i18n="wh1t">Pasteurs, églises et ministères</h3><p data-i18n="wh1d">Vous annoncez des cultes, des croisades, des conférences et des campagnes, et vous voulez toucher plus d'âmes.</p><span class="wc-k" data-i18n="wh_k">Avec la formation, vous allez :</span><ul data-i18n="wh1l"><li>Transformer vos affiches en vidéos d'invitation animées</li><li>Annoncer vos événements avec un spot professionnel</li><li>Former votre équipe média à produire chaque semaine</li></ul></article>
+      <article class="wc rv"><span class="wc-i" aria-hidden="true">📣</span><h3 data-i18n="wh2t">Responsables communication et marketing</h3><p data-i18n="wh2d">Dans une entreprise, une ONG, une école ou une institution, on vous demande toujours plus de vidéos, toujours plus vite.</p><span class="wc-k" data-i18n="wh_k">Avec la formation, vous allez :</span><ul data-i18n="wh2l"><li>Produire en interne des spots, des teasers et des vidéos d'événement</li><li>Livrer en 16:9 pour YouTube et en 9:16 pour les réseaux</li><li>Gagner des heures sur chaque projet</li></ul></article>
+      <article class="wc rv"><span class="wc-i" aria-hidden="true">🎬</span><h3 data-i18n="wh3t">Créateurs de contenu</h3><p data-i18n="wh3d">Vous publiez sur YouTube, TikTok, Instagram ou Facebook et vous voulez un rendu pro, avec un rythme qui retient.</p><span class="wc-k" data-i18n="wh_k">Avec la formation, vous allez :</span><ul data-i18n="wh3l"><li>Monter vos vidéos longues et vos Shorts plus vite</li><li>Ajouter titres animés, effets sonores et voix off</li><li>Garder une identité visuelle reconnaissable</li></ul></article>
+      <article class="wc rv"><span class="wc-i" aria-hidden="true">🎨</span><h3 data-i18n="wh4t">Graphistes, vidéastes et photographes</h3><p data-i18n="wh4d">Vous maîtrisez déjà l'image et vous voulez ajouter le motion design et l'IA à vos services.</p><span class="wc-k" data-i18n="wh_k">Avec la formation, vous allez :</span><ul data-i18n="wh4l"><li>Proposer des affiches animées et des spots motion</li><li>Livrer plus vite et accepter plus de commandes</li><li>Vendre des packs à un meilleur prix</li></ul></article>
+      <article class="wc rv"><span class="wc-i" aria-hidden="true">🎓</span><h3 data-i18n="wh5t">Étudiants et personnes en reconversion</h3><p data-i18n="wh5d">Vous cherchez une compétence demandée, que vous pouvez apprendre vite et vendre dès les premières semaines.</p><span class="wc-k" data-i18n="wh_k">Avec la formation, vous allez :</span><ul data-i18n="wh5l"><li>Apprendre de zéro, sans logiciel compliqué</li><li>Constituer un portfolio avec vos premières vidéos</li><li>Trouver vos premiers clients grâce au module monétisation</li></ul></article>
+    </div>
+    <p class="wh-note rv" data-i18n="wh_note"><b>Vous hésitez ?</b> Si vous avez un smartphone ou un ordinateur et que vous voulez créer des vidéos qui se remarquent, vous êtes au bon endroit.</p>
   </div>
 </section>
 
@@ -1063,7 +1138,7 @@ const EN = {
   hero_live:"Video course · Instant access",
   hero_h1:'<span class="ln"><span style="--i:0">Edit your videos</span></span><span class="ln"><span style="--i:1"><span class="hl">10X</span> faster</span></span><span class="ln"><span style="--i:2" class="soft">with AI.</span></span>',
   hero_sub:"Learn video editing and motion design with the right tools, <b>on a smartphone or a computer</b>. Then turn this skill into income.",
-  limited:"Promo price", hf1:"Smartphone or computer", hf2:"Over 1 hour of video", hf3:"PDF + resources", hf4:"Private group", hf5:"Lifetime access + updates", g1h:"Lifetime access", g1p:"Pay once and keep the course forever. Watch and rewatch every video as often as you like.", g2h:"Free lifetime updates", g2p:"The course evolves with AI tools. Every new module and every update is yours, at no extra cost.", g3h:"Guaranteed support", g3p:"In the private WhatsApp group, you ask your questions and I support you all the way.", tl_role:"your trainer",
+  limited:"Promo price", hf1:"Smartphone or computer", hf2:"Over 1 hour of video", hf3:"PDF + resources", hf4:"Private group", op_eye:"My videos are made with", op_p:"In the course, <b>Claude Opus 5.5</b> edits your videos and motion designs. <b>iziVoice</b> adds the voice-overs, music and sounds, right from Claude.", op_f1:"Editing and motion design", op_f2:"Voice-over and music with iziVoice", op_f3:"YouTube and social media formats", op_cta:"I learn with Claude Opus 5.5", op_n:"I show you step by step how to get access, from module 4.", op_tm:"Claude and Opus are trademarks of Anthropic. Independent course, not affiliated with Anthropic.", wh_eye:"Who is it for?", wh_h:"This course is made for you if…", wh_p:"You need professional videos, for your business, your church, your organisation or your clients. No experience required: I start from zero.", wh_note:"<b>Not sure it's for you?</b> If you have a smartphone or a computer and want to make videos that get noticed, you're in the right place.", wh0t:"Entrepreneurs and shop owners", wh0d:"You sell a product or service and pay an editor for every video, or you hardly post at all.", wh0l:"<li>Make your own ads and WhatsApp statuses</li><li>Show your products with videos that make people want to buy</li><li>Post regularly without blowing your budget</li>", wh1t:"Pastors, churches and ministries", wh1d:"You announce services, crusades, conferences and campaigns, and want to reach more people.", wh1l:"<li>Turn your posters into animated invitation videos</li><li>Announce your events with a professional ad</li><li>Train your media team to produce every week</li>", wh2t:"Communication and marketing managers", wh2d:"In a company, an NGO, a school or an institution, you're asked for more videos, faster.", wh2l:"<li>Produce ads, teasers and event videos in-house</li><li>Deliver in 16:9 for YouTube and 9:16 for social media</li><li>Save hours on every project</li>", wh3t:"Content creators", wh3d:"You post on YouTube, TikTok, Instagram or Facebook and want a pro look with pacing that keeps viewers.", wh3l:"<li>Edit your long videos and Shorts faster</li><li>Add animated titles, sound effects and voice-overs</li><li>Keep a recognisable visual identity</li>", wh4t:"Designers, videographers and photographers", wh4d:"You already master visuals and want to add motion design and AI to your services.", wh4l:"<li>Offer animated posters and motion ads</li><li>Deliver faster and take on more orders</li><li>Sell packages at a better price</li>", wh5t:"Students and career changers", wh5d:"You want an in-demand skill you can learn quickly and start selling within weeks.", wh5l:"<li>Learn from scratch, no complicated software</li><li>Build a portfolio with your first videos</li><li>Find your first clients with the monetisation module</li>", wh_k:"With the course, you will:", hf5:"Lifetime access + updates", g1h:"Lifetime access", g1p:"Pay once and keep the course forever. Watch and rewatch every video as often as you like.", g2h:"Free lifetime updates", g2p:"The course evolves with AI tools. Every new module and every update is yours, at no extra cost.", g3h:"Guaranteed support", g3p:"In the private WhatsApp group, you ask your questions and I support you all the way.", tl_role:"your trainer",
   ph_cap:"From idea to video in seconds, on a smartphone or a computer.", ph_eye:"What you need", ph_h:"Smartphone or computer: you already have everything.",
   ph_p:"No powerful computer, no expensive software. The method works just as well on a smartphone as on a computer.",
   n1h:"A smartphone or a computer", n1p:"Android, iPhone, Windows or Mac: use the device you have.", n2h:"An internet connection", n2p:"To watch the course and use the online tools.",
