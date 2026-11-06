@@ -971,7 +971,7 @@ footer.ft{text-align:left;border-top:0;font-size:inherit;color:inherit}
 @media (prefers-reduced-motion:reduce){.rv.pre{filter:none;transform:none;opacity:1}.hgrid,.hfl,.shb{animation:none}}
 
 /* hero audio pitch: compact pill, everything centred */
-.aud{display:inline-flex;align-items:center;gap:12px;margin-top:20px;padding:7px 18px 7px 7px;width:min(100%,340px);border-radius:999px;background:var(--card);box-shadow:inset 0 0 0 1px var(--line2),0 10px 26px rgba(12,12,28,.07);overflow:hidden}
+.aud{display:inline-flex;align-items:center;gap:12px;margin-top:20px;padding:7px 18px 7px 7px;width:min(100%,340px);border-radius:999px;background:var(--card);box-shadow:inset 0 0 0 1px var(--line2),0 10px 26px rgba(12,12,28,.07);overflow:visible}
 .aud-b{position:relative;flex:none;width:44px;height:44px;padding:0;border:0;border-radius:50%;background:none;cursor:pointer;-webkit-tap-highlight-color:transparent}
 .aud-c{position:absolute;inset:0;z-index:2;display:grid;place-items:center;border-radius:50%;color:#fff;background:linear-gradient(140deg,#ff3b4d,#c00418);box-shadow:0 0 0 2px #fff,0 6px 16px rgba(227,6,27,.4)}
 .aud-c svg{width:18px;height:18px}
@@ -979,9 +979,12 @@ footer.ft{text-align:left;border-top:0;font-size:inherit;color:inherit}
 .aud-c .pa{display:none}
 .aud.on .aud-c .pl{display:none}.aud.on .aud-c .pa{display:block}
 .aud-r{position:absolute;inset:0;border-radius:50%;pointer-events:none}
-.aud-r.r1{background:rgba(227,6,27,.22);animation:audp 2s ease-out infinite}
-.aud-r.r2{background:rgba(227,6,27,.08);animation:audp 2s ease-out -1s infinite}
-@keyframes audp{0%{transform:scale(1);opacity:1}100%{transform:scale(1.32);opacity:0}}
+.aud-r.r1{background:radial-gradient(circle,rgba(255,59,77,.55),rgba(255,255,255,.5) 70%);box-shadow:0 0 0 1px rgba(227,6,27,.45),0 0 18px rgba(227,6,27,.45);animation:audp 2s ease-out infinite}
+.aud-r.r2{background:radial-gradient(circle,rgba(255,59,77,.25),rgba(255,255,255,.1) 70%);box-shadow:0 0 0 1px rgba(227,6,27,.25);animation:audp 2s ease-out -1s infinite}
+@keyframes audp{0%{transform:scale(1);opacity:1}100%{transform:scale(1.85);opacity:0}}
+.aud-c{animation:audg 2s ease-in-out infinite}
+@keyframes audg{0%,100%{box-shadow:0 0 0 2px #fff,0 6px 16px rgba(227,6,27,.4)}50%{box-shadow:0 0 0 2px #fff,0 0 26px 6px rgba(255,59,77,.6)}}
+.aud.on .aud-r{animation-duration:1.4s}
 .aud-x{flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;gap:6px}
 .aud-x b{font:800 14px/1.15 var(--body);color:var(--fg);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .aud-row{display:flex;align-items:center;gap:10px}
