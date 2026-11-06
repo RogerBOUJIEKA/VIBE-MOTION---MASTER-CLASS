@@ -848,40 +848,43 @@ h1,h2,h3{text-wrap:balance}p,li{text-wrap:pretty}
 .rn{position:relative;margin-top:16px;font:500 11.5px/1.5 var(--body);color:#76757f}
 /* VS */
 .race{padding:24px 20px}
-.lanes{display:grid;gap:14px;align-items:stretch}
-@media (min-width:900px){.lanes{grid-template-columns:1fr auto 1fr}}
-.lane{position:relative;padding:20px 18px;border-radius:22px;background:rgba(255,255,255,.04);box-shadow:inset 0 0 0 1px rgba(255,255,255,.14);transition:box-shadow .4s,background .4s}
-.lane.win{background:rgba(30,169,82,.1);box-shadow:inset 0 0 0 1px rgba(51,208,122,.6),0 0 40px rgba(30,169,82,.18)}
-.lane .lh{display:flex;align-items:center;gap:10px;font:800 17px/1.2 var(--body)}
-.apps{display:flex;gap:4px}
-.apps i{display:grid;place-items:center;width:30px;height:30px;border-radius:8px;font:800 12px/1 var(--body);font-style:normal}
-.apps .ps{background:#001e36;color:#31a8ff;box-shadow:inset 0 0 0 1.5px #31a8ff}.apps .pr{background:#00005b;color:#9999ff;box-shadow:inset 0 0 0 1.5px #9999ff}.apps .ae{background:#00005b;color:#d291ff;box-shadow:inset 0 0 0 1.5px #d291ff}
-.apps .cl{background:rgba(232,118,72,.16);color:#e07a56}.apps .iz{background:rgba(234,102,7,.14)}
-.apps .spk,.apps .izi{width:18px;height:18px}
-.fct{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:16px}
-.fct span{padding:10px 8px;border-radius:12px;background:rgba(0,0,0,.25);text-align:center}
-.fct small{display:block;font:700 9.5px/1.2 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:#76757f}
-.fct b{display:block;margin-top:5px;font:800 13px/1.25 var(--body)}
-.lane .prog{height:12px;margin-top:18px;border-radius:999px;background:rgba(255,255,255,.08);overflow:hidden}
-.lane .prog i{display:block;height:100%;width:0;border-radius:inherit}
-.lane.classic .prog i{background:linear-gradient(90deg,#9999ff,#d291ff)}
-.lane.ai .prog i{background:linear-gradient(90deg,#ff6a1f,#e3061b);box-shadow:0 0 16px rgba(227,6,27,.7)}
-.lane.win .prog i{background:linear-gradient(90deg,#2bd46b,#1ea952);box-shadow:0 0 16px rgba(30,169,82,.7)}
-.lane .st{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:10px;font:600 13px/1.3 var(--body);color:#aaa9b5}
-.lane .st b{font:700 14px/1 var(--mono);color:#fff;font-variant-numeric:tabular-nums}
-.lane.win .st span{color:#33d07a;font-weight:800}
-.vs{display:grid;place-items:center}
-.vs span{display:grid;place-items:center;width:54px;height:54px;border-radius:50%;font:400 20px/1 var(--display);color:#ff3b4d;background:rgba(227,6,27,.12);box-shadow:inset 0 0 0 1px rgba(227,6,27,.45)}
+.vsl{display:grid;gap:14px;align-items:stretch}
+@media (min-width:900px){.vsl{grid-template-columns:1fr auto 1fr}}
+.vln{min-width:0;height:auto;overflow:visible;position:relative;padding:20px 18px;border-radius:22px;background:rgba(255,255,255,.04);box-shadow:inset 0 0 0 1px rgba(255,255,255,.14);transition:box-shadow .4s,background .4s}
+.vln.win{background:rgba(30,169,82,.1);box-shadow:inset 0 0 0 1px rgba(51,208,122,.6),0 0 40px rgba(30,169,82,.18)}
+.vln .vlh{display:flex;align-items:center;gap:10px;font:800 17px/1.2 var(--body)}
+.vapps{display:flex;gap:4px}
+.vapps i{display:grid;place-items:center;width:30px;height:30px;border-radius:8px;font:800 12px/1 var(--body);font-style:normal}
+.vapps .ps{background:#001e36;color:#31a8ff;box-shadow:inset 0 0 0 1.5px #31a8ff}.vapps .pr{background:#00005b;color:#9999ff;box-shadow:inset 0 0 0 1.5px #9999ff}.vapps .ae{background:#00005b;color:#d291ff;box-shadow:inset 0 0 0 1.5px #d291ff}
+.vapps .cl{background:rgba(232,118,72,.16);color:#e07a56}.vapps .iz{background:rgba(234,102,7,.14)}
+.vapps .spk,.vapps .izi{width:18px;height:18px}
+.vfct{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:16px}
+.vfct span{padding:10px 8px;border-radius:12px;background:rgba(0,0,0,.25);text-align:center}
+.vfct small{display:block;font:700 9.5px/1.2 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:#76757f}
+.vfct b{display:block;margin-top:5px;font:800 13px/1.25 var(--body)}
+.vln .vbar{height:12px;margin-top:18px;border-radius:999px;background:rgba(255,255,255,.08);overflow:hidden}
+.vln .vbar i{display:block;height:100%;width:0;border-radius:inherit}
+.vln.classic .vbar i{background:linear-gradient(90deg,#9999ff,#d291ff)}
+.vln.ai .vbar i{background:linear-gradient(90deg,#ff6a1f,#e3061b);box-shadow:0 0 16px rgba(227,6,27,.7)}
+.vln.win .vbar i{background:linear-gradient(90deg,#2bd46b,#1ea952);box-shadow:0 0 16px rgba(30,169,82,.7)}
+.vln .vst{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:10px;font:600 13px/1.3 var(--body);color:#aaa9b5}
+.vln .vst b{font:700 14px/1 var(--mono);color:#fff;font-variant-numeric:tabular-nums}
+.vln.win .st span{color:#33d07a;font-weight:800}
+.vsb{display:grid;place-items:center}
+.vsb span{display:grid;place-items:center;width:54px;height:54px;border-radius:50%;font:400 20px/1 var(--display);color:#ff3b4d;background:rgba(227,6,27,.12);box-shadow:inset 0 0 0 1px rgba(227,6,27,.45)}
 .rbtm{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:16px;margin-top:20px;padding-top:20px;border-top:1px solid rgba(255,255,255,.1)}
 .rbtm .sum b{display:block;font:900 clamp(22px,3vw,30px)/1.1 var(--body);letter-spacing:-.03em;color:#ff3b4d}
 .rbtm .sum span{display:block;margin-top:4px;font:500 14px/1.45 var(--body);color:#aaa9b5}
 .rbtm .btn{margin:0}
+@media (max-width:899px){.vsb{margin:-4px 0}.vsb span{width:46px;height:46px;font-size:17px}}
+@media (max-width:420px){.vfct b{font-size:12px}.vfct small{font-size:8.5px;letter-spacing:.04em}.vln{padding:16px 14px}.vln .vlh{font-size:15.5px}}
 /* community */
 .commh{display:grid;gap:22px;align-items:center;padding:clamp(24px,4vw,40px);border-radius:28px;background:radial-gradient(120% 140% at 0% 0%,rgba(30,169,82,.28),transparent 55%),var(--card);box-shadow:inset 0 0 0 1px rgba(30,169,82,.45)}
 @media (min-width:900px){.commh{grid-template-columns:auto 1fr auto}}
 .cbig{display:grid;place-items:center;width:72px;height:72px;border-radius:22px;background:linear-gradient(180deg,#2bd46b,#1ea952);color:#fff;box-shadow:0 14px 36px rgba(30,169,82,.4);animation:cbf 5s ease-in-out infinite}
 @keyframes cbf{50%{transform:translateY(-8px)}}
-.cbig .ic{width:38px;height:38px}
+.wai{display:block;fill:currentColor;stroke:none;flex:none}
+.cbig .wai{width:40px;height:40px}
 .commh h2{font:900 clamp(24px,3.2vw,34px)/1.1 var(--body);letter-spacing:-.03em}
 .commh p{margin-top:8px;font:500 15.5px/1.55 var(--body);color:var(--muted)}
 .commh p b{color:var(--fg)}
@@ -889,7 +892,7 @@ h1,h2,h3{text-wrap:balance}p,li{text-wrap:pretty}
 .commh .tags span{padding:7px 12px;border-radius:999px;font:700 12.5px/1 var(--body);background:rgba(30,169,82,.14);color:var(--ok)}
 @media (max-width:600px){.commh .tags{display:grid;grid-template-columns:1fr}.commh .tags span{text-align:center}}
 .btn-green{color:#fff;background:linear-gradient(180deg,#2bd46b,#1ea952);box-shadow:0 14px 36px rgba(30,169,82,.35);gap:10px}
-.btn-green .ic{width:20px;height:20px}
+.btn-green .wai{width:22px;height:22px}
 /* contact */
 .ctg{display:grid;gap:12px;max-width:900px;margin:0 auto}
 @media (min-width:760px){.ctg{grid-template-columns:repeat(3,1fr)}}
@@ -897,10 +900,39 @@ h1,h2,h3{text-wrap:balance}p,li{text-wrap:pretty}
 .ctc:hover{transform:translateY(-3px);box-shadow:inset 0 0 0 1px rgba(227,6,27,.5)}
 .ctc .ci{display:grid;place-items:center;width:44px;height:44px;border-radius:13px;color:#fff;flex:none}
 .ctc .ci svg{width:22px;height:22px}
+.ctc .ci .wai{width:24px;height:24px}
 .ctc>span:nth-child(2){flex:1;display:flex;flex-direction:column}
 .ctc b{font:800 16px/1.2 var(--body)}
 .ctc small{margin-top:3px;font:500 13px/1.2 var(--body);color:var(--muted)}
 .ctc .go{font:700 18px/1 var(--body);color:var(--red-ink)}
+
+/* full footer */
+.ft{padding:clamp(28px,4vw,48px) 16px 120px}
+@media (min-width:860px){.ft{padding-bottom:32px}}
+.ftw{max-width:1140px;margin:0 auto;display:grid;gap:30px;padding:clamp(26px,4vw,44px);border-radius:28px;background:#0b0b0f;color:#f5f4f7;box-shadow:0 30px 80px rgba(0,0,0,.25)}
+@media (min-width:700px){.ftw{grid-template-columns:1fr 1fr}}
+@media (min-width:1060px){.ftw{grid-template-columns:1.5fr 1fr 1fr 1.2fr}}
+.ft .fl img{height:32px;width:auto}
+:root .ft .lg-l,:root:not([data-theme="dark"]) .ft .lg-l,:root[data-theme="light"] .ft .lg-l{display:none!important}
+:root .ft .lg-d,:root:not([data-theme="dark"]) .ft .lg-d,:root[data-theme="light"] .ft .lg-d{display:inline-block!important}
+footer.ft{text-align:left;border-top:0;font-size:inherit;color:inherit}
+.pt2 img.tall{height:40px}
+.ft .fb p{margin-top:14px;font:500 14px/1.6 var(--body);color:#aaa9b5;max-width:380px}
+.ft .fb .btn{margin-top:18px}
+.ft h4{margin:0 0 14px;font:700 11.5px/1.2 var(--mono);letter-spacing:.16em;text-transform:uppercase;color:#76757f}
+.ft ul{display:grid;gap:10px;margin:0;padding:0;list-style:none}
+.ft ul a{font:600 15px/1.3 var(--body);color:#d6d5dd;text-decoration:none}
+.ft ul a:hover{color:#ff3b4d}
+.fct2 a{display:flex!important;align-items:center;gap:12px;padding:10px 12px;border-radius:14px;background:rgba(255,255,255,.05);box-shadow:inset 0 0 0 1px rgba(255,255,255,.1);color:#fff!important}
+.fct2 .i{display:grid;place-items:center;width:34px;height:34px;border-radius:10px;color:#fff;flex:none}
+.fct2 .i svg{width:18px;height:18px}.fct2 .i .wai{width:20px;height:20px}
+.fct2 a>span:last-child{display:flex;flex-direction:column;font:700 15px/1.2 var(--body)}
+.fct2 small{margin-top:2px;font:500 12px/1.2 var(--body);color:#aaa9b5}
+.fbar{grid-column:1/-1;display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:18px;padding-top:24px;border-top:1px solid rgba(255,255,255,.1)}
+.fbar .pl{display:block;margin-bottom:10px;font:700 11px/1.2 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:#76757f}
+.pm2{display:flex;flex-wrap:wrap;gap:7px}.pm2 img{height:30px;width:auto;border-radius:6px}
+.pt2{display:flex;flex-wrap:wrap;align-items:center;gap:14px 22px}.pt2 img{height:24px;width:auto}
+.lgl{grid-column:1/-1;margin:0;font:500 12.5px/1.6 var(--body);color:#76757f}
 </style>
 <!-- Meta Pixel Code -->
 <script>
@@ -1143,14 +1175,14 @@ fbq('track', 'PageView');
   <div class="wrap">
     <div class="head center rv"><span class="eyebrow" data-i18n="rc_eye">Le match</span><h2 data-i18n="rc_h">Logiciels classiques <span class='soft'>contre IA.</span></h2><p class="lead" data-i18n="rc_p">Le même spot de 90 secondes, deux façons de le faire. Regardez la différence.</p></div>
     <div class="race rv" id="race">
-      <div class="lanes">
-        <div class="lane classic"><div class="lh"><span class="apps"><i class="ps">Ps</i><i class="pr">Pr</i><i class="ae">Ae</i></span><span data-i18n="rc_c">Montage classique</span></div>
-          <div class="fct"><span><small data-i18n="rc_f1">Logiciels</small><b data-i18n="rc_c1">≈&nbsp;41&nbsp;000&nbsp;FCFA/mois</b></span><span><small data-i18n="rc_f2">Matériel</small><b data-i18n="rc_c2">PC puissant</b></span><span><small data-i18n="rc_f3">Apprendre</small><b data-i18n="rc_c3">Des mois</b></span></div>
-          <div class="prog"><i class="js-pa"></i></div><div class="st"><span class="js-sa" data-i18n="rc_ready">Prêt à démarrer</span><b class="js-ta">0 min</b></div></div>
-        <div class="vs"><span>VS</span></div>
-        <div class="lane ai"><div class="lh"><span class="apps"><i class="cl"><svg class="spk" viewBox="0 0 100 100" aria-hidden="true"><g stroke="currentColor" stroke-width="9" stroke-linecap="round"><line x1="63.9" y1="51.8" x2="95.6" y2="56.0"/><line x1="61.1" y1="58.5" x2="81.8" y2="74.3"/><line x1="55.4" y1="62.9" x2="67.6" y2="92.5"/><line x1="48.2" y1="63.9" x2="44.8" y2="89.7"/><line x1="41.5" y1="61.1" x2="22.0" y2="86.5"/><line x1="37.1" y1="55.4" x2="13.1" y2="65.3"/><line x1="36.1" y1="48.2" x2="4.4" y2="44.0"/><line x1="38.9" y1="41.5" x2="18.2" y2="25.7"/><line x1="44.6" y1="37.1" x2="32.4" y2="7.5"/><line x1="51.8" y1="36.1" x2="55.2" y2="10.3"/><line x1="58.5" y1="38.9" x2="78.0" y2="13.5"/><line x1="62.9" y1="44.6" x2="86.9" y2="34.7"/></g></svg></i><i class="iz"><img class="izi" src="izivoice-icon.png" alt="" width="20" height="20"></i></span><span>Claude Opus 5.5 + iziVoice</span></div>
-          <div class="fct"><span><small data-i18n="rc_f1">Logiciels</small><b data-i18n="rc_a1">≈&nbsp;12&nbsp;000&nbsp;FCFA/mois</b></span><span><small data-i18n="rc_f2">Matériel</small><b data-i18n="rc_a2">Téléphone ou PC</b></span><span><small data-i18n="rc_f3">Apprendre</small><b>1&nbsp;h&nbsp;14</b></span></div>
-          <div class="prog"><i class="js-pb"></i></div><div class="st"><span class="js-sb" data-i18n="rc_ready">Prêt à démarrer</span><b class="js-tb">0 min</b></div></div>
+      <div class="vsl">
+        <div class="vln classic"><div class="vlh"><span class="vapps"><i class="ps">Ps</i><i class="pr">Pr</i><i class="ae">Ae</i></span><span data-i18n="rc_c">Montage classique</span></div>
+          <div class="vfct"><span><small data-i18n="rc_f1">Logiciels</small><b data-i18n="rc_c1">≈&nbsp;41&nbsp;000&nbsp;FCFA/mois</b></span><span><small data-i18n="rc_f2">Matériel</small><b data-i18n="rc_c2">PC puissant</b></span><span><small data-i18n="rc_f3">Apprendre</small><b data-i18n="rc_c3">Des mois</b></span></div>
+          <div class="vbar"><i class="js-pa"></i></div><div class="vst"><span class="js-sa" data-i18n="rc_ready">Prêt à démarrer</span><b class="js-ta">0 min</b></div></div>
+        <div class="vsb"><span>VS</span></div>
+        <div class="vln ai"><div class="vlh"><span class="vapps"><i class="cl"><svg class="spk" viewBox="0 0 100 100" aria-hidden="true"><g stroke="currentColor" stroke-width="9" stroke-linecap="round"><line x1="63.9" y1="51.8" x2="95.6" y2="56.0"/><line x1="61.1" y1="58.5" x2="81.8" y2="74.3"/><line x1="55.4" y1="62.9" x2="67.6" y2="92.5"/><line x1="48.2" y1="63.9" x2="44.8" y2="89.7"/><line x1="41.5" y1="61.1" x2="22.0" y2="86.5"/><line x1="37.1" y1="55.4" x2="13.1" y2="65.3"/><line x1="36.1" y1="48.2" x2="4.4" y2="44.0"/><line x1="38.9" y1="41.5" x2="18.2" y2="25.7"/><line x1="44.6" y1="37.1" x2="32.4" y2="7.5"/><line x1="51.8" y1="36.1" x2="55.2" y2="10.3"/><line x1="58.5" y1="38.9" x2="78.0" y2="13.5"/><line x1="62.9" y1="44.6" x2="86.9" y2="34.7"/></g></svg></i><i class="iz"><img class="izi" src="izivoice-icon.png" alt="" width="20" height="20"></i></span><span>Claude Opus 5.5 + iziVoice</span></div>
+          <div class="vfct"><span><small data-i18n="rc_f1">Logiciels</small><b data-i18n="rc_a1">≈&nbsp;12&nbsp;000&nbsp;FCFA/mois</b></span><span><small data-i18n="rc_f2">Matériel</small><b data-i18n="rc_a2">Téléphone ou PC</b></span><span><small data-i18n="rc_f3">Apprendre</small><b>1&nbsp;h&nbsp;14</b></span></div>
+          <div class="vbar"><i class="js-pb"></i></div><div class="vst"><span class="js-sb" data-i18n="rc_ready">Prêt à démarrer</span><b class="js-tb">0 min</b></div></div>
       </div>
       <div class="rbtm"><div class="sum"><b data-i18n="rc_s">10× plus vite</b><span data-i18n="rc_s2">et environ 29&nbsp;000&nbsp;FCFA économisés chaque mois sur les logiciels.</span></div><button class="btn btn-red js-race" type="button"><span data-i18n="rc_go">▶ Relancer la comparaison</span></button></div>
       <p class="rn" data-i18n="rc_n">Durées indicatives pour un spot de 90 secondes. Adobe Creative Cloud Pro (Photoshop, Premiere, After Effects) : 69,99 $/mois ; Claude Pro : 20 $/mois. Prix variables selon le pays.</p>
@@ -1276,10 +1308,10 @@ fbq('track', 'PageView');
 <!-- FREE COMMUNITY -->
 <section id="communaute" style="padding-block:clamp(36px,5vw,64px)">
   <div class="wrap"><div class="commh rv">
-    <span class="cbig"><svg class="ic" aria-hidden="true"><use href="#i-wa"/></svg></span>
+    <span class="cbig"><svg class="wai" aria-hidden="true"><use href="#i-wa"/></svg></span>
     <div><h2 data-i18n="cm2_h">Rejoignez la communauté gratuite</h2><p data-i18n="cm2_p"><b>LE DIGITAL POUR TOUS</b> : un groupe WhatsApp gratuit pour apprendre l'IA, le marketing digital et la création de contenu avec d'autres passionnés.</p>
       <div class="tags"><span data-i18n="cm2_t1">Intelligence artificielle</span><span data-i18n="cm2_t2">Marketing digital</span><span data-i18n="cm2_t3">Création de contenu</span></div></div>
-    <a class="btn btn-green" href="https://chat.whatsapp.com/HhJZm77fXCd9j9TWNGx7Bk" target="_blank" rel="noopener"><svg class="ic" aria-hidden="true"><use href="#i-wa"/></svg><span data-i18n="cm2_b">Rejoindre gratuitement</span></a>
+    <a class="btn btn-green" href="https://chat.whatsapp.com/HhJZm77fXCd9j9TWNGx7Bk" target="_blank" rel="noopener"><svg class="wai" aria-hidden="true"><use href="#i-wa"/></svg><span data-i18n="cm2_b">Rejoindre gratuitement</span></a>
   </div></div>
 </section>
 
@@ -1307,7 +1339,7 @@ fbq('track', 'PageView');
   <div class="wrap">
     <div class="head center rv"><span class="eyebrow" data-i18n="ct_eye">Contact</span><h2 data-i18n="ct_h">Une question ? <span class='soft'>Écrivez-moi.</span></h2></div>
     <div class="ctg">
-      <a class="ctc rv" href="https://wa.me/237678594247?text=Bonjour%20Roger%2C%20j%27ai%20une%20question%20sur%20la%20formation." target="_blank" rel="noopener"><span class="ci" style="background:#25d366"><svg class="ic" aria-hidden="true"><use href="#i-wa"/></svg></span><span><b>WhatsApp</b><small data-i18n="ct_1">Réponse rapide</small></span><span class="go">→</span></a>
+      <a class="ctc rv" href="https://wa.me/237678594247?text=Bonjour%20Roger%2C%20j%27ai%20une%20question%20sur%20la%20formation." target="_blank" rel="noopener"><span class="ci" style="background:#25d366"><svg class="wai" aria-hidden="true"><use href="#i-wa"/></svg></span><span><b>WhatsApp</b><small data-i18n="ct_1">Réponse rapide</small></span><span class="go">→</span></a>
       <a class="ctc rv" href="mailto:rogerboujieka237@gmail.com"><span class="ci" style="background:#3d8bfd"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="3"/><path d="m3 6 9 7 9-7"/></svg></span><span><b>E-mail</b><small data-i18n="ct_2">Écrivez-moi</small></span><span class="go">→</span></a>
       <a class="ctc rv" href="tel:+237678594247"><span class="ci" style="background:#e3061b"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/></svg></span><span><b data-i18n="ct_3">Appeler</b><small data-i18n="ct_3s">Téléphone</small></span><span class="go">→</span></a>
     </div>
@@ -1329,13 +1361,26 @@ fbq('track', 'PageView');
 
 </main>
 
-<div class="partners"><div class="wrap"><span class="k" data-i18n="partners">Partenaires</span>
+<footer class="ft"><div class="ftw">
+  <div class="fb"><a href="#top" class="fl"><img loading="lazy" decoding="async" class="lg-d" src="logo_rb.png" alt="Roger BOUJIEKA"><img loading="lazy" decoding="async" class="lg-l" src="logo_rb_dk.png" alt="Roger BOUJIEKA"></a>
+    <p data-i18n="ft_p">La formation de Roger BOUJIEKA pour créer des spots, des motion designs et des affiches animées avec l'intelligence artificielle, sur smartphone ou ordinateur.</p>
+    <a class="btn btn-red js-cta" href="https://rogerboujieka237.mychariow.shop/prd_9wrq07d2/checkout"><span data-i18n="ft_cta">Rejoindre la formation</span><span class="arr">→</span></a></div>
+  <div><h4 data-i18n="ft_h1">La formation</h4><ul><li><a class="js-go" href="#realisations" data-i18n="fa_realisations">Réalisations</a></li><li><a class="js-go" href="#programme" data-i18n="fa_programme">Programme</a></li><li><a class="js-go" href="#offre" data-i18n="fa_offre">Tarifs</a></li><li><a class="js-go" href="#abonnement" data-i18n="fa_abonnement">Abonnement Claude</a></li><li><a class="js-go" href="#comparatif" data-i18n="fa_comparatif">IA vs classique</a></li></ul></div>
+  <div><h4 data-i18n="ft_h2">Liens utiles</h4><ul><li><a class="js-go" href="#qui-suis-je" data-i18n="fb_qui_suis_je">Qui suis-je ?</a></li><li><a class="js-go" href="#communaute" data-i18n="fb_communaute">Communauté</a></li><li><a class="js-go" href="#faq" data-i18n="fb_faq">FAQ</a></li><li><a class="js-go" href="#contact" data-i18n="fb_contact">Contact</a></li><li><a href="https://chat.whatsapp.com/HhJZm77fXCd9j9TWNGx7Bk" target="_blank" rel="noopener" data-i18n="ft_grp">Groupe WhatsApp gratuit</a></li></ul></div>
+  <div><h4 data-i18n="ft_h3">Contact</h4><ul class="fct2">
+    <li><a href="https://wa.me/237678594247?text=Bonjour%20Roger%2C%20j%27ai%20une%20question%20sur%20la%20formation." target="_blank" rel="noopener"><span class="i" style="background:#25d366"><svg class="wai" aria-hidden="true"><use href="#i-wa"/></svg></span><span>WhatsApp<small data-i18n="ft_c1">Réponse rapide</small></span></a></li>
+    <li><a href="mailto:rogerboujieka237@gmail.com"><span class="i" style="background:#3d8bfd"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="3"/><path d="m3 6 9 7 9-7"/></svg></span><span>E-mail<small data-i18n="ft_c2">Écrivez-moi</small></span></a></li>
+    <li><a href="tel:+237678594247"><span class="i" style="background:#e3061b"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/></svg></span><span data-i18n="ft_c3">Appeler<small>Téléphone</small></span></a></li>
+  </ul></div>
+  <div class="fbar"><div><span class="pl" data-i18n="ft_pay">Paiement sécurisé</span><div class="pm2"><img loading="lazy" decoding="async" src="orange-money.svg" alt="Orange Money" width="54" height="32"><img loading="lazy" decoding="async" src="momo-mtn.webp" alt="MoMo MTN" width="54" height="32"><img loading="lazy" decoding="async" src="moov-money.svg" alt="Moov Money" width="54" height="32"><img loading="lazy" decoding="async" src="visa.svg" alt="Visa" width="48" height="32"><img loading="lazy" decoding="async" src="mastercard.svg" alt="Mastercard" width="48" height="32"></div></div>
+    <div><span class="pl" data-i18n="partners">Partenaires</span><div class="pt2">
   <img loading="lazy" decoding="async" class="tall lg-d" src="logo_transmission.png" alt="TRANSMISSION"><img loading="lazy" decoding="async" class="tall lg-l" src="logo_transmission_dk.png" alt="TRANSMISSION">
   <img loading="lazy" decoding="async" class="lg-d" src="logo_rb.png" alt="Roger BOUJIEKA"><img loading="lazy" decoding="async" class="lg-l" src="logo_rb_dk.png" alt="Roger BOUJIEKA">
   <img loading="lazy" decoding="async" class="lg-d" src="logo_boujieka_agency.png" alt="Boujieka agency"><img loading="lazy" decoding="async" class="lg-l" src="logo_boujieka_agency_dk.png" alt="Boujieka agency">
   <img loading="lazy" decoding="async" class="lg-d" src="logo_izivoice.png" alt="iziVoice"><img loading="lazy" decoding="async" class="lg-l" src="logo_izivoice_darktext.png" alt="iziVoice">
-</div></div>
-<footer><span data-i18n="foot">© 2026 Roger BOUJIEKA · Boujieka Academy · Formation « Montage vidéo &amp; Motion Design avec l'IA »</span></footer>
+</div></div></div>
+  <p class="lgl"><span data-i18n="foot">© 2026 Roger BOUJIEKA · Boujieka Academy · Formation « Montage vidéo &amp; Motion Design avec l'IA »</span><br><span data-i18n="ft_tm">Claude et Opus sont des marques d'Anthropic ; formation indépendante, non affiliée à Anthropic.</span></p>
+</div></footer>
 
 <div class="toast" id="toast" role="status" aria-live="polite" hidden><span class="t-ic"></span><span class="t-tx"><b></b><small></small></span><button class="t-x" type="button" aria-label="Fermer">✕</button></div>
 <a class="wa-float" href="https://wa.me/237678594247?text=Bonjour%20Roger%2C%20j%27ai%20une%20question%20sur%20la%20formation%20Montage%20vid%C3%A9o%20%26%20Motion%20Design%20avec%20l%27IA." target="_blank" rel="noopener" aria-label="Envoyer un message à Roger BOUJIEKA sur WhatsApp" title="WhatsApp"><svg class="wa-ic" aria-hidden="true"><use href="#i-wa"/></svg></a>
@@ -1346,7 +1391,7 @@ fbq('track', 'PageView');
    CHECKOUT_URL: the Chariow checkout of the course. Every buy button opens it. */
 const CHECKOUT_URL = "https://rogerboujieka237.mychariow.shop/prd_9wrq07d2/checkout";
 
-const EN = {h1a:"Create", h1b:"with AI.", cta_join:"Join the course", cta_works:"See my work", qn_realisations:"Portfolio", qn_programme:"Programme", qn_offre:"Pricing", qn_abonnement:"Claude plan", qn_comparatif:"AI vs classic", qn_qui_suis_je:"About me", qn_communaute:"Community", qn_faq:"FAQ", qn_contact:"Contact", ro_eye:"After the course", ro_h:"A 12,000&nbsp;FCFA plan. <span class='soft'>Videos worth far more.</span>", ro_p:"To create your videos you need the <b>Claude Pro</b> plan: your editor, motion designer and animator in one tool. Module 4 shows you how to get it, even with Mobile Money.", ro_sc:"Monthly, cancel anytime", ro_am:"FCFA / month · $20", ro_ch:"Work out what you could earn", ro_n:"Videos delivered per month", ro_pp:"Price per video", ro_s1:"animated poster", ro_s2:"status / social", ro_s3:"motion ad", ro_s4:"pro ad", ro_b1:"Your Claude plan", ro_b2:"What you bill", ro_r:"FCFA a month · ", ro_rc:"clients served", ro_x:"the plan", ro_note:"Indicative example using common prices. Your income depends on your clients and your work. Claude Pro: $20/month (varies by country and taxes); usage limits are set by Anthropic.", ro_l:"<li><b>A single video sold</b> pays for the month's plan.</li><li>Ads, motion designs, animated posters, long videos: <b>all with the same plan.</b></li><li>Voice-overs with <b>iziVoice</b>: credits as you go (module 7).</li>", rc_eye:"The match", rc_h:"Classic software <span class='soft'>versus AI.</span>", rc_p:"The same 90-second ad, two ways to make it. Watch the difference.", rc_c:"Classic editing", rc_f1:"Software", rc_c1:"≈&nbsp;41,000&nbsp;FCFA/mo", rc_f2:"Hardware", rc_c2:"Powerful PC", rc_f3:"Learning", rc_c3:"Months", rc_ready:"Ready to start", rc_a1:"≈&nbsp;12,000&nbsp;FCFA/mo", rc_a2:"Phone or PC", rc_s:"10× faster", rc_s2:"and about 29,000&nbsp;FCFA saved every month on software.", rc_go:"▶ Run it again", rc_n:"Indicative times for a 90-second ad. Adobe Creative Cloud Pro (Photoshop, Premiere, After Effects): $69.99/month; Claude Pro: $20/month. Prices vary by country.", cm2_h:"Join the free community", cm2_p:"<b>LE DIGITAL POUR TOUS</b>: a free WhatsApp group to learn AI, digital marketing and content creation with other enthusiasts.", cm2_t1:"Artificial intelligence", cm2_t2:"Digital marketing", cm2_t3:"Content creation", cm2_b:"Join for free", ct_eye:"Contact", ct_h:"A question? <span class='soft'>Message me.</span>", ct_1:"Quick reply", ct_2:"Write to me", ct_3:"Call", ct_3s:"Phone",
+const EN = {ft_p:"Roger BOUJIEKA's course for creating ads, motion designs and animated posters with artificial intelligence, on a smartphone or a computer.", ft_cta:"Join the course", ft_h1:"The course", fa_realisations:"Portfolio", fa_programme:"Programme", fa_offre:"Pricing", fa_abonnement:"Claude plan", fa_comparatif:"AI vs classic", ft_h2:"Useful links", fb_qui_suis_je:"About me", fb_communaute:"Community", fb_faq:"FAQ", fb_contact:"Contact", ft_grp:"Free WhatsApp group", ft_h3:"Contact", ft_c1:"Quick reply", ft_c2:"Write to me", ft_c3:"Call<small>Phone</small>", ft_pay:"Secure payment", ft_tm:"Claude and Opus are trademarks of Anthropic; independent course, not affiliated with Anthropic.",h1a:"Create", h1b:"with AI.", cta_join:"Join the course", cta_works:"See my work", qn_realisations:"Portfolio", qn_programme:"Programme", qn_offre:"Pricing", qn_abonnement:"Claude plan", qn_comparatif:"AI vs classic", qn_qui_suis_je:"About me", qn_communaute:"Community", qn_faq:"FAQ", qn_contact:"Contact", ro_eye:"After the course", ro_h:"A 12,000&nbsp;FCFA plan. <span class='soft'>Videos worth far more.</span>", ro_p:"To create your videos you need the <b>Claude Pro</b> plan: your editor, motion designer and animator in one tool. Module 4 shows you how to get it, even with Mobile Money.", ro_sc:"Monthly, cancel anytime", ro_am:"FCFA / month · $20", ro_ch:"Work out what you could earn", ro_n:"Videos delivered per month", ro_pp:"Price per video", ro_s1:"animated poster", ro_s2:"status / social", ro_s3:"motion ad", ro_s4:"pro ad", ro_b1:"Your Claude plan", ro_b2:"What you bill", ro_r:"FCFA a month · ", ro_rc:"clients served", ro_x:"the plan", ro_note:"Indicative example using common prices. Your income depends on your clients and your work. Claude Pro: $20/month (varies by country and taxes); usage limits are set by Anthropic.", ro_l:"<li><b>A single video sold</b> pays for the month's plan.</li><li>Ads, motion designs, animated posters, long videos: <b>all with the same plan.</b></li><li>Voice-overs with <b>iziVoice</b>: credits as you go (module 7).</li>", rc_eye:"The match", rc_h:"Classic software <span class='soft'>versus AI.</span>", rc_p:"The same 90-second ad, two ways to make it. Watch the difference.", rc_c:"Classic editing", rc_f1:"Software", rc_c1:"≈&nbsp;41,000&nbsp;FCFA/mo", rc_f2:"Hardware", rc_c2:"Powerful PC", rc_f3:"Learning", rc_c3:"Months", rc_ready:"Ready to start", rc_a1:"≈&nbsp;12,000&nbsp;FCFA/mo", rc_a2:"Phone or PC", rc_s:"10× faster", rc_s2:"and about 29,000&nbsp;FCFA saved every month on software.", rc_go:"▶ Run it again", rc_n:"Indicative times for a 90-second ad. Adobe Creative Cloud Pro (Photoshop, Premiere, After Effects): $69.99/month; Claude Pro: $20/month. Prices vary by country.", cm2_h:"Join the free community", cm2_p:"<b>LE DIGITAL POUR TOUS</b>: a free WhatsApp group to learn AI, digital marketing and content creation with other enthusiasts.", cm2_t1:"Artificial intelligence", cm2_t2:"Digital marketing", cm2_t3:"Content creation", cm2_b:"Join for free", ct_eye:"Contact", ct_h:"A question? <span class='soft'>Message me.</span>", ct_1:"Quick reply", ct_2:"Write to me", ct_3:"Call", ct_3s:"Phone",
   cta_short:"Enrol now", cta_main:"Get the course",
   hero_live:"Video course · Instant access",
   hero_h1:'<span class="ln"><span style="--i:0">Edit your videos</span></span><span class="ln"><span style="--i:1"><span class="hl">10X</span> faster</span></span><span class="ln"><span style="--i:2" class="soft">with AI.</span></span>',
@@ -1636,7 +1681,7 @@ if (document.fonts) document.fonts.ready.then(moveInd);
 /* ---------- classic software vs AI ---------- */
 (function () {
   const box = document.getElementById('race'); if (!box) return;
-  const q = s => box.querySelector(s), ai = q('.lane.ai');
+  const q = s => box.querySelector(s), ai = q('.vln.ai');
   const L = () => document.documentElement.lang === 'en';
   const A = () => L() ? ['Importing footage…', 'Editing clip by clip…', 'Keyframing titles…', 'Rendering…'] : ['Import des rushes…', 'Montage plan par plan…', 'Animation des titres…', 'Rendu en cours…'];
   const B = () => L() ? ['Reading the brief…', 'Editing + motion design…', 'iziVoice voice-over…', '✓ Ad delivered'] : ['Analyse du brief…', 'Montage + motion design…', 'Voix off iziVoice…', '✓ Spot livré'];
