@@ -970,29 +970,28 @@ footer.ft{text-align:left;border-top:0;font-size:inherit;color:inherit}
 .rv.pre{opacity:0;transform:translateY(34px) scale(.985);filter:blur(10px)}
 @media (prefers-reduced-motion:reduce){.rv.pre{filter:none;transform:none;opacity:1}.hgrid,.hfl,.shb{animation:none}}
 
-/* hero audio pitch */
-.aud{display:flex;align-items:center;gap:14px;margin-top:22px;padding:10px 18px 10px 10px;max-width:470px;border-radius:999px;background:var(--card);box-shadow:inset 0 0 0 1px var(--line2),0 14px 36px rgba(12,12,28,.08)}
-.aud-b{position:relative;flex:none;width:58px;height:58px;padding:0;border:0;border-radius:50%;background:none;cursor:pointer;-webkit-tap-highlight-color:transparent}
-.aud-c{position:absolute;inset:0;z-index:2;display:grid;place-items:center;border-radius:50%;color:#fff;background:linear-gradient(140deg,#ff3b4d,#c00418);box-shadow:0 0 0 3px rgba(255,255,255,.9),0 10px 26px rgba(227,6,27,.45)}
-.aud-c svg{width:24px;height:24px}
+/* hero audio pitch: compact pill, everything centred */
+.aud{display:inline-flex;align-items:center;gap:12px;margin-top:20px;padding:7px 18px 7px 7px;width:min(100%,340px);border-radius:999px;background:var(--card);box-shadow:inset 0 0 0 1px var(--line2),0 10px 26px rgba(12,12,28,.07);overflow:hidden}
+.aud-b{position:relative;flex:none;width:44px;height:44px;padding:0;border:0;border-radius:50%;background:none;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.aud-c{position:absolute;inset:0;z-index:2;display:grid;place-items:center;border-radius:50%;color:#fff;background:linear-gradient(140deg,#ff3b4d,#c00418);box-shadow:0 0 0 2px #fff,0 6px 16px rgba(227,6,27,.4)}
+.aud-c svg{width:18px;height:18px}
+.aud-c .pl{margin-left:2px}
 .aud-c .pa{display:none}
 .aud.on .aud-c .pl{display:none}.aud.on .aud-c .pa{display:block}
 .aud-r{position:absolute;inset:0;border-radius:50%;pointer-events:none}
-.aud-r.r1{background:rgba(255,255,255,.5);box-shadow:0 0 0 1px rgba(227,6,27,.35);animation:audp 2s ease-out infinite}
-.aud-r.r2{background:rgba(255,255,255,.1);box-shadow:0 0 0 1px rgba(227,6,27,.2);animation:audp 2s ease-out -1s infinite}
-@keyframes audp{0%{transform:scale(1);opacity:1}100%{transform:scale(1.9);opacity:0}}
-.aud.on .aud-r{animation-duration:1.4s}
-.aud-x{flex:1;min-width:0;display:flex;flex-direction:column;gap:4px}
-.aud-x b{font:800 15.5px/1.2 var(--body);color:var(--fg)}
-.aud-m{font:600 12.5px/1.2 var(--mono);color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.aud-w{display:flex;align-items:center;gap:3px;height:16px;margin-top:2px}
-.aud-w i{flex:1;max-width:5px;height:45%;border-radius:2px;background:var(--red);opacity:.35;transition:height .2s}
-.aud.on .aud-w i{opacity:.9;animation:audw .9s ease-in-out infinite}
+.aud-r.r1{background:rgba(227,6,27,.22);animation:audp 2s ease-out infinite}
+.aud-r.r2{background:rgba(227,6,27,.08);animation:audp 2s ease-out -1s infinite}
+@keyframes audp{0%{transform:scale(1);opacity:1}100%{transform:scale(1.32);opacity:0}}
+.aud-x{flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;gap:6px}
+.aud-x b{font:800 14px/1.15 var(--body);color:var(--fg);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.aud-row{display:flex;align-items:center;gap:10px}
+.aud-w{flex:1;min-width:0;display:flex;align-items:center;justify-content:space-between;height:14px}
+.aud-w i{width:3px;height:40%;border-radius:2px;background:var(--line2);transition:background .2s}
+.aud-w i.on{background:var(--red)}
+.aud.on .aud-w i{animation:audw .9s ease-in-out infinite}
 .aud-w i:nth-child(3n){animation-delay:-.3s}.aud-w i:nth-child(3n+1){animation-delay:-.6s}.aud-w i:nth-child(4n){animation-delay:-.15s}
-@keyframes audw{0%,100%{height:25%}50%{height:100%}}
-.aud-p{display:block;height:3px;border-radius:3px;background:var(--line2);overflow:hidden}
-.aud-p i{display:block;height:100%;width:0;background:var(--red)}
-@media (max-width:420px){.aud{gap:12px;padding-right:16px}.aud-b{width:52px;height:52px}.aud-x b{font-size:14.5px}.aud-m{font-size:10.5px;letter-spacing:-.02em}}
+@keyframes audw{0%,100%{height:30%}50%{height:100%}}
+.aud-t{flex:none;min-width:34px;text-align:right;font:700 11.5px/1 var(--mono);color:var(--muted);font-variant-numeric:tabular-nums}
 </style>
 <!-- Meta Pixel Code -->
 <script>
@@ -1047,7 +1046,7 @@ fbq('track', 'PageView');
       <span class="live in" style="--d:.05s"><i></i><span data-i18n="hero_live">Formation vidéo · Accès immédiat</span></span>
       <h1 class="h1"><span class="ln"><span style="--i:0" data-i18n="h1a">Créez des</span></span><span class="ln"><span style="--i:1"><span class="hl rotw" aria-hidden="true"><span class="on">affiches animées</span><span>motion designs</span><span>spots publicitaires</span><span>vidéos YouTube</span><span>sites animés</span><span>invitations</span></span><span class="sr js-rot-sr">affiches animées</span></span></span><span class="ln"><span style="--i:2" class="soft" data-i18n="h1b">avec l'IA.</span></span></h1>
       <div class="aud in" style="--d:.55s"><button type="button" class="aud-b js-aud" aria-label="Écouter la présentation"><span class="aud-r r1"></span><span class="aud-r r2"></span><span class="aud-c"><svg class="pl" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z" fill="currentColor"/></svg><svg class="pa" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 5h3.5v14H7zM13.5 5H17v14h-3.5z" fill="currentColor"/></svg></span></button>
-  <div class="aud-x"><b data-i18n="au_t">Écoutez avant de décider</b><span class="aud-m"><span data-i18n="au_s">1 min 30 pour tout comprendre</span> · <span class="js-aud-t">0:00</span></span><span class="aud-w" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span><span class="aud-p"><i class="js-aud-bar"></i></span></div>
+  <div class="aud-x"><b data-i18n="au_t">Écoutez avant de décider</b><span class="aud-row"><span class="aud-w" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span><span class="aud-t js-aud-t">1:30</span></span></div>
   <audio class="js-aud-el" preload="none" src="presentation-formation.mp3"></audio></div>
       <p class="lead sub in" style="--d:.5s" data-i18n="hero_sub">Apprenez le montage vidéo et le motion design avec les bons outils, <b>sur smartphone ou ordinateur</b>. Puis transformez cette compétence en revenus.</p>
       <div class="price-line in" style="--d:.6s"><span class="price-now">15 000<small>FCFA</small></span><span class="price-was">35 000 FCFA</span><span class="tag" data-i18n="limited">Prix promo</span></div>
@@ -1763,14 +1762,15 @@ if (document.fonts) document.fonts.ready.then(moveInd);
 /* ---------- hero audio pitch ---------- */
 (function () {
   const box = document.querySelector('.aud'); if (!box) return;
-  const a = box.querySelector('.js-aud-el'), btn = box.querySelector('.js-aud'), t = box.querySelector('.js-aud-t'), bar = box.querySelector('.js-aud-bar');
+  const a = box.querySelector('.js-aud-el'), btn = box.querySelector('.js-aud'), t = box.querySelector('.js-aud-t'), bars = [...box.querySelectorAll('.aud-w i')];
   const fmt = x => Math.floor(x / 60) + ':' + String(Math.floor(x % 60)).padStart(2, '0');
+  const paint = () => { const k = a.duration ? a.currentTime / a.duration : 0, n = Math.round(k * bars.length); bars.forEach((b, i) => b.classList.toggle('on', i < n)); };
   btn.addEventListener('click', () => { if (a.paused) a.play().catch(() => {}); else a.pause(); });
   a.addEventListener('play', () => { box.classList.add('on'); document.querySelectorAll('video').forEach(v => { if (!v.paused) v.pause(); }); });
   a.addEventListener('pause', () => box.classList.remove('on'));
-  a.addEventListener('ended', () => { box.classList.remove('on'); a.currentTime = 0; });
-  a.addEventListener('timeupdate', () => { t.textContent = fmt(a.currentTime) + (a.duration ? ' / ' + fmt(a.duration) : ''); if (a.duration) bar.style.width = (a.currentTime / a.duration * 100) + '%'; });
-  a.addEventListener('loadedmetadata', () => { t.textContent = '0:00 / ' + fmt(a.duration); });
+  a.addEventListener('ended', () => { box.classList.remove('on'); a.currentTime = 0; paint(); t.textContent = fmt(a.duration); });
+  a.addEventListener('timeupdate', () => { if (a.currentTime > 0) t.textContent = fmt(a.currentTime); paint(); });
+  a.addEventListener('loadedmetadata', () => { if (a.paused) t.textContent = fmt(a.duration); });
 })();
 
 /* ---------- "see all my work" opens the works tab ---------- */
