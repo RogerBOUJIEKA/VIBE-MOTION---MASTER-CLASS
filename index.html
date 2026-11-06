@@ -933,6 +933,42 @@ footer.ft{text-align:left;border-top:0;font-size:inherit;color:inherit}
 .pm2{display:flex;flex-wrap:wrap;gap:7px}.pm2 img{height:30px;width:auto;border-radius:6px}
 .pt2{display:flex;flex-wrap:wrap;align-items:center;gap:14px 22px}.pt2 img{height:24px;width:auto}
 .lgl{grid-column:1/-1;margin:0;font:500 12.5px/1.6 var(--body);color:#76757f}
+
+/* hero background: soft red gradient + dark grid that fades away going up */
+.hero{position:relative;isolation:isolate}
+.hero::before{content:"";position:absolute;inset:0;z-index:-2;background:radial-gradient(70% 60% at 85% 20%,rgba(227,6,27,.16),transparent 70%),radial-gradient(60% 50% at 0% 100%,rgba(227,6,27,.10),transparent 70%);pointer-events:none}
+.hgrid{position:absolute;inset:0;z-index:-1;pointer-events:none;background-image:linear-gradient(rgba(12,12,28,.10) 1px,transparent 1px),linear-gradient(90deg,rgba(12,12,28,.10) 1px,transparent 1px);background-size:46px 46px;-webkit-mask-image:linear-gradient(to top,#000 0%,rgba(0,0,0,.55) 45%,transparent 100%);mask-image:linear-gradient(to top,#000 0%,rgba(0,0,0,.55) 45%,transparent 100%);animation:gridup 18s linear infinite}
+@keyframes gridup{to{background-position:0 -46px}}
+:root[data-theme="dark"] .hgrid{background-image:linear-gradient(rgba(255,255,255,.07) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.07) 1px,transparent 1px)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .hgrid{background-image:linear-gradient(rgba(255,255,255,.07) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.07) 1px,transparent 1px)}}
+.hfl{position:absolute;z-index:-1;pointer-events:none;opacity:.6;will-change:transform}
+.hfl .spk,.hfl img{width:100%;height:100%;animation:none}
+.hfl{color:#e07a56}
+.hfl.f1{left:3%;top:12%;width:34px;height:34px;animation:hfa 14s ease-in-out infinite}
+.hfl.f2{left:44%;top:6%;width:30px;height:30px;animation:hfb 17s ease-in-out infinite}
+.hfl.f3{right:4%;bottom:10%;width:26px;height:26px;animation:hfa 19s ease-in-out -5s infinite}
+.hfl.f4{left:6%;bottom:6%;width:28px;height:28px;animation:hfb 21s ease-in-out -8s infinite}
+@keyframes hfa{0%,100%{transform:translate(0,0) rotate(0)}50%{transform:translate(18px,-22px) rotate(120deg)}}
+@keyframes hfb{0%,100%{transform:translate(0,0)}50%{transform:translate(-16px,18px)}}
+@media (max-width:860px){.hfl.f2{left:auto;right:6%;top:4%}.hfl.f4{display:none}}
+
+/* solid badges on the shoulders, floating up and down */
+.pic,.portrait{position:relative}
+.shb{position:absolute;z-index:3;display:inline-flex;align-items:center;gap:8px;padding:8px 13px 8px 8px;border-radius:999px;background:#fff;color:#0d0d12;font:800 12.5px/1 var(--body);white-space:nowrap;box-shadow:0 12px 30px rgba(0,0,0,.28);will-change:transform}
+.shb i{display:grid;place-items:center;width:28px;height:28px;border-radius:50%;font-style:normal;background:#fff3ee}
+.shb i.c{color:#e07a56;background:#fdf0ea}
+.shb .spk{width:18px;height:18px}
+.pic .shb img.izi,.portrait .shb img.izi{position:static;left:auto;bottom:auto;width:18px;height:18px;max-width:none;transform:none;opacity:1;animation:none}
+.sh1{left:5%;top:60%;animation:shbob 3.6s ease-in-out infinite}
+.sh2{right:5%;top:66%;animation:shbob 3.6s ease-in-out -1.8s infinite}
+@keyframes shbob{0%,100%{transform:translateY(0)}50%{transform:translateY(-14px)}}
+.portrait .sh1{top:62%}.portrait .sh2{top:70%}
+@media (max-width:420px){.shb{font-size:11px;padding:6px 10px 6px 6px}.shb i{width:24px;height:24px}}
+
+/* scroll reveal: blocks land fast, floating out of a soft blur */
+.rv{transition:opacity .9s var(--ease),transform .9s var(--ease),filter .9s var(--ease)}
+.rv.pre{opacity:0;transform:translateY(34px) scale(.985);filter:blur(10px)}
+@media (prefers-reduced-motion:reduce){.rv.pre{filter:none;transform:none;opacity:1}.hgrid,.hfl,.shb{animation:none}}
 </style>
 <!-- Meta Pixel Code -->
 <script>
@@ -981,6 +1017,7 @@ fbq('track', 'PageView');
 <main>
 <!-- HERO -->
 <section class="hero" id="top">
+  <div class="hgrid" aria-hidden="true"></div><span class="hfl f1" aria-hidden="true"><svg class="spk" viewBox="0 0 100 100" aria-hidden="true"><g stroke="currentColor" stroke-width="9" stroke-linecap="round"><line x1="63.9" y1="51.8" x2="95.6" y2="56.0"/><line x1="61.1" y1="58.5" x2="81.8" y2="74.3"/><line x1="55.4" y1="62.9" x2="67.6" y2="92.5"/><line x1="48.2" y1="63.9" x2="44.8" y2="89.7"/><line x1="41.5" y1="61.1" x2="22.0" y2="86.5"/><line x1="37.1" y1="55.4" x2="13.1" y2="65.3"/><line x1="36.1" y1="48.2" x2="4.4" y2="44.0"/><line x1="38.9" y1="41.5" x2="18.2" y2="25.7"/><line x1="44.6" y1="37.1" x2="32.4" y2="7.5"/><line x1="51.8" y1="36.1" x2="55.2" y2="10.3"/><line x1="58.5" y1="38.9" x2="78.0" y2="13.5"/><line x1="62.9" y1="44.6" x2="86.9" y2="34.7"/></g></svg></span><span class="hfl f2" aria-hidden="true"><img src="izivoice-icon.png" alt=""></span><span class="hfl f3" aria-hidden="true"><svg class="spk" viewBox="0 0 100 100" aria-hidden="true"><g stroke="currentColor" stroke-width="9" stroke-linecap="round"><line x1="63.9" y1="51.8" x2="95.6" y2="56.0"/><line x1="61.1" y1="58.5" x2="81.8" y2="74.3"/><line x1="55.4" y1="62.9" x2="67.6" y2="92.5"/><line x1="48.2" y1="63.9" x2="44.8" y2="89.7"/><line x1="41.5" y1="61.1" x2="22.0" y2="86.5"/><line x1="37.1" y1="55.4" x2="13.1" y2="65.3"/><line x1="36.1" y1="48.2" x2="4.4" y2="44.0"/><line x1="38.9" y1="41.5" x2="18.2" y2="25.7"/><line x1="44.6" y1="37.1" x2="32.4" y2="7.5"/><line x1="51.8" y1="36.1" x2="55.2" y2="10.3"/><line x1="58.5" y1="38.9" x2="78.0" y2="13.5"/><line x1="62.9" y1="44.6" x2="86.9" y2="34.7"/></g></svg></span><span class="hfl f4" aria-hidden="true"><img src="izivoice-icon.png" alt=""></span>
   <div class="wrap">
     <div>
       <span class="live in" style="--d:.05s"><i></i><span data-i18n="hero_live">Formation vidéo · Accès immédiat</span></span>
@@ -999,7 +1036,7 @@ fbq('track', 'PageView');
       </div>
     </div>
     <div class="hcard in" style="--d:.15s">
-      <div class="pic"><span class="rg"></span><span class="rg"></span><span class="rg"></span><span class="rg"></span><img src="roger.webp" alt="Roger BOUJIEKA" width="1000" height="1000" fetchpriority="high"></div>
+      <div class="pic"><span class="rg"></span><span class="rg"></span><span class="rg"></span><span class="rg"></span><img src="roger-v2.webp" alt="Roger BOUJIEKA" width="1000" height="1000" fetchpriority="high"><span class="shb sh1" aria-hidden="true"><i class="c"><svg class="spk" viewBox="0 0 100 100" aria-hidden="true"><g stroke="currentColor" stroke-width="9" stroke-linecap="round"><line x1="63.9" y1="51.8" x2="95.6" y2="56.0"/><line x1="61.1" y1="58.5" x2="81.8" y2="74.3"/><line x1="55.4" y1="62.9" x2="67.6" y2="92.5"/><line x1="48.2" y1="63.9" x2="44.8" y2="89.7"/><line x1="41.5" y1="61.1" x2="22.0" y2="86.5"/><line x1="37.1" y1="55.4" x2="13.1" y2="65.3"/><line x1="36.1" y1="48.2" x2="4.4" y2="44.0"/><line x1="38.9" y1="41.5" x2="18.2" y2="25.7"/><line x1="44.6" y1="37.1" x2="32.4" y2="7.5"/><line x1="51.8" y1="36.1" x2="55.2" y2="10.3"/><line x1="58.5" y1="38.9" x2="78.0" y2="13.5"/><line x1="62.9" y1="44.6" x2="86.9" y2="34.7"/></g></svg></i>Claude Opus 5.5</span><span class="shb sh2" aria-hidden="true"><i><img class="izi" src="izivoice-icon.png" alt="" width="20" height="20"></i>iziVoice</span></div>
       <div class="tl" aria-hidden="true">
         <div class="tl-h"><span><b>Roger BOUJIEKA</b> · <span data-i18n="tl_role">votre formateur</span></span><span class="tc js-tc">00:00:00</span></div>
         <div class="tl-b">
@@ -1255,7 +1292,7 @@ fbq('track', 'PageView');
 
     <div class="panel" role="tabpanel" id="p-formateur" aria-labelledby="tab-formateur" hidden>
       <div class="trainer">
-        <div class="portrait"><img src="roger.webp" alt="Roger BOUJIEKA" loading="lazy" decoding="async" width="1254" height="1254"></div>
+        <div class="portrait"><img src="roger-v2.webp" alt="Roger BOUJIEKA" loading="lazy" decoding="async" width="1000" height="1000"><span class="shb sh1" aria-hidden="true"><i class="c"><svg class="spk" viewBox="0 0 100 100" aria-hidden="true"><g stroke="currentColor" stroke-width="9" stroke-linecap="round"><line x1="63.9" y1="51.8" x2="95.6" y2="56.0"/><line x1="61.1" y1="58.5" x2="81.8" y2="74.3"/><line x1="55.4" y1="62.9" x2="67.6" y2="92.5"/><line x1="48.2" y1="63.9" x2="44.8" y2="89.7"/><line x1="41.5" y1="61.1" x2="22.0" y2="86.5"/><line x1="37.1" y1="55.4" x2="13.1" y2="65.3"/><line x1="36.1" y1="48.2" x2="4.4" y2="44.0"/><line x1="38.9" y1="41.5" x2="18.2" y2="25.7"/><line x1="44.6" y1="37.1" x2="32.4" y2="7.5"/><line x1="51.8" y1="36.1" x2="55.2" y2="10.3"/><line x1="58.5" y1="38.9" x2="78.0" y2="13.5"/><line x1="62.9" y1="44.6" x2="86.9" y2="34.7"/></g></svg></i>Claude Opus 5.5</span><span class="shb sh2" aria-hidden="true"><i><img class="izi" src="izivoice-icon.png" alt="" width="20" height="20"></i>iziVoice</span></div>
         <div>
           <h3>Roger BOUJIEKA</h3>
           <p class="lead" style="margin-top:12px" data-i18n="tr_p">Entrepreneur web, expert en intelligence artificielle, en montage vidéo, en motion design et en marketing digital. Je crée chaque jour des vidéos et des campagnes pour des marques et des entreprises, et je vous transmets exactement ce qui marche.</p>
