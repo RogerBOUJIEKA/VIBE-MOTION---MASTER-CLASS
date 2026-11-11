@@ -33,9 +33,9 @@ fbq('track', 'PageView');
 <style>
 @font-face{font-family:"Urbanist";font-style:normal;font-weight:100 900;font-display:swap;src:url(fonts/urbanist.woff2) format("woff2");unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
 @font-face{font-family:"Urbanist";font-style:normal;font-weight:100 900;font-display:swap;src:url(fonts/urbanist-ext.woff2) format("woff2");unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+1E00-1E9F,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113}
-:root{--bg:#f6f4f1;--bg2:#ece9e4;--card:#ffffff;--ink:#121214;--muted:#5e5b58;--faint:#9b9792;--line:rgba(18,18,20,.09);--line2:rgba(18,18,20,.16);--red:#e3061b;--red2:#ff3347;--red-ink:#cf0418;--soft:#fbe6e8;--dark:#0b0b0e;--dark2:#15151a;--green:#1ea952;--claude:#e07a56;
+:root{--bg:#f6f4f1;--bg2:#ece9e4;--card:#ffffff;--ink:#121214;--muted:#5e5b58;--faint:#736f69;--line:rgba(18,18,20,.09);--line2:rgba(18,18,20,.16);--red:#e3061b;--red2:#ff3347;--red-ink:#cf0418;--soft:#fbe6e8;--dark:#0b0b0e;--dark2:#15151a;--green:#1ea952;--claude:#e07a56;
 --f:"Urbanist",ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;--ease:cubic-bezier(.16,1,.3,1);--sh:0 1px 2px rgba(18,18,20,.05),0 16px 40px rgba(18,18,20,.07);--sh2:0 40px 90px rgba(18,18,20,.16);color-scheme:light}
-:root[data-theme="dark"]{--bg:#0e0e11;--bg2:#17171c;--card:#18181e;--ink:#f3f2f0;--muted:#a7a4a0;--faint:#6f6c69;--line:rgba(255,255,255,.08);--line2:rgba(255,255,255,.15);--red-ink:#ff4558;--soft:rgba(227,6,27,.15);--sh:0 1px 2px rgba(0,0,0,.4),0 16px 40px rgba(0,0,0,.35);--sh2:0 40px 90px rgba(0,0,0,.55);color-scheme:dark}
+:root[data-theme="dark"]{--bg:#0e0e11;--bg2:#17171c;--card:#18181e;--ink:#f3f2f0;--muted:#a7a4a0;--faint:#85817c;--line:rgba(255,255,255,.08);--line2:rgba(255,255,255,.15);--red-ink:#ff4558;--soft:rgba(227,6,27,.15);--sh:0 1px 2px rgba(0,0,0,.4),0 16px 40px rgba(0,0,0,.35);--sh2:0 40px 90px rgba(0,0,0,.55);color-scheme:dark}
 *,*::before,*::after{box-sizing:border-box}
 html{-webkit-text-size-adjust:100%;scroll-padding-top:110px}
 html.lenis,html.lenis body{height:auto}.lenis.lenis-smooth{scroll-behavior:auto!important}
@@ -327,7 +327,7 @@ section{position:relative}
 .cmp{display:flex;flex-direction:column;padding:clamp(24px,3vw,36px);border-radius:32px;background:var(--card);box-shadow:var(--sh),inset 0 0 0 1px var(--line)}
 .cmp .sw{display:grid;grid-template-columns:1fr 1fr;padding:4px;border-radius:999px;background:var(--bg);position:relative}
 .cmp .sw button{position:relative;z-index:1;padding:13px 10px;border:0;border-radius:999px;background:none;cursor:pointer;font:500 15px/1 var(--f);color:var(--muted);transition:color .3s}
-.cmp .sw button[aria-pressed="true"]{color:#fff}
+.cmp .sw button[aria-pressed="true"]{color:var(--bg)}.cmp.ai .sw button[aria-pressed="true"]{color:#fff}
 .cmp .sw .pill{position:absolute;top:4px;bottom:4px;left:4px;width:calc(50% - 4px);border-radius:999px;background:var(--ink);transition:transform .5s var(--ease),background .4s}
 .cmp.ai .sw .pill{transform:translateX(100%);background:var(--red)}
 .cmp .apps{display:flex;align-items:center;gap:8px;margin-top:24px;min-height:36px}
@@ -423,10 +423,10 @@ section{position:relative}
 .mod .n{flex:none;width:40px;font:300 26px/1 var(--f);letter-spacing:-.04em;color:var(--red-ink)}
 .mod .b{flex:1;min-width:0;display:flex;flex-direction:column;gap:4px}
 .mod .b b{font:500 17.5px/1.25 var(--f);text-wrap:balance}
-.mod .b span{font:400 14px/1.35 var(--f);color:var(--muted)}
+.mod .b>span{font:400 14px/1.35 var(--f);color:var(--muted)}
 .mod .d{flex:none;font:500 12.5px/1 var(--f);color:var(--faint);white-space:nowrap}
-.mod .f{display:inline-block;margin-left:8px;padding:4px 8px;border-radius:999px;font:500 10.5px/1 var(--f);vertical-align:2px;color:#fff;background:var(--ink)}
-.mod .f.live{background:var(--red)}.mod .f.money{background:var(--green)}
+.mod .f{display:inline-block;margin-left:8px;padding:5px 9px;border-radius:999px;font:500 11px/1 var(--f);letter-spacing:.02em;vertical-align:2px;color:var(--bg);background:var(--ink)}
+.mod .f.live{background:var(--red);color:#fff}.mod .f.money{background:#15803d;color:#fff}
 .mod p{padding:0 22px 20px 76px;font:400 15.5px/1.6 var(--f);color:var(--muted)}
 @media (max-width:560px){.mod p{padding-left:20px}.mod .d{display:none}}
 .chev{flex:none;display:grid;place-items:center;width:32px;height:32px;border-radius:50%;background:var(--card);transition:transform .35s var(--ease),background .25s}
@@ -675,6 +675,24 @@ details[open]>summary .chev{transform:rotate(180deg);background:var(--red);color
 @media (max-width:959px){.tun .ov{padding-bottom:calc(104px + env(safe-area-inset-bottom,0px))}}.tun .lbl{text-wrap:balance;max-width:100%}
 .pm-img{background:transparent}.pm .pm-x,.pm-img img{width:100%;height:100%;max-width:none}
 .prc .once,.prc .safe,.prc .nt,.fc p,.ft p.d{text-wrap:balance}
+
+/* selected chapter stays visible in night mode */
+:root[data-theme="dark"] .ctab[aria-selected="true"]{background:var(--ink);color:var(--bg)}
+:root[data-theme="dark"] .ctab[aria-selected="true"] small{color:#cf0418}
+:root[data-theme="dark"] .ctab[aria-selected="true"] span{color:rgba(14,14,17,.7)}
+/* portrait: the cut on the left shoulder never shows */
+@media (max-width:600px){
+  .subject{margin-inline:-20px}
+  .subject img{width:100%;max-width:none}
+  .badge.b1{left:14px}.badge.b2{right:14px}
+}
+@media (min-width:601px) and (max-width:999px){
+  .subject img{-webkit-mask-image:linear-gradient(90deg,transparent 0,#000 26%,#000 92%,transparent 100%),linear-gradient(#000 74%,transparent 98%);-webkit-mask-composite:source-in;mask-image:linear-gradient(90deg,transparent 0,#000 26%,#000 92%,transparent 100%),linear-gradient(#000 74%,transparent 98%);mask-composite:intersect}
+}
+@media (min-width:1000px){
+  .subject img{-webkit-mask-image:linear-gradient(90deg,transparent 0,#000 26%,#000 92%,transparent 100%);mask-image:linear-gradient(90deg,transparent 0,#000 26%,#000 92%,transparent 100%)}
+}
+.fc .ph{-webkit-mask-image:linear-gradient(90deg,transparent 0,#000 26%,#000 92%,transparent 100%);mask-image:linear-gradient(90deg,transparent 0,#000 26%,#000 92%,transparent 100%)}
 
 </style>
 </head>
