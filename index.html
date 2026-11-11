@@ -11,7 +11,7 @@
 <meta property="og:type" content="website"><meta property="og:url" content="https://www.rogerboujieka.com/">
 <meta property="og:title" content="Vibe Motion · Créez des vidéos pro avec l'IA">
 <meta property="og:description" content="Claude Opus 5.5 monte. iziVoice prête sa voix. Vous dirigez. La formation de Roger BOUJIEKA, sur smartphone ou ordinateur.">
-<meta property="og:image" content="https://www.rogerboujieka.com/og.jpg"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:locale" content="fr_FR"><meta name="twitter:card" content="summary_large_image">
+<meta property="og:image" content="https://www.rogerboujieka.com/og-vibe-motion.jpg"><meta property="og:image:type" content="image/jpeg"><meta property="og:image:alt" content="Formation Vibe Motion : créez des vidéos pro avec l'IA, avec Roger BOUJIEKA"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:locale" content="fr_FR"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:image" content="https://www.rogerboujieka.com/og-vibe-motion.jpg">
 <meta name="color-scheme" content="light dark">
 <link rel="preload" href="fonts/urbanist.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="roger-v3.webp" as="image">
@@ -888,6 +888,11 @@ details[open]>summary .chev{transform:rotate(180deg);background:var(--red);color
 .orbm-t text{font-size:9.6px;font-weight:500;letter-spacing:0;dominant-baseline:central}
 .orbm-r{width:56%}
 .orbm-c{width:40%}
+
+/* hero: light grid that fades out from the top centre */
+:root{--gridc:rgba(18,18,20,.065)}:root[data-theme="dark"]{--gridc:rgba(255,255,255,.055)}
+.hero::after{content:"";position:absolute;inset:0;z-index:-3;pointer-events:none;background-image:linear-gradient(var(--gridc) 1px,transparent 1px),linear-gradient(90deg,var(--gridc) 1px,transparent 1px);background-size:52px 52px;background-position:center -1px;-webkit-mask-image:radial-gradient(ellipse 75% 85% at 50% 0%,#000 20%,rgba(0,0,0,.45) 55%,transparent 88%);mask-image:radial-gradient(ellipse 75% 85% at 50% 0%,#000 20%,rgba(0,0,0,.45) 55%,transparent 88%)}
+@media (max-width:767px){.hero::after{background-size:40px 40px}}
 
 </style>
 </head>
