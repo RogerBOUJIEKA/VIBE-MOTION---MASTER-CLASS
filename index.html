@@ -889,10 +889,7 @@ details[open]>summary .chev{transform:rotate(180deg);background:var(--red);color
 .orbm-r{width:56%}
 .orbm-c{width:40%}
 
-/* hero: light grid that fades out from the top centre */
-:root{--gridc:rgba(18,18,20,.045)}:root[data-theme="dark"]{--gridc:rgba(255,255,255,.038)}
-.hero::after{content:"";position:absolute;inset:0;z-index:-3;pointer-events:none;background-image:linear-gradient(var(--gridc) 1px,transparent 1px),linear-gradient(90deg,var(--gridc) 1px,transparent 1px);background-size:52px 52px;background-position:center -1px;-webkit-mask-image:radial-gradient(ellipse 75% 85% at 50% 0%,#000 20%,rgba(0,0,0,.45) 55%,transparent 88%);mask-image:radial-gradient(ellipse 75% 85% at 50% 0%,#000 20%,rgba(0,0,0,.45) 55%,transparent 88%)}
-@media (max-width:767px){.hero::after{background-size:40px 40px}}
+
 
 </style>
 </head>
