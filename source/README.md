@@ -110,7 +110,7 @@ Si la clé a été collée dans un chat ou un document, la **supprimer et en cr�
 1. **GitHub :** le code est dans le dépôt `RogerBOUJIEKA/VIBE-MOTION---MASTER-CLASS`. Avec un nouveau compte GitHub : *Settings → Transfer ownership* du dépôt, ou ajouter le nouveau compte comme collaborateur. Penser à passer le dépôt en **privé** (Settings → Danger Zone).
 2. **Vercel :** dans le nouveau compte, *Add New → Project → Import* le dépôt (aucune commande de build, aucun réglage). Remettre les variables d'environnement du §2, puis déplacer le domaine `rogerboujieka.com` (le retirer de l'ancien projet, l'ajouter au nouveau ; le fichier `CNAME` est déjà là).
 3. **Claude :** nouveau compte → connecter GitHub avec accès à ce dépôt → ouvrir une session sur le dépôt → « Lis source/README.md et continue ».
-4. Un point de restauration existe : le tag Git **`sauvegarde-2026-11-promo-5500`** (état du site à la date de cette sauvegarde).
+4. **Point de restauration :** le commit **`c56a192`** (état du site à la date de cette sauvegarde : paiement SasPay, promo 5 500 FCFA, haut de page téléphone). Pour y revenir : `git checkout c56a192` (ou, dans GitHub, *Commits* → ce numéro → *Browse files*).
 
 ## 8. Notes techniques
 
