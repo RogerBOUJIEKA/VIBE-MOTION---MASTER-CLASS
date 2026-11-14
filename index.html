@@ -1384,9 +1384,14 @@ $('#menu-x').addEventListener('click', closeMenu);
     if (!raf) raf = requestAnimationFrame(() => { raf = 0; h.style.setProperty('--mx', x + 'px'); h.style.setProperty('--my', y + 'px'); }); }, { passive: true });
 })();
 
-/* ---------- free community bar ---------- */
+/* ---------- free community bar ----------
+   PAUSE / PLAY: the bar at the top inviting to the free WhatsApp community.
+   Paused during the big sale so visitors are not pulled away from the offer.
+   To turn it back on, set SHOW_COMMUNITY_BAR to true (nothing else to change).
+   The free community link stays in the community section and the footer. */
+const SHOW_COMMUNITY_BAR = false;
 (function () {
-  const bar = $('#cbar'); if (!bar) return;
+  const bar = $('#cbar'); if (!bar || !SHOW_COMMUNITY_BAR) return;
   let closed = false; try { closed = sessionStorage.getItem('mc_cbar') === '0'; } catch (e) {}
   if (closed) return;
   setTimeout(() => { bar.hidden = false; requestAnimationFrame(() => requestAnimationFrame(() => bar.classList.add('on'))); }, 4000);
