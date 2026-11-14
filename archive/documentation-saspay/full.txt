@@ -1,0 +1,1980 @@
+# Créer un compte et obtenir une clé API
+Source: https://docs.saspay.me/account-setup
+
+Le mécanisme complet, de zéro jusqu'à votre première clé API — inscription, vérification KYC, création de la clé.
+
+Avant de pouvoir appeler l'API avec une clé (`Authorization: Bearer sk_...`), un compte doit exister, être vérifié (KYC), puis générer sa première clé. **Ces étapes préalables ne peuvent PAS se faire avec une clé API** — pour une raison structurelle simple : la clé n'existe pas encore. Elles utilisent un jeton de session (JWT), obtenu par connexion classique email/mot de passe, exactement comme le tableau de bord [app.saspay.me](https://app.saspay.me) lui-même. Une fois votre première clé générée, vous n'avez plus jamais besoin de JWT pour intégrer l'API.
+
+> [!NOTE]
+>
+> Tout ce mécanisme est utilisable en API pure (pas seulement depuis le tableau de bord) si vous voulez automatiser votre propre onboarding — les mêmes appels sont ceux que fait l'interface web.
+
+## 1. Créer votre compte utilisateur
+
+```bash theme={null}
+curl -X POST https://api.saspay.me/api/v1/users/ \
+  -H "Content-Type: application/json" \
+  -d '{
+    "full_name": "Awa Sossou",
+    "email": "awa@example.com",
+    "country": "<uuid du pays, cf. GET /countries/>",
+    "password": "un-mot-de-passe-solide"
+  }'
+```
+
+Public — aucune authentification requise. Déclenche automatiquement l'envoi d'un code de vérification par email.
+
+## 2. Vérifier votre email
+
+```bash theme={null}
+curl -X POST https://api.saspay.me/api/v1/auth/verify-email/ \
+  -H "Content-Type: application/json" \
+  -d '{"email": "awa@example.com", "code": "123456"}'
+```
+
+Tant que l'email n'est pas vérifié, la connexion (étape 3) échoue avec `403 email_not_verified`.
+
+## 3. Vous connecter (obtenir un jeton de session)
+
+```bash theme={null}
+curl -X POST https://api.saspay.me/api/v1/auth/login/ \
+  -H "Content-Type: application/json" \
+  -d '{"email": "awa@example.com", "password": "un-mot-de-passe-solide"}'
+```
+
+```json Réponse (HTTP 200) theme={null}
+{
+  "success": true,
+  "data": { "tokens": { "access": "eyJhbGciOi...", "refresh": "eyJhbGciOi..." } },
+  "code": 200
+}
+```
+
+> [!NOTE]
+>
+> Comme toutes les réponses de l'API, le contenu utile est dans `data` — voir [Format des réponses](/api-reference/introduction#format-des-r%C3%A9ponses).
+
+> [!NOTE]
+>
+> Si l'authentification à deux facteurs est activée sur le compte, cette réponse contient `pending_2fa_token` au lieu de `tokens` — une étape supplémentaire (`POST /auth/login/verify-2fa/`) est alors nécessaire. Non détaillée ici, hors périmètre de l'intégration API pure.
+
+Utilisez `access` dans le header `Authorization: Bearer <access>` pour toutes les requêtes des étapes suivantes — **ce n'est pas une clé API**, c'est un jeton de session classique, à ne jamais confondre avec `sk_live_EXEMPLE/sk_test_EXEMPLE`.
+
+## 4. Créer votre marchand (votre "boutique")
+
+```bash theme={null}
+curl -X POST https://api.saspay.me/api/v1/merchants/ \
+  -H "Authorization: Bearer eyJhbGciOi..." \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "Ma Boutique",
+    "website_url": "https://maboutique.com",
+    "category": "e-commerce"
+  }'
+```
+
+Un même compte utilisateur peut posséder plusieurs marchands (plusieurs boutiques indépendantes). Le marchand créé démarre avec `kyc_status: "NONE"` et `is_active: false` — inutilisable tant que le KYC n'est pas validé.
+
+## 5. Soumettre votre dossier KYC
+
+> [!NOTE]
+>
+> Le KYC est un mécanisme dashboard/JWT uniquement, de bout en bout — jamais exposé par clé API, y compris en lecture. Il n'apparaît donc pas ailleurs dans cette documentation ; le détail ci-dessous est le seul endroit où ce flux est documenté.
+
+D'abord, créez le dossier lui-même :
+
+```bash theme={null}
+curl -X POST https://api.saspay.me/api/v1/merchant-kyc/ \
+  -H "Authorization: Bearer eyJhbGciOi..." \
+  -H "Content-Type: application/json" \
+  -d '{
+    "merchant": "<id du marchand créé à l'\''étape 4>",
+    "kyc_type": "BUSINESS",
+    "first_name": "Awa", "last_name": "Sossou",
+    "company_name": "Ma Boutique SARL", "rccm_number": "BJ-COT-2023-B-1234", "ifu_number": "3202312345678"
+  }'
+```
+
+Puis uploadez chaque pièce justificative (image ou PDF, 10 Mo max) — cet endpoint reçoit un binaire multipart et renvoie une URL à réutiliser à l'étape suivante :
+
+```bash theme={null}
+curl -X POST https://api.saspay.me/api/v1/merchant-kyc/upload/ \
+  -H "Authorization: Bearer eyJhbGciOi..." \
+  -F "file=@/chemin/vers/piece-identite.jpg"
+```
+
+```json Réponse (HTTP 201) theme={null}
+{ "success": true, "data": { "url": "https://.../kyc/3f9a1b2c....jpg" }, "code": 201 }
+```
+
+Enfin, attachez chaque URL obtenue au dossier avec le type de pièce correspondant (`ID_CARD`, `PASSPORT`, `SELFIE`, `BUSINESS_REGISTRATION`, `FISCAL` ou `OTHER`) :
+
+```bash theme={null}
+curl -X POST https://api.saspay.me/api/v1/merchant-kyc/<id du dossier>/documents/ \
+  -H "Authorization: Bearer eyJhbGciOi..." \
+  -H "Content-Type: application/json" \
+  -d '{"document_type": "ID_CARD", "file_url": "https://.../kyc/3f9a1b2c....jpg"}'
+```
+
+## 6. Attendre la validation
+
+Un administrateur SasPay examine le dossier. Vous recevez un email dès qu'une décision est prise. Une fois validé, `merchant.kyc_status` passe à `"VERIFIED"` et `is_active` à `true`.
+
+## 7. Créer votre première clé API
+
+```bash theme={null}
+curl -X POST https://api.saspay.me/api/v1/merchant-api-keys/ \
+  -H "Authorization: Bearer eyJhbGciOi..." \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "Backend production",
+    "environment": "LIVE",
+    "scope": "BOTH"
+  }'
+```
+
+```json Réponse (HTTP 201) theme={null}
+{
+  "success": true,
+  "data": {
+    "id": "d4e5...", "merchant": "8a2f...", "name": "Backend production",
+    "key_prefix": "sk_live_EXEMPLE", "environment": "LIVE", "scope": "BOTH",
+    "is_active": true, "expires_at": null, "last_used_at": null,
+    "secret": "sk_live_EXEMPLE"
+  },
+  "code": 201
+}
+```
+
+> [!WARNING]
+>
+> Le champ `secret` (la clé complète) n'est renvoyé **qu'une seule fois**, dans cette réponse. Il n'est jamais récupérable après coup, même via le tableau de bord — s'il est perdu, générez-en une nouvelle. Copiez-le immédiatement dans votre gestionnaire de secrets.
+
+* `environment` : `"LIVE"` (préfixe `sk_live_EXEMPLE`, argent réel) ou `"SANDBOX"` (préfixe `sk_test_EXEMPLE`, tests sans argent réel).
+* `scope` : `"PAYIN"`, `"PAYOUT"` ou `"BOTH"` (défaut). Une clé `PAYIN` seule ne peut pas initier de retrait, et inversement — limitez le scope d'une clé exposée côté frontend/serveur web à ce qui est strictement nécessaire.
+
+Vous avez maintenant une clé API utilisable pour tous les endpoints décrits dans le reste de cette documentation. Voir [Démarrage rapide](/quickstart) pour votre premier appel.
+
+## Accès dashboard vs. clé API
+
+Une fois votre clé API en main, une bonne partie de la gestion de votre compte reste néanmoins **exclusivement accessible depuis le [tableau de bord](https://app.saspay.me)** (jeton de session), jamais par clé API — même en lecture pour la plupart. C'est un choix délibéré : ces opérations touchent au compte lui-même (qui peut agir, avec quels droits, vers quelles coordonnées) plutôt qu'aux opérations de paiement au jour le jour, pour lesquelles la clé API est faite.
+
+| Domaine | Accès par clé API |
+| - | - |
+| Paiements, retraits, transactions, liens de paiement | Complet — c'est l'usage prévu de la clé API |
+| Soldes wallet (lecture) + taux de change (lecture) | Lecture seule — voir [Wallet](/api-reference/wallet) |
+| Webhooks (consultation des points de réception, abonnements, historique de livraison) | Lecture seule — voir [Webhooks](/api-reference/webhooks) |
+| Compte marchand, KYC, clés API elles-mêmes, méthodes de retrait, demandes de retrait, transferts interwallet, relevé détaillé du wallet, création/modification de webhooks | Aucun — dashboard uniquement |
+
+Une clé API ne peut par exemple **jamais** gérer les clés API elles-mêmes (créer, modifier, révoquer — y compris se révoquer elle-même), ni consulter ou modifier le profil de votre marchand.
+
+
+# Règles pour assistants IA (AGENTS.md)
+Source: https://docs.saspay.me/ai/agents-md
+
+Ajoutez les règles essentielles de l'API SasPay aux instructions de votre projet pour un assistant de code.
+
+Un fichier `AGENTS.md` donne à un assistant de code des instructions propres à votre projet. Les règles ci-dessous réduisent les erreurs fréquentes : exposition de la clé API, livraison avant confirmation du paiement, retry d'un débit sans clé d'idempotence.
+
+Ajoutez l'extrait suivant à un fichier `AGENTS.md` à la racine de votre projet.
+
+```markdown AGENTS.md theme={null}
+## Intégration de l'API SasPay
+
+- Utilisez la documentation officielle : /llms.txt de la documentation SasPay.
+- Utilisez la spécification OpenAPI : /api-reference/openapi.json.
+- Utilisez l'URL de base `https://api.saspay.me/api/v1`.
+- Effectuez toutes les requêtes SasPay depuis le backend.
+- Stockez la clé API dans un gestionnaire de secrets ou une variable d'environnement.
+- Ne placez jamais la clé API dans le frontend, les logs ou le dépôt Git.
+- Envoyez la clé avec `Authorization: Bearer sk_test_EXEMPLE` en développement, `sk_live_EXEMPLE` en production.
+- Montants : chaînes décimales (`"2500.00"`), jamais de flottants.
+- Envoyez un `Idempotency-Key` sur `POST /payments/softpay/`, `POST /payouts/initialize/`, `POST /wallet-transfers/` et `POST /payments/{payment_id}/retry/`.
+- Ne livrez un produit ou n'activez un accès que lorsque `GET /payments/{payment_id}/verify/` renvoie `SUCCESS`.
+- Si `checkout_url` est non vide après un softpay, redirigez le client vers cette URL.
+- Vérifiez la signature des webhooks (`X-Webhook-Signature`, `X-Webhook-Timestamp`) sur le corps brut, et rejetez un horodatage de plus de 300 secondes.
+- Pour un retrait, whitelistez l'IP du serveur ; sinon l'appel renvoie `403 ip_not_whitelisted`.
+- Gérez les réponses `401`, `403`, `404`, `409`, `422` et `429` selon l'endpoint ; en cas de `429`, espacez les appels.
+- N'inventez aucun endpoint, champ, statut ou événement absent de la spécification OpenAPI.
+```
+
+## Pourquoi l'ajouter ?
+
+Ces règles restent disponibles pendant les tâches de développement, sans avoir à relire la documentation à chaque fois.
+
+> [!TIP]
+>
+> Combinez `AGENTS.md` avec la [skill SasPay](/ai/skill) pour donner à l'assistant un guide d'intégration complet, et avec `llms.txt` pour accéder à la documentation à jour.
+
+
+# Skill SasPay
+Source: https://docs.saspay.me/ai/skill
+
+Un guide d'intégration complet pour les assistants IA : encaissement, vérification, retraits, webhooks, erreurs.
+
+La skill SasPay est un fichier `SKILL.md` qui décrit l'intégration complète de SasPay dans une application, quelle que soit la stack. Elle couvre :
+
+* le choix entre softpay (push direct) et checkout hébergé ;
+* la vérification avant livraison, et l'idempotence sur les routes qui déplacent de l'argent ;
+* les retraits, avec les contraintes d'IP whitelistée et de devise ;
+* la vérification de signature des webhooks, avec un exemple de code ;
+* la classification des erreurs par code HTTP, et une définition de terminé.
+
+[⬇️ Télécharger la skill (SKILL.md)](https://files.viraclip.me/saspay/docs/SKILL.txt?response-content-disposition=attachment%3B%20filename%3D%22SKILL.md%22)
+
+Fichier à déposer dans le dossier de skills de votre assistant.
+
+> [!NOTE]
+>
+> La skill ne remplace pas la référence API : en cas de doute, la spécification [OpenAPI](/api-reference/openapi.json) fait foi.
+
+## Utiliser la skill
+
+Placez le fichier `SKILL.md` dans le dépôt de votre projet, dans le dossier de skills de votre assistant, puis demandez-lui une intégration SasPay. Pour les règles permanentes, ajoutez aussi l'extrait de la page [Règles pour assistants IA](/ai/agents-md) à votre `AGENTS.md`.
+
+
+# Référence API
+Source: https://docs.saspay.me/api-reference/introduction
+
+Documentation complète de l'API SasPay — encaissement, retraits, wallet, webhooks et KYC.
+
+## Base URL
+
+Toutes les requêtes doivent être adressées à :
+
+```
+https://api.saspay.me/api/v1
+```
+
+## Authentification
+
+Toutes les routes marchand nécessitent votre clé API secrète, transmise dans le header `Authorization` au format Bearer :
+
+```bash theme={null}
+Authorization: Bearer sk_live_EXEMPLE
+```
+
+Utilisez une clé `sk_test_EXEMPLE` en environnement de test, `sk_live_EXEMPLE` en production. Retrouvez vos clés API dans votre [tableau de bord](https://app.saspay.me), section Développeur.
+
+> [!WARNING]
+>
+> Votre clé secrète donne accès complet à votre compte marchand (encaissement, retraits, solde). Ne l'exposez jamais côté client (navigateur, application mobile) — utilisez-la uniquement depuis votre backend.
+
+## Format des réponses
+
+Toutes les réponses de l'API partagent la même enveloppe, qu'il s'agisse d'un succès ou d'une erreur.
+
+```json Succès theme={null}
+{
+  "success": true,
+  "data": { },
+  "code": 200
+}
+```
+
+```json Erreur theme={null}
+{
+  "success": false,
+  "error": {
+    "message": "Solde disponible insuffisant.",
+    "code": "insufficient_balance"
+  },
+  "code": 422
+}
+```
+
+Le champ `error` prend deux formes selon le type d'erreur :
+
+* **Erreur métier** (`{"message": "...", "code": "..."}`) — un code d'erreur stable que vous pouvez tester dans votre code, ex. `insufficient_balance`, `merchant_suspended`.
+* **Erreur de validation** (`{"champ": ["message"], "autre_champ": ["message"]}`) — une entrée par champ invalide du corps de la requête.
+
+## Codes d'erreur HTTP
+
+| Code | Signification |
+| - | - |
+| `400` | Corps de requête invalide (champ manquant, format incorrect) |
+| `401` | Clé API manquante, invalide ou expirée |
+| `403` | Ressource n'appartenant pas à votre compte, ou compte suspendu |
+| `404` | Ressource introuvable |
+| `409` | Conflit d'état (ex. `Idempotency-Key` déjà utilisée avec un autre payload, transaction déjà dans un état terminal) |
+| `410` | Ressource expirée (ex. lien de paiement ou session de checkout arrivé à expiration) |
+| `422` | Requête valide mais impossible à exécuter en l'état (ex. solde insuffisant) |
+| `429` | Trop de requêtes — respectez la limite de débit |
+
+## Idempotence
+
+Le header `Idempotency-Key` est **optionnel** : c'est vous qui décidez, requête par requête, si SasPay doit dédupliquer.
+
+```bash theme={null}
+Idempotency-Key: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+```
+
+**Sans le header** — chaque appel est traité comme une intention nouvelle. Deux requêtes identiques créent deux opérations distinctes.
+
+**Avec le header** — une valeur unique que vous générez par intention logique d'opération (un UUID, par exemple) :
+
+| Rejeu | Résultat |
+| - | - |
+| Même clé, **même** corps | La réponse exacte du 1<sup>er</sup> appel est renvoyée (même code HTTP, même contenu). Rien n'est recréé. |
+| Même clé, corps **différent** | `409 Conflict` — la clé est déjà associée à une autre requête. |
+| Même clé, 1<sup>er</sup> appel encore en cours | `409 Conflict` — évite deux exécutions concurrentes. |
+
+> [!WARNING]
+>
+> Optionnel ne veut pas dire facultatif en pratique. Sur les endpoints qui **déplacent de l'argent** — `POST /payments/softpay/initialize/`, `POST /payouts/initialize/`, `POST /settlements/`, `POST /wallet-transfers/`, `POST /payments/{id}/retry/` — un retry réseau sans clé crée un **second débit réel**. Envoyez-la systématiquement sur ces routes.
+
+> [!TIP]
+>
+> Générez une nouvelle `Idempotency-Key` à chaque nouvelle intention de paiement, mais réutilisez la même clé pour chaque *retry réseau* de cette même tentative. Un timeout ou une coupure réseau n'est jamais la preuve que la requête a échoué : elle a pu aboutir côté serveur.
+
+## Limite de débit
+
+Les appels authentifiés (clé API ou dashboard) sont limités à **300 requêtes par minute** par compte par défaut. Un dépassement renvoie `429 Too Many Requests`. Espacez vos appels ou mettez en cache les réponses peu volatiles (ex. liste des pays/réseaux supportés).
+
+## Ressources
+
+> [card] [Paiements](/api-reference/payments)
+>
+> Encaissez via checkout hébergé ou softpay
+
+> [card] [Liens de paiement](/api-reference/payment-links)
+>
+> Créez des liens de paiement réutilisables
+
+> [card] [Retraits](/api-reference/payouts)
+>
+> Payez un bénéficiaire en mobile money
+
+> [card] [Wallet](/api-reference/wallet)
+>
+> Consultez vos soldes et les taux de change
+
+> [card] [Webhooks](/api-reference/webhooks)
+>
+> Recevez vos événements en temps réel
+
+> [card] [Créer un compte](/account-setup)
+>
+> Inscription, KYC, première clé API
+
+
+# Liens de paiement
+Source: https://docs.saspay.me/api-reference/payment-links
+
+Créez un lien de paiement réutilisable, à partager par email, SMS ou sur votre site.
+
+Toutes les routes de ce groupe nécessitent le header `Authorization: Bearer sk_...` et un scope de clé API `PAYIN` ou `BOTH` à la création.
+
+## Vue d'ensemble
+
+Un lien de paiement est **réutilisable** — contrairement à une [session de checkout](/api-reference/payments/checkout-create), qui est à usage unique, un même lien peut générer un nombre illimité (ou limité via `usage_limit`) de `Transaction` au fil du temps :
+
+```
+PaymentLink ("Facture boutique", slug: kx7f2q1a)
+│
+├── amount_type: "FIXED"  → montant imposé (amount)
+│   ou
+├── amount_type: "FREE"   → le client choisit (min_amount optionnel comme plancher)
+│
+└── transactions[] ── une par paiement effectué via ce lien
+```
+
+* [Créer un lien de paiement](/api-reference/payment-links/create)
+* [Lister ses liens](/api-reference/payment-links/list)
+* [Détail d'un lien](/api-reference/payment-links/get)
+* [Modifier un lien](/api-reference/payment-links/update)
+* [Supprimer un lien](/api-reference/payment-links/delete)
+* [Transactions issues d'un lien](/api-reference/payment-links/transactions)
+
+## Montant fixe ou libre
+
+| `amount_type` | Comportement |
+| - | - |
+| `FIXED` (défaut) | Le client paie exactement `amount` |
+| `FREE` | Le client choisit son montant ; `min_amount` fixe un plancher optionnel |
+
+> [!WARNING]
+>
+> Aucune validation croisée n'est appliquée côté serveur entre `amount_type` et `amount` : rien n'empêche de créer un lien `amount_type: "FIXED"` sans `amount` renseigné. Vérifiez la cohérence de ces deux champs côté intégrateur avant de créer le lien.
+
+## `merchant` non réassignable
+
+Le champ `merchant` est résolu à la création (votre clé API elle-même, ou le marchand actif du dashboard) et reste en lecture seule pour toute mise à jour ultérieure — un `PATCH`/`PUT` ne peut jamais réattribuer un lien existant à un autre marchand.
+
+## Retrouver les paiements d'un lien
+
+[`GET /payment-links/{id}/transactions/`](/api-reference/payment-links/transactions) retourne les `Transaction` générées par ce lien précis.
+
+> [!WARNING]
+>
+> Cette vue n'accepte **aucun filtre ni recherche** — contrairement à [`GET /transactions/`](/api-reference/transactions/list), qui supporte `status`, `currency`, plages de dates, etc. Seul le lien lui-même filtre le résultat. Elle utilise aussi une pagination par numéro de page classique (`count`/`next`/`previous`), pas la pagination par curseur de `/transactions/` — une incohérence entre les deux endpoints à garder en tête si vous consommez les deux.
+
+> [!WARNING]
+>
+> `POST /payment-links/` ne prend pas en charge `Idempotency-Key` — un double-clic ou un retry réseau peut créer deux liens distincts. Sans conséquence financière : un lien en double se supprime depuis votre dashboard.
+
+
+# Créer un lien de paiement
+Source: https://docs.saspay.me/api-reference/payment-links/create
+
+api-reference/openapi.json POST /payment-links/
+Crée un lien de paiement réutilisable
+
+> [!WARNING]
+>
+> `Idempotency-Key` n'est pas pris en charge sur cet endpoint — un double-clic ou un retry réseau peut créer deux liens distincts. Sans conséquence financière : un lien en double se supprime depuis votre dashboard.
+
+> [!WARNING]
+>
+> Aucune validation croisée serveur entre `amount_type` et `amount` : rien n'empêche de créer un lien `FIXED` sans `amount`. Vérifiez cette cohérence côté intégrateur.
+
+> [!NOTE]
+>
+> `redirect_url` devient obligatoire (400 sinon) dès que `show_confirmation_page` vaut `false` — bascule exclusive : soit le client voit la page de confirmation SasPay après paiement, soit il est redirigé directement vers `redirect_url`, jamais les deux.
+
+> [!NOTE]
+>
+> Chaque entrée de `custom_fields` doit avoir au minimum `key` et `label` (400 sinon), et les `key` doivent être uniques au sein d'un même lien. Ce sont des définitions de champs — les *valeurs* saisies par le client sont collectées au checkout (`custom_field_values`) et atterrissent dans `Transaction.metadata`, jamais sur `PaymentLink` lui-même.
+
+
+# Supprimer un lien
+Source: https://docs.saspay.me/api-reference/payment-links/delete
+
+api-reference/openapi.json DELETE /payment-links/{id}/
+Supprime définitivement un lien de paiement
+
+> [!NOTE]
+>
+> Les transactions déjà créées via ce lien restent inchangées — seule la possibilité de générer de nouveaux paiements via ce lien disparaît.
+
+
+# Détail d'un lien
+Source: https://docs.saspay.me/api-reference/payment-links/get
+
+api-reference/openapi.json GET /payment-links/{id}/
+Retourne les métadonnées complètes d'un lien de paiement
+
+# Lister ses liens
+Source: https://docs.saspay.me/api-reference/payment-links/list
+
+api-reference/openapi.json GET /payment-links/
+Liste paginée, filtrable par marchand ou statut actif
+
+# Transactions issues d'un lien
+Source: https://docs.saspay.me/api-reference/payment-links/transactions
+
+api-reference/openapi.json GET /payment-links/{id}/transactions/
+Liste les paiements générés par ce lien précis
+
+> [!WARNING]
+>
+> Aucun filtre ni recherche disponible sur cette vue — seul le lien lui-même filtre le résultat. Pagination par numéro de page classique (`count`/`next`/`previous`), pas la pagination par curseur de [`GET /transactions/`](/api-reference/transactions/list).
+
+
+# Modifier un lien
+Source: https://docs.saspay.me/api-reference/payment-links/update
+
+api-reference/openapi.json PATCH /payment-links/{id}/
+Met à jour un lien de paiement existant
+
+> [!NOTE]
+>
+> `PUT /payment-links/{id}/` est également disponible pour un remplacement complet (mêmes champs, tous requis sauf les champs en lecture seule). `merchant` reste en lecture seule dans les deux cas — un lien ne peut jamais être réattribué à un autre marchand.
+
+
+# Paiements
+Source: https://docs.saspay.me/api-reference/payments
+
+Encaissez un client en mobile money ou carte, via softpay (push direct) ou checkout hébergé (page à rediriger).
+
+Toutes les routes de ce groupe nécessitent le header `Authorization: Bearer sk_...` et un scope de clé API `PAYIN` ou `BOTH` (voir [Format des réponses](/api-reference/introduction#format-des-r%C3%A9ponses) pour l'enveloppe de réponse et [Idempotence](/api-reference/introduction#id%C3%A9potence) pour le header `Idempotency-Key`).
+
+## Vue d'ensemble
+
+SasPay propose deux façons d'encaisser, selon que vous connaissez déjà le réseau et le numéro du client ou non :
+
+```
+                    ┌─────────────────────────────┐
+                    │   Vous connaissez déjà le    │
+                    │   réseau + numéro du client  │
+                    └───────────────┬───────────────┘
+                       oui ─────────┼───────── non
+                         │                       │
+                         ▼                       ▼
+              POST /payments/softpay/   POST /checkout-sessions/
+              Push sur le téléphone,    Génère une page hébergée
+              OU checkout_url à         (checkout_url) à rediriger
+              rediriger selon l'opé.    le client dessus
+                         │                       │
+                         └───────────┬───────────┘
+                                     ▼
+                     Transaction créée (PENDING → SUCCESS/FAILED)
+                                     │
+                                     ▼
+                 GET /payments/{payment_id}/verify/  ← revérifie
+                 toujours l'état réel côté gateway, jamais confiance
+                 dans un statut mémorisé
+```
+
+> [!NOTE]
+>
+> **Softpay vs checkout hébergé** — le softpay pousse directement une demande de paiement (USSD/notification) sur le téléphone du client à partir du réseau et du numéro que vous fournissez : idéal quand votre propre interface a déjà collecté ces informations. Le checkout hébergé génère une page de paiement SasPay (`checkout_url`) où c'est le client qui choisit son réseau et saisit son numéro — idéal pour un lien envoyé par email/SMS ou un bouton "Payer" qui redirige vers nous.
+
+## Softpay (push direct)
+
+* [Initier un paiement softpay](/api-reference/payments/softpay)
+* [Confirmer par OTP](/api-reference/payments/confirm-otp)
+* [Relancer un paiement échoué](/api-reference/payments/retry)
+
+## Checkout hébergé
+
+* [Créer une session de checkout](/api-reference/payments/checkout-create)
+* [Lister ses sessions de checkout](/api-reference/payments/checkout-list)
+* [Détail d'une session](/api-reference/payments/checkout-get)
+* [Statut d'une session](/api-reference/payments/checkout-status)
+* [Annuler une session](/api-reference/payments/checkout-cancel)
+
+## Commun aux deux
+
+* [Vérifier le statut d'un paiement](/api-reference/payments/verify)
+
+Pour l'historique complet, les filtres, l'export CSV et la facture PDF, voir [Transactions](/api-reference/transactions) — softpay et checkout hébergé produisent tous les deux une `Transaction` classique (`flow_direction: "INBOUND"`).
+
+## OTP pré-paiement
+
+Certains réseaux (Orange Money Côte d'Ivoire et Burkina Faso) exigent l'inverse : le client doit obtenir un code **avant même votre appel API**, en composant un code USSD sur son téléphone (`#144*82#` en Côte d'Ivoire, un autre au Burkina). Ce code se transmet dans le champ `otp` de [`POST /payments/softpay/`](/api-reference/payments/softpay).
+
+Pour savoir à l'avance si le réseau visé l'exige — et afficher la bonne consigne USSD à votre client avant qu'il ne paie — consultez `otp_required`/`otp_instructions` dans [`GET /pricing/my-rates/`](/api-reference/reference/my-rates).
+
+> [!WARNING]
+>
+> Sans ce code sur un réseau qui l'exige, la requête échoue avec `422 prepayment_otp_missing` plutôt que de pousser une demande vouée à l'échec sur le téléphone du client.
+
+Sur le **checkout hébergé**, cette étape est gérée automatiquement par la page de paiement SasPay — vous n'avez rien à transmettre vous-même.
+
+## Confirmation OTP
+
+Certains réseaux (par exemple Wizall au Sénégal ou Coris au Bénin) exigent l'inverse chronologique : après le push initial, le client reçoit un code qu'il doit vous communiquer, à transmettre ensuite via [`POST /payments/{payment_id}/confirm-otp/`](/api-reference/payments/confirm-otp). La plupart des réseaux mobile money n'ont besoin ni de l'un ni de l'autre — le client valide directement sur son téléphone.
+
+> [!NOTE]
+>
+> Les deux mécanismes ci-dessus sont indépendants et ne concernent jamais le même réseau : l'un se fournit avant le paiement (`otp` sur la requête initiale), l'autre après (`confirm-otp`, une fois le paiement déjà poussé).
+
+> [!WARNING]
+>
+> `POST /checkout-sessions/` ne prend pas en charge `Idempotency-Key` — un double-clic ou un retry réseau peut y créer deux sessions distinctes (sans conséquence financière : une session ne débite rien tant qu'elle n'est pas payée). Sur softpay, retry et payout, la clé est prise en charge et vivement recommandée.
+
+## Cycle de vie d'un paiement
+
+| Statut | Signification |
+| - | - |
+| `PENDING` | Paiement poussé, en attente de la validation du client ou du gateway |
+| `SUCCESS` | Paiement confirmé et crédité |
+| `FAILED` | Paiement refusé ou échoué côté gateway/réseau |
+| `CANCELLED` | Jamais atteint sur ce flux actuellement (voir [Transactions](/api-reference/transactions)) |
+
+Un paiement `FAILED` peut être rejoué sans créer de nouvelle transaction via [`POST /payments/{payment_id}/retry/`](/api-reference/payments/retry).
+
+
+# Annuler une session de checkout
+Source: https://docs.saspay.me/api-reference/payments/checkout-cancel
+
+api-reference/openapi.json POST /checkout-sessions/{id}/cancel/
+Passe une session PENDING au statut CANCELLED
+
+> [!NOTE]
+>
+> Ne fonctionne que sur une session encore `PENDING`. Une session déjà payée, expirée ou déjà annulée renvoie `409 not_pending`.
+
+
+# Créer une session de checkout
+Source: https://docs.saspay.me/api-reference/payments/checkout-create
+
+api-reference/openapi.json POST /checkout-sessions/
+Génère une page de paiement hébergée à rediriger le client dessus
+
+> [!WARNING]
+>
+> `Idempotency-Key` n'est pas pris en charge sur cet endpoint — un double-clic ou un retry réseau peut créer deux sessions distinctes. Sans conséquence financière : une session ne débite rien tant qu'elle n'est pas payée.
+
+## Rediriger votre client après paiement
+
+Le champ `return_url` est optionnel — sans lui, votre client reste sur la page de succès SasPay après avoir payé, sans retour automatique vers votre site. Il n'apparaît pas dans les champs requis ci-dessus (dépliez "6 champs optionnels" pour le voir dans le testeur), mais vous pouvez l'envoyer dès la création :
+
+```bash theme={null}
+curl --request POST \
+  --url https://api.saspay.me/api/v1/checkout-sessions/ \
+  --header 'Authorization: Bearer sk_live_EXEMPLE' \
+  --header 'Content-Type: application/json' \
+  --data '{
+  "amount": "5000.00",
+  "currency": "XOF",
+  "description": "Facture #1042",
+  "customer_email": "client@example.com",
+  "customer_name": "Awa Sossou",
+  "return_url": "https://votre-site.com/merci"
+}'
+```
+
+Si vous le renseignez, la page de checkout hébergée redirige automatiquement le navigateur du client vers cette URL 3 secondes après confirmation d'un paiement **réussi**. Ce délai laisse le temps au client de voir la confirmation avant de quitter la page.
+
+> [!WARNING]
+>
+> Ce comportement ne s'applique qu'au succès. Sur un paiement échoué ou annulé, `return_url` n'est actuellement **pas** utilisée : le client voit un bouton "Réessayer" sur place et doit fermer l'onglet lui-même s'il veut abandonner. Si votre intégration dépend d'un retour systématique vers votre site (succès ou échec), prévoyez ce cas de votre côté pour l'instant.
+
+## Choisir qui paie les frais (`fee_charge_mode`)
+
+Par défaut, le mode de frais appliqué est celui configuré sur votre compte (Paramètres → Frais). Vous pouvez le surcharger pour CETTE session précise en envoyant `fee_charge_mode` à la création :
+
+```bash theme={null}
+curl --request POST \
+  --url https://api.saspay.me/api/v1/checkout-sessions/ \
+  --header 'Authorization: Bearer sk_live_EXEMPLE' \
+  --header 'Content-Type: application/json' \
+  --data '{
+  "amount": "1000.00",
+  "currency": "XOF",
+  "customer_email": "client@example.com",
+  "customer_name": "Awa Sossou",
+  "fee_charge_mode": "DEDUCTED"
+}'
+```
+
+* `ADD_ON` : les frais s'ajoutent au montant débité au client (vous recevez le montant plein).
+* `DEDUCTED` : le client est débité exactement du montant demandé, les frais sont déduits du montant net que vous recevez.
+
+> [!WARNING]
+>
+> Ce paramètre n'a d'effet que si l'option **"Autoriser le choix du mode de frais par l'API"** (`ALLOW_CLIENT_OVERRIDE`) est activée sur votre compte (Paramètres → Frais). Si elle est désactivée, `fee_charge_mode` est silencieusement ignoré et le réglage par défaut de votre compte s'applique — même garde que sur `/payments/softpay/` et `/payouts/initialize/`.
+
+
+# Détail d'une session de checkout
+Source: https://docs.saspay.me/api-reference/payments/checkout-get
+
+api-reference/openapi.json GET /checkout-sessions/{id}/
+Lecture seule — une session se termine via le paiement du client ou l'annulation
+
+# Lister ses sessions de checkout
+Source: https://docs.saspay.me/api-reference/payments/checkout-list
+
+api-reference/openapi.json GET /checkout-sessions/
+Liste paginée, filtrable par statut ou devise
+
+# Statut d'une session de checkout
+Source: https://docs.saspay.me/api-reference/payments/checkout-status
+
+api-reference/openapi.json GET /checkout-sessions/{id}/status/
+Raccourci léger pour connaître l'état d'un paiement sans relire le détail complet de la session
+
+> [!TIP]
+>
+> Si vous avez déjà un [webhook](/api-reference/webhooks) configuré, vous n'avez normalement pas besoin d'interroger cet endpoint en boucle — mais gardez-le en filet de sécurité pour les cas où un webhook n'arrive jamais (panne réseau, endpoint temporairement indisponible chez vous).
+
+
+# Confirmer un paiement par OTP
+Source: https://docs.saspay.me/api-reference/payments/confirm-otp
+
+api-reference/openapi.json POST /payments/{payment_id}/confirm-otp/
+Deuxième étape pour les réseaux qui exigent une confirmation côté client après le push initial
+
+> [!NOTE]
+>
+> Concerne certains réseaux seulement (par exemple Wizall au Sénégal ou Coris au Bénin, liste non exhaustive) — la plupart des paiements mobile money n'ont pas besoin de cette étape. Si le réseau ne la supporte pas, l'appel échoue avec `400 otp_not_applicable`.
+
+> [!WARNING]
+>
+> `422 otp_confirmation_failed` est un message volontairement générique — le détail de l'erreur gateway n'est jamais exposé tel quel.
+
+
+# Relancer un paiement échoué
+Source: https://docs.saspay.me/api-reference/payments/retry
+
+api-reference/openapi.json POST /payments/{payment_id}/retry/
+Rejoue le routage sur la même transaction, sans en créer une nouvelle
+
+> [!NOTE]
+>
+> Réutilise le même `id` de transaction — aucune nouvelle transaction n'est créée. Réservé aux paiements entrants (`flow_direction: "INBOUND"`) ; un payout renvoie `400 invalid_flow`.
+
+## Éviter un doublon en cas de coupure réseau
+
+Le header `Idempotency-Key` est **optionnel** : sans lui, chaque appel relance le paiement — un simple retry réseau le relance donc une seconde fois. Avec lui, renvoyer la même clé après un timeout vous renvoie la réponse d'origine au lieu de rejouer l'opération.
+
+Un timeout n'est jamais la preuve qu'une requête a échoué : elle a pu aboutir côté serveur. C'est précisément ce cas que la clé couvre.
+
+```bash theme={null}
+curl -X POST https://api.saspay.me/api/v1/payments/{payment_id}/retry/ \
+  -H "Authorization: Bearer sk_live_EXEMPLE" \
+  -H "Idempotency-Key: 3fa85f64-5717-4562-b3fc-2c963f66afa6" \
+  -H "Content-Type: application/json" \
+  -d '{ ... }'
+```
+
+Générez une clé **par intention** (un UUID convient), et réutilisez-la pour chaque retry de cette même tentative. Réutiliser une clé avec un corps différent renvoie `409`. Détails : [Idempotence](/api-reference/introduction#idempotence).
+
+
+# Initier un paiement softpay
+Source: https://docs.saspay.me/api-reference/payments/softpay
+
+api-reference/openapi.json POST /payments/softpay/
+Push sur le téléphone du client, ou redirection vers une page de paiement selon l'opérateur
+
+> [!WARNING]
+>
+> **Testez toujours `checkout_url`.** Quand elle est non vide, votre client ne recevra AUCUNE demande sur son téléphone : vous devez le rediriger vers cette URL, sinon le paiement n'aura jamais lieu.
+>
+> Ce n'est pas un cas marginal — c'est le fonctionnement normal de Wave, Orange Money, Djamo et des cartes bancaires. Un même réseau peut d'ailleurs basculer d'un mode à l'autre sans préavis, selon la route choisie par notre moteur de routage.
+
+```js theme={null}
+const res = await fetch('https://api.saspay.me/api/v1/payments/softpay/', { /* … */ })
+const { data } = await res.json()
+
+if (data.bank_transfer?.account_number) {
+  // Virement bancaire entrant (network: "allbanks_ng", Nigeria) : affichez
+  // ce compte virtuel à votre client — ni push ni redirection pour ce réseau.
+  console.log(data.bank_transfer.bank_name, data.bank_transfer.account_number)
+} else if (data.checkout_url) {
+  // Le paiement se règle sur une page hébergée : redirigez le client.
+  window.location.href = data.checkout_url
+} else {
+  // Push direct : une demande arrive sur son téléphone, affichez `instructions`
+  // et sondez GET /payments/{id}/ jusqu'au statut final.
+}
+```
+
+> [!NOTE]
+>
+> `bank_transfer` n'est renseigné que pour `network: "allbanks_ng"` (Nigeria) : un compte virtuel dédié à ce paiement (`bank_name`, `account_number`, `account_name`, `amount_expected`, `currency`, `expires_at`, `reference`). Il reste valide jusqu'à `expires_at` — sondez `GET /payments/{id}/` pour détecter la confirmation du virement ; ce champ y est aussi renvoyé en cas de rechargement de page.
+
+> [!NOTE]
+>
+> `return_url` sert précisément à ce cas : après paiement sur la page hébergée, votre client y est ramené automatiquement. Sans lui, il reste sur la page du fournisseur.
+>
+> **Optionnel** pour la quasi-totalité des réseaux (push USSD, pas de page hébergée). **Obligatoire** pour `card`/`crypto` — sans lui, `422` immédiat (`return_url` manquant), aucun paiement initié. Ces deux réseaux n'ont *que* la page hébergée, jamais de push : sans URL de retour, votre client n'aurait aucun moyen de revenir chez vous après avoir payé.
+
+Voir [Pays, réseaux et format du téléphone](/api-reference/reference/formats) pour la liste des codes `network` valides par pays et le format attendu de `customer.phone`.
+
+## Éviter un doublon en cas de coupure réseau
+
+Le header `Idempotency-Key` est **optionnel** : sans lui, chaque appel crée un paiement — un simple retry réseau en pousse donc un second sur le téléphone du client. Avec lui, renvoyer la même clé après un timeout vous renvoie la réponse d'origine au lieu de rejouer l'opération.
+
+Un timeout n'est jamais la preuve qu'une requête a échoué : elle a pu aboutir côté serveur. C'est précisément ce cas que la clé couvre.
+
+```bash theme={null}
+curl -X POST https://api.saspay.me/api/v1/payments/softpay/ \
+  -H "Authorization: Bearer sk_live_EXEMPLE" \
+  -H "Idempotency-Key: 3fa85f64-5717-4562-b3fc-2c963f66afa6" \
+  -H "Content-Type: application/json" \
+  -d '{ ... }'
+```
+
+Générez une clé **par intention** (un UUID convient), et réutilisez-la pour chaque retry de cette même tentative. Réutiliser une clé avec un corps différent renvoie `409`. Détails : [Idempotence](/api-reference/introduction#idempotence).
+
+
+# Vérifier le statut d'un paiement
+Source: https://docs.saspay.me/api-reference/payments/verify
+
+api-reference/openapi.json GET /payments/{payment_id}/verify/
+Revérifie toujours l'état réel côté gateway si le statut est PENDING
+
+> [!NOTE]
+>
+> Si la transaction est encore `PENDING`, SasPay revérifie toujours son état réel auprès du gateway avant de répondre — jamais confiance dans un statut mémorisé. La réponse contient les mêmes champs qu'une [transaction](/api-reference/transactions/get).
+
+
+# Retraits
+Source: https://docs.saspay.me/api-reference/payouts
+
+Envoyez de l'argent vers un bénéficiaire en mobile money (payout).
+
+Toutes les routes de ce groupe nécessitent le header `Authorization: Bearer sk_...` et un scope de clé API `PAYOUT` ou `BOTH`.
+
+## Vue d'ensemble
+
+Un **payout** est l'inverse d'un paiement : au lieu d'encaisser un client, vous envoyez des fonds depuis votre solde marchand vers un bénéficiaire (`recipient`) désigné par son numéro mobile money.
+
+```
+Votre solde marchand (wallet par pays)
+        │
+        ▼
+POST /payouts/initialize/  ──────────►  Transaction (flow_direction: "OUTBOUND")
+        │                                        │
+        │                                        ▼
+        │                        GET /payouts/{payout_id}/verify/
+        │                        revérifie toujours l'état réel côté
+        │                        gateway si le statut est PENDING
+        ▼
+  bénéficiaire crédité (mobile money)
+```
+
+* [Initier un payout](/api-reference/payouts/initialize)
+* [Vérifier le statut d'un payout](/api-reference/payouts/verify)
+
+Pour l'historique, les filtres et l'export, voir [Transactions](/api-reference/transactions) — un payout produit une `Transaction` classique avec `flow_direction: "OUTBOUND"` et `transaction_type: "RETRAIT"`.
+
+> [!WARNING]
+>
+> **Whitelist IP obligatoire.** Contrairement à toutes les autres routes de cette documentation, `POST /payouts/initialize/` exige que l'IP de votre serveur soit whitelistée pour votre marchand **quand vous appelez avec une clé API**. Sans IP whitelistée, la requête échoue avec `403 ip_not_whitelisted`, même si votre clé API est valide et correctement scopée. Ce prérequis ne s'applique pas à un appel authentifié depuis le tableau de bord (JWT dashboard, pas d'IP serveur fixe à whitelister de la même façon). La whitelist elle-même se gère depuis votre tableau de bord ou l'API de gestion du marchand.
+
+## Devise et pays : strict, pas de conversion automatique
+
+Contrairement à l'encaissement (payin), où un mismatch entre `currency` et `country` est désormais auto-converti au taux de change courant, un payout **rejette** ce mismatch (`currency_country_mismatch`, `422`). Fournissez toujours une devise cohérente avec le pays du bénéficiaire (ex. `XOF` + `BJ`, `XAF` + `CM`).
+
+## Cycle de vie d'un payout
+
+| Statut | Signification |
+| - | - |
+| `PENDING` | Payout initié, en attente de confirmation gateway |
+| `SUCCESS` | Bénéficiaire crédité |
+| `FAILED` | Payout refusé ou échoué côté gateway/réseau |
+
+> [!NOTE]
+>
+> Un payout ne peut pas être relancé via [`/payments/{payment_id}/retry/`](/api-reference/payments/retry) — cet endpoint est réservé aux paiements entrants (`flow_direction: "INBOUND"`). Pour un payout échoué, initiez une nouvelle requête `POST /payouts/initialize/` avec une nouvelle `Idempotency-Key`.
+
+
+# Initier un payout
+Source: https://docs.saspay.me/api-reference/payouts/initialize
+
+api-reference/openapi.json POST /payouts/initialize/
+Envoie des fonds depuis votre solde marchand vers un bénéficiaire mobile money
+
+> [!WARNING]
+>
+> **Whitelist IP obligatoire pour une clé API.** Si aucune IP n'est whitelistée pour votre marchand, cet appel échoue avec `403 ip_not_whitelisted`, quelle que soit la validité de votre clé. Ajoutez l'IP de votre serveur depuis votre tableau de bord (ou via `POST /merchant-ip-whitelist-entries/`, accessible par clé API) avant votre premier appel. Ce prérequis ne s'applique pas à un appel authentifié via le dashboard (JWT).
+
+> [!NOTE]
+>
+> Contrairement à l'encaissement, le mismatch entre `currency` et `country` est ici **rejeté** (`422 currency_country_mismatch`), sans conversion automatique.
+
+Voir [Pays, réseaux et format du téléphone](/api-reference/reference/formats) pour la liste des codes `method` valides par pays et le format attendu de `recipient.msisdn`.
+
+## Éviter un doublon en cas de coupure réseau
+
+Le header `Idempotency-Key` est **optionnel** : sans lui, chaque appel crée un décaissement — un simple retry réseau en envoie donc un second au bénéficiaire. Avec lui, renvoyer la même clé après un timeout vous renvoie la réponse d'origine au lieu de rejouer l'opération.
+
+Un timeout n'est jamais la preuve qu'une requête a échoué : elle a pu aboutir côté serveur. C'est précisément ce cas que la clé couvre.
+
+```bash theme={null}
+curl -X POST https://api.saspay.me/api/v1/payouts/initialize/ \
+  -H "Authorization: Bearer sk_live_EXEMPLE" \
+  -H "Idempotency-Key: 3fa85f64-5717-4562-b3fc-2c963f66afa6" \
+  -H "Content-Type: application/json" \
+  -d '{ ... }'
+```
+
+Générez une clé **par intention** (un UUID convient), et réutilisez-la pour chaque retry de cette même tentative. Réutiliser une clé avec un corps différent renvoie `409`. Détails : [Idempotence](/api-reference/introduction#idempotence).
+
+
+# Vérifier le statut d'un payout
+Source: https://docs.saspay.me/api-reference/payouts/verify
+
+api-reference/openapi.json GET /payouts/{payout_id}/verify/
+Revérifie toujours l'état réel côté gateway si le statut est PENDING
+
+> [!NOTE]
+>
+> Même mécanique que la [vérification d'un paiement](/api-reference/payments/verify) : si le payout est encore `PENDING`, SasPay revérifie toujours son état réel auprès du gateway avant de répondre.
+
+
+# Introduction
+Source: https://docs.saspay.me/api-reference/reference
+
+Catalogue des pays et réseaux mobile money supportés par SasPay.
+
+## Vue d'ensemble
+
+SasPay opère sur plusieurs pays d'Afrique de l'Ouest et du Centre, chacun rattaché à une devise, et sur les réseaux mobile money disponibles dans chacun d'eux.
+
+```
+Pays (Country)
+├── iso_code           ── "BJ", "CI", "SN"...
+├── default_currency    ── "XOF", "XAF"...
+│
+└── Réseaux (Network)   ── rattachés à un pays
+    ├── code             ── "mtn_bj", "moov_ci"...  ← à utiliser dans vos requêtes
+    ├── name
+    └── is_active
+```
+
+> [!NOTE]
+>
+> `code` (ex. `"mtn_bj"`) est la valeur à utiliser dans le champ `network` de [Initier un paiement softpay](/api-reference/payments/softpay) et dans le champ `method` de [Initier un retrait](/api-reference/payouts/initialize). C'est la clé technique qui relie ce catalogue de référence aux endpoints de paiement.
+>
+> Voir [Pays, réseaux et format du téléphone](/api-reference/reference/formats) pour un tableau complet (tous les pays actifs, tous les codes réseau, et le format de numéro de téléphone attendu par pays) — plus rapide à consulter que d'assembler `/countries/` et `/networks/` à la main.
+
+## Pays
+
+* [Lister les pays](/api-reference/reference/countries)
+* [Détail d'un pays](/api-reference/reference/country-get)
+
+| Champ | Type | Description |
+| - | - | - |
+| `id` | uuid | Identifiant du pays |
+| `iso_code` | string | Code ISO 2 lettres, ex. `BJ` |
+| `name` | string | Nom du pays |
+| `default_currency` | string | Devise ISO 3 lettres, ex. `XOF` |
+| `created_at` / `updated_at` | datetime | — |
+
+**Exemple**
+
+```json theme={null}
+{
+  "success": true,
+  "data": {
+    "id": "6d1a...",
+    "iso_code": "BJ",
+    "name": "Bénin",
+    "default_currency": "XOF"
+  },
+  "code": 200
+}
+```
+
+> [!NOTE]
+>
+> `GET /countries/` est **public** — aucune authentification requise, fonctionne même sans clé API. Pratique pour peupler un formulaire d'inscription avant qu'un compte n'existe. La liste n'est **pas paginée** (tableau JSON brut, pas d'enveloppe `{count, results}`) : c'est un catalogue borné, à récupérer en un seul appel.
+>
+> `GET /countries/{id}/`, en revanche, nécessite une authentification (clé API valide) — contrairement à la liste.
+
+## Réseaux
+
+* [Lister les réseaux](/api-reference/reference/networks)
+* [Détail d'un réseau](/api-reference/reference/network-get)
+
+| Champ | Type | Description |
+| - | - | - |
+| `id` | uuid | Identifiant du réseau |
+| `country` | uuid | Pays auquel ce réseau est rattaché |
+| `code` | string | Valeur technique, ex. `mtn_bj` — utilisée comme `network`/`method` dans les endpoints de paiement |
+| `name` | string | Nom lisible, ex. `MTN Mobile Money` |
+| `is_active` | boolean | Réseau actuellement opérationnel côté SasPay |
+| `created_at` / `updated_at` | datetime | — |
+
+> [!WARNING]
+>
+> Contrairement à `/countries/`, `GET /networks/` nécessite une authentification et **est paginé**. Il n'existe surtout **aucun filtre `?country=`**, malgré le besoin évident de "quels réseaux pour ce pays" — vous devez lister l'ensemble et filtrer côté client sur le champ `country`.
+
+
+# Lister les pays
+Source: https://docs.saspay.me/api-reference/reference/countries
+
+api-reference/openapi.json GET /countries/
+Catalogue public, non paginé, aucune authentification requise
+
+> [!NOTE]
+>
+> Endpoint public — fonctionne même sans clé API. Réponse non paginée : un tableau JSON brut, pas d'enveloppe `{count, results}`.
+
+
+# Détail d'un pays
+Source: https://docs.saspay.me/api-reference/reference/country-get
+
+api-reference/openapi.json GET /countries/{id}/
+Nécessite une authentification, contrairement à la liste
+
+# Pays, réseaux et format du téléphone
+Source: https://docs.saspay.me/api-reference/reference/formats
+
+Catalogue complet des pays, réseaux mobile money et format de numéro de téléphone attendu par pays.
+
+Catalogue statique de référence — les mêmes données sont aussi disponibles en direct via [Lister les pays](/api-reference/reference/countries) et [Lister les réseaux](/api-reference/reference/networks), mais sans le format de téléphone attendu (une convention côté plateforme, non exposée par ces deux endpoints).
+
+> [!NOTE]
+>
+> Seuls les pays ayant au moins un réseau mobile money actif peuvent recevoir un paiement softpay ou un retrait — c'est la liste ci-dessous. Le référentiel `/countries/` complet en contient davantage (pays sans réseau, réservés à un usage futur).
+
+## Format du numéro de téléphone
+
+Le numéro du client (`customer.phone` sur [un paiement](/api-reference/payments/softpay)) ou du bénéficiaire (`recipient.msisdn` sur [un retrait](/api-reference/payouts/initialize)) accepte trois écritures équivalentes, normalisées côté serveur avant l'envoi au gateway :
+
+* **Local**, tel que composé dans le pays (ex. Bénin : `0197505050`, 10 chiffres depuis la numérotation 2021 — le `0` initial fait partie du numéro, ce n'est pas un préfixe à retirer)
+* **International sans `+`** (ex. `2290197505050`)
+* **International avec `+`** (ex. `+2290197505050`)
+
+> [!WARNING]
+>
+> Le serveur ajoute l'indicatif s'il est absent, mais ne retire ni ne reformate jamais un numéro local — un numéro mal saisi (mauvaise longueur, mauvais préfixe opérateur) n'est détecté qu'au moment où le gateway le rejette, pas à la validation de la requête.
+
+## Réseaux globaux : `card` et `crypto`
+
+En plus des réseaux mobile money ci-dessous (rattachés chacun à un pays précis), deux réseaux sont **globaux** — ils ne dépendent d'aucun pays et sont proposables quel que soit le pays de votre client :
+
+| `network` | Moyen de paiement | Devise |
+| - | - | - |
+| `card` | Carte bancaire (Visa/Mastercard, via Stripe) | USD uniquement |
+| `crypto` | Stablecoins/crypto (via IziChange) — la sélection de l'actif précis se fait sur la page hébergée, pas dans la requête | USD uniquement |
+
+> [!NOTE]
+>
+> Passez le `country` que vous voulez (le pays réel de votre client, ou l'ISO technique `XX`) — pour `card`/`crypto`, il est ignoré : la transaction est systématiquement créée en USD, rattachée au pays technique `XX` ("International (USD)"), quel que soit ce que vous envoyez. Si votre `amount`/`currency` de départ ne sont pas déjà en USD, la conversion se fait automatiquement au taux configuré, comme pour tout autre mismatch de devise en entrée.
+
+> [!WARNING]
+>
+> `customer.phone` reste **requis** par le endpoint softpay même pour `card`/`crypto` (aucun push USSD n'est fait, le champ n'est simplement pas utilisé) — envoyez une valeur qui passe la validation de format basique, elle n'a pas besoin de suivre le format d'un pays réel.
+
+> [!WARNING]
+>
+> `return_url` devient **obligatoire** dès que `network` vaut `card` ou `crypto` sur [`/payments/softpay/`](/api-reference/payments/softpay) — ces deux réseaux n'ont que la page hébergée du fournisseur, jamais de push. Sans lui, votre client n'aurait aucun moyen de revenir chez vous une fois payé : la requête est rejetée en `422` avant même de créer un paiement.
+
+## Catalogue
+
+`network` (paiement) / `method` (retrait) attend le `code` exact de la colonne Réseaux — pas le nom lisible.
+
+| Pays | ISO | Devise | Indicatif | Réseaux (`code` — nom) |
+| - | - | - | - | - |
+| Burkina Faso | `BF` | XOF | +226 | `moov_bf` — Moov Burkina Faso `orange_bf` — Orange Burkina Faso |
+| Bénin | `BJ` | XOF | +229 | `celtiis_bj` — Celtiis Cash Bénin `moov_bj` — Moov Money Benin `mtn_bj` — MTN MoMo Benin |
+| République Démocratique du Congo | `CD` | CDF | +243 | `airtel_cd` — Airtel Congo `orange_cd` — Orange Congo `vodacom_cd` — Vodacom Congo |
+| Côte d'Ivoire | `CI` | XOF | +225 | `moov_ci` — Moov Money CI `mtn_ci` — MTN MoMo CI `orange_ci` — Orange Money CI `wave_ci` — Wave CI |
+| Cameroun | `CM` | XAF | +237 | `eu_mobile_cm` — EU Mobile Money Cameroon *(inactif)* `mtn_cm` — MTN MoMo Cameroon `orange_cm` — Orange Money Cameroon |
+| Ghana | `GH` | GHS | +233 | `mtn_gh` — MTN MoMo Ghana `tigo_gh` — Airtel/Tigo Ghana `vodafone_gh` — Vodafone Ghana |
+| Guinée | `GN` | GNF | +224 | `mtn_gn` — MTN MoMo Guinea `orange_gn` — Orange Money Guinea *(inactif)* |
+| Kenya | `KE` | KES | +254 | `mpesa_ke` — M-Pesa Kenya |
+| Mali | `ML` | XOF | +223 | `mobi_cash_ml` — Mobi Cash Mali `moov_ml` — Moov Money Mali `orange_ml` — Orange Money Mali |
+| Malawi | `MW` | MWK | +265 | `airtel_mw` — Airtel Money Malawi `tnm_mw` — TNM Mpamba Malawi |
+| Niger | `NE` | XOF | +227 | `airtel_ne` — Airtel Niger |
+| Nigeria | `NG` | NGN | +234 | `airtel_ng` — Airtel Money Nigeria `mtn_ng` — MTN Nigeria `allbanks_ng` — Virement bancaire (format spécifique, voir note ci-dessous) |
+| Rwanda | `RW` | RWF | +250 | `airtel_rw` — Airtel Rwanda `mtn_rw` — MTN MoMo Rwanda |
+| Sénégal | `SN` | XOF | +221 | `e_money_sn` — E-Money Senegal *(inactif)* `freemoney_sn` — Free Money Senegal `orange_sn` — Orange Money Senegal `wave_sn` — Wave Senegal `wizall_sn` — Wizall Senegal |
+| Togo | `TG` | XOF | +228 | `moov_tg` — Moov Money Togo `togocel` — Togocel Money |
+| Tanzanie | `TZ` | TZS | +255 | `airtel_tz` — Airtel Tanzania `halopesa_tz` — Halopesa `mpesa_tz` — Vodacom Tanzania `tigo_tz` — Tigo Tanzania |
+| Ouganda | `UG` | UGX | +256 | `airtel_ug` — Airtel Uganda `mtn_ug` — MTN MoMo Uganda |
+| Zambie | `ZM` | ZMW | +260 | `airtel_zm` — Airtel Zambia `mtn_zm` — MTN MoMo Zambia `zamtel_zm` — Zamtel Kwacha |
+
+> [!NOTE]
+>
+> Un réseau marqué *inactif* existe dans le catalogue mais n'est routé vers aucun gateway pour le moment — l'utiliser renvoie une erreur `invalid_method` (`422`). La liste ci-dessus reflète l'état par défaut du catalogue ; utilisez [Lister les réseaux](/api-reference/reference/networks) pour l'état réel et à jour (`is_active`).
+
+## Cas particulier : `allbanks_ng` (Nigeria) — virement bancaire
+
+Ce réseau ne suit pas le format mobile money standard ci-dessus. En **encaissement (payin)**, il ne demande aucune coordonnée bancaire dans la requête (même format que les autres réseaux) : la réponse de [`/payments/softpay/`](/api-reference/payments/softpay) (ou l'équivalent page hébergée) contient un objet `bank_transfer` avec un **compte virtuel dédié à ce paiement** (banque, numéro de compte, montant exact, date d'expiration) — c'est ce compte que votre client doit créditer pour finaliser le paiement. Ni `checkout_url` ni push USSD ne s'appliquent à ce réseau.
+
+
+# Consulter mes tarifs
+Source: https://docs.saspay.me/api-reference/reference/my-rates
+
+api-reference/openapi.json GET /pricing/my-rates/
+Tarif applicable réseau par réseau, et si un OTP pré-paiement est requis avant de payer
+
+> [!NOTE]
+>
+> `otp_required` suit la route actuellement la plus prioritaire pour ce réseau. S'il redevient `false` plus tard sans rien changer de votre côté, c'est qu'un autre fournisseur sans OTP a repris la main sur ce réseau — pas une anomalie.
+
+> [!NOTE]
+>
+> `is_custom: true` signifie que ce tarif vous est propre (négocié), par opposition au tarif global appliqué par défaut à tous les marchands.
+
+
+# Détail d'un réseau
+Source: https://docs.saspay.me/api-reference/reference/network-get
+
+api-reference/openapi.json GET /networks/{id}/
+code est la valeur à utiliser dans network/method des endpoints de paiement
+
+# Lister les réseaux
+Source: https://docs.saspay.me/api-reference/reference/networks
+
+api-reference/openapi.json GET /networks/
+Authentifié et paginé — contrairement à /countries/
+
+> [!NOTE]
+>
+> Aucun filtre `?country=` disponible malgré le besoin évident de "quels réseaux pour ce pays" — listez l'ensemble et filtrez côté client sur le champ `country`.
+
+
+# Transactions
+Source: https://docs.saspay.me/api-reference/transactions
+
+Historique unifié des paiements et retraits : détail, tentatives, changements de statut, export CSV et facture PDF.
+
+Toutes les routes de ce groupe nécessitent le header `Authorization: Bearer sk_...`. Une `Transaction` est créée par [softpay](/api-reference/payments/softpay), [checkout hébergé](/api-reference/payments/checkout-create) ou [payout](/api-reference/payouts/initialize) — il n'existe pas de création directe de transaction via ce groupe, lecture seule uniquement.
+
+## Vue d'ensemble
+
+```
+Transaction
+├── champs de base (montants, devise, statut, merchant, customer, country, network...)
+├── attempts[]       ← une ligne par tentative de routage gateway (priorité, succès/échec)
+└── status_logs[]     ← historique append-only des transitions de statut (from → to, qui a déclenché)
+```
+
+* [Lister ses transactions](/api-reference/transactions/list)
+* [Détail d'une transaction](/api-reference/transactions/get)
+* [Export CSV](/api-reference/transactions/export)
+* [Facture PDF](/api-reference/transactions/invoice)
+* [Lister les tentatives](/api-reference/transactions/attempts-list)
+* [Détail d'une tentative](/api-reference/transactions/attempts-get)
+* [Lister les changements de statut](/api-reference/transactions/status-logs-list)
+* [Détail d'un changement de statut](/api-reference/transactions/status-logs-get)
+
+## `flow_direction` : payin ou payout
+
+| `transaction_type` | `flow_direction` | Origine |
+| - | - | - |
+| `PAIEMENT` | `INBOUND` | [softpay](/api-reference/payments/softpay) ou [checkout hébergé](/api-reference/payments/checkout-create) |
+| `RECHARGE` | `INBOUND` | Recharge de solde |
+| `RETRAIT` | `OUTBOUND` | [payout](/api-reference/payouts/initialize) |
+| `TRANSFERT` | `OUTBOUND` | Transfert interwallet (voir [Wallet](/api-reference/wallet)) |
+
+`flow_direction` est toujours dérivé de `transaction_type`, jamais saisi directement — c'est un champ en lecture seule.
+
+> [!NOTE]
+>
+> `status: "CANCELLED"` existe dans le modèle de données mais n'est actuellement atteint par aucun flux — en pratique, seuls `PENDING`, `SUCCESS` et `FAILED` apparaissent.
+
+## Pagination : curseur, pas de `count`
+
+`GET /transactions/`, `GET /transaction-attempts/` et `GET /transaction-status-logs/` utilisent une pagination par curseur (`page_size=50` par défaut, `200` maximum via `?page_size=`) :
+
+```json theme={null}
+{
+  "success": true,
+  "data": {
+    "next": "https://api.saspay.me/api/v1/transactions/?cursor=cD0yMDI2LTA4LTEy",
+    "previous": null,
+    "results": [ ]
+  },
+  "code": 200
+}
+```
+
+> [!WARNING]
+>
+> Pas de champ `count` sur ces trois endpoints (contrairement à la plupart des autres listes de l'API, qui utilisent une pagination par numéro de page classique avec `count`) — table la plus volumineuse de la plateforme, un `COUNT(*)` par page serait coûteux. Naviguez avec `next`/`previous`, pas avec un numéro de page.
+
+## Filtrer et rechercher
+
+`GET /transactions/` accepte :
+
+* **Filtres exacts** : `status`, `transaction_type`, `currency`, `flow_direction`, `country`, `network`, `merchant`
+* **Plage de dates** : `created_at__gte`, `created_at__lte`
+* **Recherche libre** (`?search=`) : référence, référence gateway, nom/email/téléphone client, slug de lien de paiement, slug de session checkout
+
+`GET /transaction-attempts/` filtre par `status`, `gateway`, `transaction`. `GET /transaction-status-logs/` filtre par `to_status`, `triggered_by`, `transaction`.
+
+## Export et facture : marge interne jamais exposée
+
+Par transparence, la décomposition de ce qui vous est facturé est visible : `client_fee` (frais payés par le client), `gateway_fee` (coût du fournisseur de paiement) et `platform_fee` (frais de la plateforme), avec l'objet `amounts` (`requested`, `fee`, `charged`, `net`). Ces frais **disparaissent totalement** de la facture PDF, destinée à être partagée en dehors de l'API :
+
+| Document | `gateway_fee` / `platform_fee` |
+| - | - |
+| `GET /transactions/` , `GET /transactions/{id}/` | Visibles |
+| [Export CSV](/api-reference/transactions/export) | Visibles (usage interne/comptable marchand) |
+| [Facture PDF](/api-reference/transactions/invoice) | **Jamais** — uniquement `requested_amount`, `client_fee`, `debited_amount` |
+
+Le fournisseur utilisé (`current_gateway`) et la règle tarifaire globale (`pricing_rule`) ne sont jamais renvoyés. `GET /transaction-attempts/` ne renvoie pas non plus le fournisseur ni l'ordre de routage : uniquement `status`, `msisdn`, un `error_message` générique et les horodatages.
+
+> [!WARNING]
+>
+> La facture PDF n'est disponible que pour un paiement entrant réussi (`flow_direction: "INBOUND"` et `status: "SUCCESS"`) — jamais pour un payout, jamais pour une transaction encore `PENDING` ou `FAILED`.
+
+
+# Détail d'une tentative
+Source: https://docs.saspay.me/api-reference/transactions/attempts-get
+
+api-reference/openapi.json GET /transaction-attempts/{id}/
+Détail d'une tentative de routage gateway individuelle
+
+# Lister les tentatives
+Source: https://docs.saspay.me/api-reference/transactions/attempts-list
+
+api-reference/openapi.json GET /transaction-attempts/
+Historique des tentatives de routage gateway, lecture seule
+
+# Export CSV
+Source: https://docs.saspay.me/api-reference/transactions/export
+
+api-reference/openapi.json GET /transactions/export/
+Même filtres/recherche que la liste, sans pagination, fichier binaire
+
+> [!NOTE]
+>
+> Réponse binaire `text/csv` (`Content-Disposition: attachment`), pas du JSON. Colonnes, dans l'ordre : `reference`, `external_reference`, `merchant`, `customer_name`, `customer_email`, `customer_phone`, `country`, `network`, `transaction_type`, `flow_direction`, `requested_amount`, `client_fee`, `gateway_fee`, `platform_fee`, `debited_amount`, `net_amount`, `currency`, `status`, `operation_msisdn`, `ip_address`, `created_at`. Le fournisseur utilisé (colonne `gateway`) n'est jamais exporté. Accepte les mêmes filtres/recherche que [`GET /transactions/`](/api-reference/transactions/list), sans pagination — tout le jeu de résultats matché est exporté d'un coup.
+
+
+# Détail d'une transaction
+Source: https://docs.saspay.me/api-reference/transactions/get
+
+api-reference/openapi.json GET /transactions/{id}/
+Ajoute les tentatives de routage et l'historique des changements de statut
+
+## Champs utiles
+
+En plus des champs bruts (`requested_amount`, `client_fee`, `debited_amount`, `net_amount`…), la réponse expose des raccourcis prêts à afficher :
+
+| Champ | Contenu |
+| - | - |
+| `country_code` | Code ISO 2 lettres (`BJ`) — évite un appel à `/countries/` pour résoudre l'UUID `country` |
+| `network_code` | Code réseau (`mtn_bj`) — idem pour `network` |
+| `operation_msisdn` | Numéro débité (encaissement) ou crédité (décaissement), figé au moment de l'opération |
+| `amounts` | Ventilation prête à afficher, voir ci-dessous |
+
+### Le bloc `amounts`
+
+```json theme={null}
+"amounts": {
+  "requested": "25000.00",       // montant demandé
+  "fee": "625.00",               // frais facturés au client
+  "charged": "25625.00",         // ce que le payeur débourse réellement
+  "net": "25000.00",             // ce que vous recevez
+  "currency": "XOF",
+  "fee_charge_mode": "ADD_ON"
+}
+```
+
+`requested` n'est pas ce que le payeur débourse : cela dépend de `fee_charge_mode`.
+
+| Mode | Le payeur débourse | Vous recevez |
+| - | - | - |
+| `ADD_ON` | `charged` = `requested` + `fee` | `net` = `requested` |
+| `DEDUCTED` | `charged` = `requested` | `net` = `requested` − `fee` |
+
+> [!TIP]
+>
+> Pour un rapprochement comptable, utilisez `charged` et `net` — jamais `requested` seul.
+
+> [!NOTE]
+>
+> `operation_msisdn` est vide sur les transactions antérieures au 17 août 2026 : le numéro n'était alors pas conservé.
+
+
+# Facture PDF
+Source: https://docs.saspay.me/api-reference/transactions/invoice
+
+api-reference/openapi.json GET /transactions/{id}/invoice/
+Facture d'un paiement réussi, sans marge interne
+
+> [!WARNING]
+>
+> Ne contient **jamais** `gateway_fee`/`platform_fee` (marge interne de la plateforme) — uniquement `requested_amount`, `client_fee` et `debited_amount`, ce que le client a réellement payé.
+
+> [!NOTE]
+>
+> Disponible uniquement pour un paiement entrant (`flow_direction: "INBOUND"`) déjà `SUCCESS`. Sinon : `409 invalid_flow` (transaction sortante, ex. un payout) ou `409 not_success` (pas encore réussie).
+
+
+# Lister ses transactions
+Source: https://docs.saspay.me/api-reference/transactions/list
+
+api-reference/openapi.json GET /transactions/
+Historique paginé par curseur, filtrable et cherchable
+
+# Détail d'un changement de statut
+Source: https://docs.saspay.me/api-reference/transactions/status-logs-get
+
+api-reference/openapi.json GET /transaction-status-logs/{id}/
+Détail d'une transition de statut individuelle
+
+# Lister les changements de statut
+Source: https://docs.saspay.me/api-reference/transactions/status-logs-list
+
+api-reference/openapi.json GET /transaction-status-logs/
+Historique append-only des transitions de statut, lecture seule
+
+# Wallet
+Source: https://docs.saspay.me/api-reference/wallet
+
+Consultez vos soldes par pays et les taux de change appliqués aux transferts interwallet.
+
+Toutes les routes nécessitent votre clé API secrète (`Authorization: Bearer sk_...`) ou une session dashboard.
+
+> [!NOTE]
+>
+> La gestion des retraits (méthodes de retrait, demandes de retrait) et le relevé détaillé des mouvements se font **exclusivement depuis le [tableau de bord](https://app.saspay.me)**, pas via l'API. La consultation des soldes/taux de change et les **transferts interwallet** (lecture et création) restent accessibles par clé API — voir [Accès dashboard vs. clé API](/account-setup#acc%C3%A8s-dashboard-vs-cl%C3%A9-api).
+
+## Un wallet par (marchand, pays)
+
+Contrairement à une approche par devise, SasPay tient un solde distinct pour **chaque pays** où vous encaissez — jamais un solde global par devise. C'est un choix structurant : plusieurs pays partagent parfois la même devise (le XOF pour le Bénin, le Togo, la Côte d'Ivoire, le Sénégal...), et confondre les deux masquerait dans quel pays l'argent se trouve réellement.
+
+```
+Votre marchand
+│
+├── Wallet Bénin (XOF)   ── available_amount, pending_amount, is_frozen
+├── Wallet Sénégal (XOF) ── un solde distinct, même devise
+└── Wallet Cameroun (XAF)
+```
+
+Un wallet est créé automatiquement dès qu'un mouvement l'exige (premier encaissement dans ce pays, par exemple) — il n'y a pas de création manuelle.
+
+## Soldes
+
+Lecture seule stricte : aucune écriture n'est possible côté marchand, le solde ne bouge que via les mouvements internes de la plateforme (encaissement, retrait, ajustement admin...).
+
+* [Lister les soldes](/api-reference/wallet/balances-list)
+* [Récupérer un solde](/api-reference/wallet/balances-get)
+
+> [!NOTE]
+>
+> Pas de filtre `?country=` disponible sur la liste — récupérez tous vos soldes et filtrez côté client.
+
+Le champ `is_frozen` mérite attention : quand il vaut `true`, les **entrées restent acceptées** (vos encaissements continuent d'être crédités) mais toutes les **sorties sont bloquées** (retrait, transfert sortant). Un gel est toujours décidé côté plateforme, jamais déclenché par le marchand.
+
+## Taux de change
+
+Les taux appliqués aux transferts interwallet lors d'une conversion de devise.
+
+* [Lister les taux de change](/api-reference/wallet/exchange-rates-list)
+
+> [!NOTE]
+>
+> Pas de filtre par paire de devises — listez tout et filtrez côté client.
+
+## Transferts interwallet
+
+Déplacez des fonds entre deux wallets pays du **même marchand** — jamais d'argent qui quitte la plateforme. Nécessite un scope de clé API `PAYOUT` ou `BOTH` pour créer (lecture ouverte à tout scope).
+
+* [Lister les transferts interwallet](/api-reference/wallet/wallet-transfers-list)
+* [Initier un transfert interwallet](/api-reference/wallet/wallet-transfers-create)
+* [Récupérer un transfert interwallet](/api-reference/wallet/wallet-transfers-get)
+
+
+# Récupérer un solde
+Source: https://docs.saspay.me/api-reference/wallet/balances-get
+
+api-reference/openapi.json GET /merchant-balances/{id}/
+Détail du solde disponible/en attente pour un pays
+
+# Lister les soldes
+Source: https://docs.saspay.me/api-reference/wallet/balances-list
+
+api-reference/openapi.json GET /merchant-balances/
+Un solde par (marchand, pays) — lecture seule
+
+> [!NOTE]
+>
+> Pas de filtre `?country=` disponible — récupérez tous vos soldes et filtrez côté client.
+
+
+# Lister les taux de change
+Source: https://docs.saspay.me/api-reference/wallet/exchange-rates-list
+
+api-reference/openapi.json GET /exchange-rates/
+Taux appliqués aux conversions de devise lors d'un transfert interwallet
+
+> [!NOTE]
+>
+> Pas de filtre par paire de devises — listez tout et filtrez côté client.
+
+
+# Initier un transfert interwallet
+Source: https://docs.saspay.me/api-reference/wallet/wallet-transfers-create
+
+api-reference/openapi.json POST /wallet-transfers/
+Déplace des fonds entre deux wallets pays du même marchand
+
+> [!NOTE]
+>
+> Le montant reste toujours sur la plateforme — un transfert interwallet ne fait que déplacer des fonds entre deux wallets **du même marchand**, jamais vers un tiers. Si les devises diffèrent, la conversion utilise le taux de change en vigueur ([Lister les taux de change](/api-reference/wallet/exchange-rates-list)) et des frais peuvent s'appliquer sur le montant converti.
+
+## Statut après création
+
+* `PENDING` : votre marchand n'a pas l'auto-approbation activée — le transfert attend une validation admin avant que le wallet cible ne soit crédité. Un seul transfert `PENDING` à la fois est autorisé par marchand.
+* `COMPLETED` : le transfert a été exécuté immédiatement (auto-approbation activée).
+
+## Éviter un doublon en cas de coupure réseau
+
+Le header `Idempotency-Key` est **optionnel** : sans lui, un simple retry réseau réserve le montant une seconde fois sur le wallet source. Voir [Idempotence](/api-reference/introduction#idempotence).
+
+
+# Récupérer un transfert interwallet
+Source: https://docs.saspay.me/api-reference/wallet/wallet-transfers-get
+
+api-reference/openapi.json GET /wallet-transfers/{id}/
+Détail et statut d'un transfert interwallet précis
+
+# Lister les transferts interwallet
+Source: https://docs.saspay.me/api-reference/wallet/wallet-transfers-list
+
+api-reference/openapi.json GET /wallet-transfers/
+Historique des transferts entre vos wallets pays
+
+> [!NOTE]
+>
+> Pas de filtre par marchand disponible ici (réservé à l'administration) — vous ne voyez que vos propres transferts.
+
+
+# Webhooks
+Source: https://docs.saspay.me/api-reference/webhooks
+
+Recevez en temps réel les changements de statut de vos transactions, retraits et transferts
+
+Toutes les routes nécessitent votre clé API secrète (`Authorization: Bearer sk_...`) ou une session dashboard. Un point de réception (`webhook`) appartient à votre marchand ; un abonnement (`subscription`) rattache ce point de réception à un type d'événement précis — un même webhook peut avoir plusieurs abonnements.
+
+```
+Votre marchand
+│
+└── Webhook (url, environment, signing_secret)
+    ├── Abonnement → transaction.success
+    ├── Abonnement → settlement.success
+    └── Abonnement → wallet_transfer.completed
+```
+
+> [!NOTE]
+>
+> Créer, modifier ou supprimer un webhook (ou un abonnement), ainsi que renvoyer manuellement une livraison, se fait **exclusivement depuis le [tableau de bord](https://app.saspay.me)**. Seule la consultation (points de réception, abonnements, historique de livraison) reste accessible par clé API — voir [Accès dashboard vs. clé API](/account-setup#acc%C3%A8s-dashboard-vs-cl%C3%A9-api).
+
+## Catalogue d'events
+
+| Event | Déclenchement |
+| - | - |
+| `transaction.created` | Une transaction (payin ou payout) vient d'être initiée |
+| `transaction.success` | Une transaction a été confirmée avec succès |
+| `transaction.failed` | Une transaction a échoué |
+| `transaction.cancelled` | Une transaction a été annulée |
+| `settlement.requested` | Un retrait a été demandé |
+| `settlement.approved` | Un retrait a été approuvé par un administrateur |
+| `settlement.success` | Un retrait a été exécuté avec succès |
+| `settlement.failed` | Un retrait a échoué |
+| `settlement.cancelled` | Un retrait a été annulé (par le marchand ou refusé par un administrateur) |
+| `wallet_transfer.requested` | Un transfert interwallet a été demandé |
+| `wallet_transfer.completed` | Un transfert interwallet a été complété |
+| `wallet_transfer.rejected` | Un transfert interwallet a été rejeté |
+| `webhook.test` | Event de test, déclenché manuellement pour vérifier votre intégration |
+
+> [!NOTE]
+>
+> Les events `settlement.*` sont en cours de fiabilisation côté plateforme — le contenu de `data` n'est pas garanti pour ces events précis pour le moment. Le catalogue reste correct, mais évitez de dépendre de la forme exacte de leur payload tant que ce point n'est pas stabilisé.
+
+## Format de l'enveloppe
+
+Chaque event envoyé à votre URL partage la même structure :
+
+```json theme={null}
+{
+  "event": "transaction.success",
+  "data": { }
+}
+```
+
+### `data` selon l'event
+
+```json theme={null}
+// transaction.success
+{
+  "event": "transaction.success",
+  "data": {
+    "id": "7c1a...",
+    "reference": "TXN-2026-000456",
+    "type": "PAIEMENT",
+    "status": "SUCCESS",
+
+    "amount": "25000.00",           // montant demandé
+    "fee": "625.00",                // frais facturés au client
+    "charged": "25625.00",          // ce que le payeur débourse réellement
+    "net_amount": "25000.00",       // ce que vous recevez
+    "fee_charge_mode": "ADD_ON",    // ADD_ON | DEDUCTED — décide qui paie les frais
+    "currency": "XOF",
+
+    "country": "BJ",                // code ISO 2 lettres
+    "network": "mtn_bj",            // code réseau
+    "msisdn": "22990000000"         // numéro débité (payin) ou crédité (payout)
+  }
+}
+
+// wallet_transfer.completed
+{
+  "event": "wallet_transfer.completed",
+  "data": {
+    "id": "1a2b...",
+    "reference": "f4e5d6c7...",
+    "status": "COMPLETED",
+    "from_country": "BJ",
+    "from_amount": "100000.00",
+    "from_currency": "XOF",
+    "to_country": "CM",
+    "to_amount": "984.00",
+    "to_currency": "XAF"
+  }
+}
+```
+
+### Comprendre les montants
+
+`amount` n'est **pas** ce que le payeur débourse : cela dépend de `fee_charge_mode`.
+
+| Mode | Le payeur débourse | Vous recevez |
+| - | - | - |
+| `ADD_ON` | `charged` = `amount` + `fee` | `net_amount` = `amount` |
+| `DEDUCTED` | `charged` = `amount` | `net_amount` = `amount` − `fee` |
+
+Pour rapprocher votre comptabilité, utilisez `charged` (ce qui a quitté le compte du client) et `net_amount` (ce qui vous revient) — jamais `amount` seul.
+
+> [!NOTE]
+>
+> `msisdn` est vide sur les transactions antérieures au 17 août 2026 : le numéro n'était alors pas conservé. `country`, `network` et les montants sont toujours présents.
+
+## Consulter vos webhooks
+
+* [Lister vos points de réception](/api-reference/webhooks/list)
+* [Récupérer un point de réception](/api-reference/webhooks/get)
+* [Lister vos abonnements](/api-reference/webhooks/subscriptions-list)
+* [Récupérer un abonnement](/api-reference/webhooks/subscriptions-get)
+
+> [!WARNING]
+>
+> Le secret de signature (`signing_secret`) n'est **jamais renvoyé en lecture** — ni par [Lister](/api-reference/webhooks/list), ni par [Récupérer](/api-reference/webhooks/get). Il n'apparaît qu'**une seule fois**, dans la réponse de création et dans celle d'une rotation de secret, y compris quand SasPay l'a généré pour vous. **Copiez-le à ce moment-là : il n'est plus jamais réaffichable.** Si vous l'avez perdu, définissez-en un nouveau depuis votre dashboard (Webhooks → Changer le secret) — les webhooks suivants seront signés avec celui-ci.
+
+## Sécurité — vérifier la signature
+
+Chaque requête envoyée à votre URL inclut trois headers, en plus du corps JSON de l'event :
+
+```
+POST <votre url>
+Content-Type: application/json
+X-Webhook-Signature: <hex sha256 HMAC, en minuscules>
+X-Webhook-Timestamp: <horodatage Unix, en secondes>
+X-Webhook-Event: <event_type, ex "transaction.success">
+
+<le corps JSON exact sur lequel la signature a été calculée>
+```
+
+La signature couvre l'horodatage **et** le corps, séparés par un point :
+
+```python theme={null}
+signed = f"{timestamp}.{body}"
+signature = hmac.new(signing_secret.encode(), signed.encode(), hashlib.sha256).hexdigest()
+```
+
+L'horodatage est régénéré à chaque tentative de livraison : une nouvelle tentative 2 h plus tard porte le sien.
+
+### Deux contrôles, pas un seul
+
+1. **L'âge** — rejetez si `X-Webhook-Timestamp` s'écarte de plus de **5 minutes** de votre horloge. Sans ce contrôle, un webhook légitime intercepté reste rejouable indéfiniment : sa signature ne périme jamais.
+2. **La signature** — recalculez-la sur le **corps brut reçu**, jamais sur une re-sérialisation de `payload` que vous reconstruiriez : l'ordre des clés ou le formatage des nombres peuvent différer et casser la comparaison bit à bit.
+
+L'horodatage étant inclus dans la signature, un attaquant ne peut pas le rajeunir pour contourner le contrôle d'âge — la signature ne correspondrait plus.
+
+```js Node.js theme={null}
+const crypto = require("crypto");
+const TOLERANCE_SECONDS = 300;
+
+function isValid(rawBody, signatureHeader, timestampHeader, secret) {
+  const now = Math.floor(Date.now() / 1000);
+  if (Math.abs(now - Number(timestampHeader)) > TOLERANCE_SECONDS) return false;
+
+  const expected = crypto
+    .createHmac("sha256", secret)
+    .update(`${timestampHeader}.${rawBody}`)
+    .digest("hex");
+
+  const a = Buffer.from(signatureHeader);
+  const b = Buffer.from(expected);
+  return a.length === b.length && crypto.timingSafeEqual(a, b);
+}
+```
+
+```php PHP theme={null}
+<?php
+const TOLERANCE_SECONDS = 300;
+
+// Corps BRUT, jamais json_decode puis re-encode.
+$body = file_get_contents('php://input');
+$signature = $_SERVER['HTTP_X_WEBHOOK_SIGNATURE'] ?? '';
+$timestamp = $_SERVER['HTTP_X_WEBHOOK_TIMESTAMP'] ?? '0';
+
+if (abs(time() - (int) $timestamp) > TOLERANCE_SECONDS) {
+    http_response_code(403);
+    exit('horodatage hors tolérance');
+}
+
+$expected = hash_hmac('sha256', $timestamp . '.' . $body, $secret);
+if (!hash_equals($expected, $signature)) {
+    http_response_code(403);
+    exit('signature invalide');
+}
+
+$payload = json_decode($body, true);
+http_response_code(200);
+```
+
+```python Python theme={null}
+import hashlib, hmac, time
+
+TOLERANCE_SECONDS = 300
+
+def is_valid(raw_body: bytes, signature: str, timestamp: str, secret: str) -> bool:
+    if abs(int(time.time()) - int(timestamp)) > TOLERANCE_SECONDS:
+        return False
+    signed = f"{timestamp}.".encode() + raw_body
+    expected = hmac.new(secret.encode(), signed, hashlib.sha256).hexdigest()
+    return hmac.compare_digest(expected, signature)
+```
+
+> [!NOTE]
+>
+> Comparez toujours en **temps constant** (`hash_equals`, `timingSafeEqual`, `hmac.compare_digest`) et jamais avec `==` : une comparaison classique s'arrête au premier caractère différent, ce qui laisse fuiter la signature attendue par mesure du temps de réponse.
+
+## Historique de livraison
+
+Chaque tentative de livraison (réussie, échouée, en cours de retry) est journalisée.
+
+* [Lister l'historique de livraison](/api-reference/webhooks/logs-list)
+* [Récupérer une livraison](/api-reference/webhooks/logs-get)
+
+> [!NOTE]
+>
+> Pas de filtre disponible sur cette vue marchand — récupérez la liste et filtrez côté client. Un renvoi manuel se fait depuis le tableau de bord.
+
+## Fiabilité
+
+* **5 tentatives** par event : immédiat, puis +30s, +5min, +30min, +2h.
+* **Timeout de 15s** par tentative.
+* Après épuisement des 5 tentatives, la livraison passe en statut `FAILED` **définitif** — seul un renvoi manuel depuis le tableau de bord peut la relancer, elle n'est plus retentée automatiquement.
+
+> [!NOTE]
+>
+> Un abonnement ne peut être créé qu'une seule fois par couple (webhook, event\_type). Retenter d'abonner le même webhook au même `event_type` renvoie aujourd'hui une erreur serveur générique plutôt qu'un message dédié.
+
+
+# Récupérer un point de réception
+Source: https://docs.saspay.me/api-reference/webhooks/get
+
+api-reference/openapi.json GET /merchant-webhooks/{id}/
+Détail d'un webhook enregistré
+
+> [!NOTE]
+>
+> `signing_secret` n'apparaît jamais dans cette réponse — il n'est renvoyé qu'**une seule fois**, à la création du point de réception ou lors d'une rotation de secret.
+
+> [!NOTE]
+>
+> `payment_link` : `null` pour un webhook marchand global — renseigné, ce webhook est scopé à un seul [lien de paiement](/api-reference/payment-links), cf. [Lister vos points de réception](/api-reference/webhooks/list).
+
+
+# Lister vos points de réception
+Source: https://docs.saspay.me/api-reference/webhooks/list
+
+api-reference/openapi.json GET /merchant-webhooks/
+Liste de vos webhooks enregistrés
+
+> [!NOTE]
+>
+> `signing_secret` n'apparaît jamais dans cette réponse — il n'est renvoyé qu'**une seule fois**, à la création du point de réception ou lors d'une rotation de secret.
+
+> [!NOTE]
+>
+> `payment_link` : `null` pour un webhook marchand global (reçoit les events de toutes vos transactions) — renseigné, il ne reçoit QUE les events des transactions issues de ce [lien de paiement](/api-reference/payment-links) précis, en plus (jamais à l'exclusion) de vos webhooks globaux.
+
+
+# Récupérer une livraison
+Source: https://docs.saspay.me/api-reference/webhooks/logs-get
+
+api-reference/openapi.json GET /webhook-logs/{id}/
+Détail d'une tentative de livraison, avec le payload exact envoyé
+
+# Lister l'historique de livraison
+Source: https://docs.saspay.me/api-reference/webhooks/logs-list
+
+api-reference/openapi.json GET /webhook-logs/
+Chaque tentative de livraison, réussie ou non, pour tous vos webhooks
+
+> [!NOTE]
+>
+> Pas de filtre disponible sur cette vue marchand — récupérez la liste et filtrez côté client.
+
+
+# Récupérer un abonnement
+Source: https://docs.saspay.me/api-reference/webhooks/subscriptions-get
+
+api-reference/openapi.json GET /merchant-webhook-subscriptions/{id}/
+Détail d'un abonnement webhook
+
+# Lister vos abonnements
+Source: https://docs.saspay.me/api-reference/webhooks/subscriptions-list
+
+api-reference/openapi.json GET /merchant-webhook-subscriptions/
+Liste des abonnements webhook actifs, tous webhooks confondus
+
+# SasPay
+Source: https://docs.saspay.me/index
+
+Encaissez et payez en mobile money et par carte en Afrique de l'Ouest et du Centre, via une API REST unique.
+
+## Bienvenue sur SasPay
+
+SasPay est un service d'intégration technique qui vous permet d'encaisser (mobile money, carte) et de payer vos bénéficiaires depuis une seule intégration — sans négocier avec chaque opérateur télécom ou chaque banque séparément.
+
+> [card] [Démarrer en 5 minutes](/quickstart)
+>
+> Obtenez votre clé API et encaissez votre premier paiement de test.
+
+## Ce que vous pouvez faire
+
+> [card] [Encaisser un paiement](/api-reference/payments)
+>
+> Page de paiement hébergée (checkout) ou paiement direct (softpay) en mobile money/carte.
+
+> [card] [Liens de paiement](/api-reference/payment-links)
+>
+> Créez un lien de paiement réutilisable à partager avec vos clients.
+
+> [card] [Payer un bénéficiaire](/api-reference/payouts)
+>
+> Envoyez de l'argent en mobile money depuis votre solde SasPay.
+
+> [card] [Consulter votre solde](/api-reference/wallet)
+>
+> Consultez vos soldes par pays (le retrait se fait depuis le tableau de bord).
+
+> [card] [Webhooks](/api-reference/webhooks)
+>
+> Recevez une notification en temps réel à chaque changement de statut.
+
+> [card] [Créer un compte et vérifier votre identité](/account-setup)
+>
+> Inscription, KYC, puis génération de votre première clé API.
+
+## Liens utiles
+
+> [card] [Tableau de bord](https://app.saspay.me)
+>
+> Gérez votre compte et vos clés API
+
+> [card] [Référence API](/api-reference/introduction)
+>
+> Documentation complète de l'API
+
+> [card] [Support](https://app.saspay.me/dashboard/support)
+>
+> Ouvrez un ticket depuis votre tableau de bord
+
+
+# Plugin WooCommerce
+Source: https://docs.saspay.me/plugins/woocommerce
+
+Accepter les paiements SasPay (mobile money, carte) dans votre boutique WooCommerce en quelques minutes.
+
+Le plugin **SasPay for WooCommerce** connecte votre boutique WordPress/WooCommerce à SasPay. Vos clients choisissent SasPay au paiement, sont redirigés vers la page de paiement hébergée SasPay, puis reviennent sur votre boutique. La commande passe à jour automatiquement grâce au retour du client et au webhook.
+
+> [card] [Télécharger le plugin](https://files.viraclip.me/saspay/docs/saspay-for-woocommerce-1.0.0.zip)
+>
+> Archive ZIP prête à téléverser dans WordPress (version 1.0.0), avec un fichier `INSTALL.txt` détaillé.
+
+## Prérequis
+
+* WordPress 5.6 ou supérieur, WooCommerce 5.8 ou supérieur, PHP 7.4 ou supérieur
+* Un site en HTTPS
+* Un compte marchand SasPay et une clé API (`sk_test_EXEMPLE` pour tester, `sk_live_EXEMPLE` en production)
+
+## 1. Installer le plugin
+
+1. Dans WordPress, allez dans **Extensions → Ajouter une extension → Téléverser une extension**.
+2. Choisissez le fichier `saspay-for-woocommerce-1.0.0.zip`, puis cliquez sur **Installer maintenant**.
+3. Cliquez sur **Activer l'extension**.
+
+## 2. Activer le moyen de paiement
+
+1. Allez dans **WooCommerce → Réglages → Paiements → SasPay for WooCommerce**.
+2. Cochez **Enable SasPay**.
+3. Collez votre clé API dans **API Secret Key**.
+4. Enregistrez les modifications.
+
+> [!WARNING]
+>
+> Gardez la clé secrète côté serveur uniquement : elle est stockée dans les réglages WordPress et ne doit jamais être partagée ni publiée.
+
+## 3. Configurer le webhook
+
+Le webhook permet à SasPay de prévenir votre boutique à chaque changement de statut d'un paiement.
+
+1. Dans les réglages du plugin, copiez l'URL affichée dans **Webhook URL** (de la forme `https://votre-site.com/?wc-api=saspay_wc_webhook`).
+2. Copiez la valeur du champ **Webhook Secret**.
+3. Dans le [tableau de bord SasPay](https://app.saspay.me), section **Développeur → Webhooks** :
+   * créez un webhook avec l'URL copiée ;
+   * cochez au minimum `transaction.success` et `transaction.failed` ;
+   * utilisez **Changer le secret** pour y coller la valeur de **Webhook Secret**.
+
+> [!NOTE]
+>
+> Le secret doit être identique des deux côtés. Sinon, SasPay envoie des webhooks signés que le plugin refuse (erreur 401 dans les journaux).
+
+Pour le détail des événements et de la vérification de signature, voir la page [Webhooks](/api-reference/webhooks).
+
+## 4. Tester
+
+1. Gardez la clé `sk_test_EXEMPLE` dans les réglages.
+2. Passez une commande de test de petit montant, puis payez avec SasPay.
+3. Vérifiez que la commande passe à **Terminée**.
+4. Dans le tableau de bord SasPay, déclenchez l'événement `webhook.test` de votre webhook.
+
+Une fois les tests concluants, remplacez la clé de test par votre clé `sk_live_EXEMPLE`.
+
+## Dépannage
+
+Les événements du plugin sont consignés dans **WooCommerce → Statut → Journaux**, sous le fichier `saspay-for-woocommerce`.
+
+| Symptôme | Cause probable |
+| - | - |
+| « Erreur de connexion à la plateforme de paiement » | Clé API incorrecte, ou serveur sans accès à `api.saspay.me` |
+| « SasPay is not available at the moment » | Moyen de paiement désactivé, ou clé API vide |
+| Webhook refusé (401) | Secret différent de celui de SasPay, ou horloge du serveur décalée de plus de 5 minutes |
+| Commande non mise à jour après paiement | URL du webhook inexacte ou inaccessible depuis Internet |
+
+Besoin d'aide ? Ouvrez un ticket depuis le [tableau de bord SasPay](https://app.saspay.me/dashboard/support).
+
+
+# Démarrage rapide
+Source: https://docs.saspay.me/quickstart
+
+Encaissez votre premier paiement de test avec SasPay en moins de 5 minutes.
+
+## 1. Obtenez votre clé API
+
+Connectez-vous sur [app.saspay.me](https://app.saspay.me) et copiez votre clé API secrète depuis la section Développeur de votre tableau de bord.
+
+```
+Authorization: Bearer sk_test_EXEMPLE
+```
+
+Utilisez une clé `sk_test_EXEMPLE` pour tester sans argent réel, `sk_live_EXEMPLE` une fois prêt à encaisser en production.
+
+## 2. Découvrez les pays et réseaux supportés
+
+Avant d'initier un paiement, vérifiez quels réseaux mobile money sont disponibles dans le pays de votre client. Cet appel ne nécessite aucune authentification.
+
+```bash theme={null}
+curl https://api.saspay.me/api/v1/countries/
+```
+
+Repérez le `code` du réseau qui vous intéresse (ex. `mtn_bj` pour MTN Bénin) via [Liste des réseaux](/api-reference/reference/networks).
+
+## 3. Encaissez un paiement
+
+Deux façons d'encaisser sont disponibles selon votre intégration.
+
+> [tab] Softpay (direct)
+>
+> Poussez directement une demande de paiement sur le téléphone du client — idéal si vous avez déjà son numéro et son réseau.
+>
+> ```bash theme={null}
+> curl -X POST https://api.saspay.me/api/v1/payments/softpay/ \
+>   -H "Authorization: Bearer sk_test_EXEMPLE" \
+>   -H "Content-Type: application/json" \
+>   -H "Idempotency-Key: 3fa85f64-5717-4562-b3fc-2c963f66afa6" \
+>   -d '{
+>     "amount": "2500.00",
+>     "currency": "XOF",
+>     "country": "BJ",
+>     "network": "mtn_bj",
+>     "description": "Abonnement mensuel",
+>     "customer": {
+>       "email": "client@example.com",
+>       "first_name": "Awa",
+>       "last_name": "Sossou",
+>       "phone": "+22997505050"
+>     }
+>   }'
+> ```
+>
+> ```json Réponse (HTTP 201) theme={null}
+> {
+>   "success": true,
+>   "data": {
+>     "message": "Payment pushed successfully",
+>     "id": "b1f2c3d4-...",
+>     "status": "PENDING",
+>     "checkout_url": "",
+>     "instructions": ""
+>   },
+>   "code": 201
+> }
+> ```
+>
+> > [!NOTE]
+> >
+> > Comme **toutes** les réponses de l'API, le contenu utile est dans `data` — voir [Format des réponses](/api-reference/introduction#format-des-r%C3%A9ponses). Les exemples suivants de cette page gardent cette enveloppe sans le répéter à chaque fois.
+>
+> > [!WARNING]
+> >
+> > `checkout_url` est vide ici parce que MTN Bénin fonctionne en push. Sur Wave, Orange Money, Djamo ou une carte bancaire, elle sera **non vide** et vous devrez y rediriger votre client — sinon aucun paiement n'a lieu. Testez toujours ce champ.
+>
+> > [!NOTE]
+> >
+> > Le header `Idempotency-Key` est optionnel, mais vivement recommandé ici : sans lui, un retry réseau crée un second paiement réel. Générez un identifiant unique (UUID par exemple) par tentative. Voir [Idempotence](/api-reference/introduction#idempotence).
+>
+> Le client reçoit l'invite de paiement directement sur son téléphone (USSD ou notification, selon le réseau). Suivez ensuite l'étape 4 pour connaître le résultat.
+
+> [tab] Checkout hébergé
+>
+> Générez une page de paiement à laquelle rediriger votre client — idéal si vous ne voulez pas gérer l'interface de paiement vous-même.
+>
+> ```bash theme={null}
+> curl -X POST https://api.saspay.me/api/v1/checkout-sessions/ \
+>   -H "Authorization: Bearer sk_test_EXEMPLE" \
+>   -H "Content-Type: application/json" \
+>   -d '{
+>     "amount": "5000.00",
+>     "currency": "XOF",
+>     "description": "Facture #1042",
+>     "customer_email": "client@example.com",
+>     "customer_name": "Awa Sossou",
+>     "return_url": "https://votre-site.com/merci"
+>   }'
+> ```
+>
+> ```json Réponse (HTTP 201, abrégée) theme={null}
+> {
+>   "success": true,
+>   "data": {
+>     "id": "c9a1...",
+>     "slug": "kZ2v9rT4bQxL8mNpYw==",
+>     "checkout_url": "https://pay.saspay.me/checkout/kZ2v9rT4bQxL8mNpYw==",
+>     "status": "PENDING"
+>   },
+>   "code": 201
+> }
+> ```
+>
+> Redirigez votre client vers `checkout_url` — il y choisit son réseau et confirme le paiement lui-même.
+>
+> > [!WARNING]
+> >
+> > `return_url` est optionnel mais fortement recommandé : sans lui, votre client reste bloqué sur la page de succès SasPay après paiement, sans moyen de revenir chez vous. Si vous le fournissez, il est automatiquement redirigé vers cette URL 3 secondes après un paiement **réussi**. Ce n'est pas encore le cas sur un paiement échoué — dans ce cas le client voit un bouton "Réessayer" et doit fermer l'onglet lui-même.
+
+## 4. Vérifiez le résultat
+
+Ne faites jamais confiance à un simple délai — interrogez toujours le statut réel avant de considérer un paiement comme réussi.
+
+```bash theme={null}
+curl https://api.saspay.me/api/v1/payments/b1f2c3d4-.../verify/ \
+  -H "Authorization: Bearer sk_test_EXEMPLE"
+```
+
+```json Réponse (HTTP 200, abrégée) theme={null}
+{
+  "success": true,
+  "data": {
+    "message": "Payment transaction fetched successfully",
+    "id": "b1f2c3d4-...",
+    "status": "SUCCESS",
+    "net_amount": "2500.00",
+    "currency": "XOF"
+  },
+  "code": 200
+}
+```
+
+> [!TIP]
+>
+> Plutôt que d'interroger cet endpoint en boucle, configurez un [webhook](/api-reference/webhooks) pour être notifié en temps réel dès que le statut change.
+
+## Prochaines étapes
+
+> [card] [Paiements](/api-reference/payments)
+>
+> Softpay, checkout hébergé, retry, confirmation OTP
+
+> [card] [Retraits](/api-reference/payouts)
+>
+> Payer un bénéficiaire en mobile money
+
+> [card] [Webhooks](/api-reference/webhooks)
+>
+> Recevez vos événements en temps réel
+
+> [card] [Créer un compte](/account-setup)
+>
+> Inscription, KYC, première clé API
+
+

@@ -1,0 +1,3592 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "SasPay API",
+    "description": "API d'encaissement et de paiement mobile money/carte pour l'Afrique de l'Ouest et du Centre. Toutes les routes marchand nécessitent une clé API secrète (header Authorization: Bearer sk_...).",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://api.saspay.me/api/v1"
+    }
+  ],
+  "security": [
+    {
+      "bearerAuth": []
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "sk_live_EXEMPLE / sk_test_EXEMPLE",
+        "description": "Clé API secrète du marchand — header Authorization: Bearer sk_live_EXEMPLE (ou sk_test_EXEMPLE en environnement de test)."
+      }
+    },
+    "parameters": {
+      "IdempotencyKey": {
+        "name": "Idempotency-Key",
+        "in": "header",
+        "required": false,
+        "description": "Identifiant unique que **vous** générez pour cette tentative (un UUID par exemple). Optionnel : sans lui, chaque appel est traité comme une nouvelle demande. Avec lui, si vous renvoyez la même clé — après un timeout ou une coupure réseau — SasPay renvoie la réponse d'origine au lieu de créer un second paiement. Réutilisez la même clé pour les retrys d'une même tentative, changez-en pour toute nouvelle intention. La même clé avec un corps de requête différent renvoie une erreur `409`. Voir [Idempotence](/api-reference/introduction#idempotence).",
+        "schema": {
+          "type": "string",
+          "maxLength": 255
+        },
+        "example": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+      }
+    }
+  },
+  "paths": {
+    "/checkout-sessions/": {
+      "post": {
+        "tags": [
+          "Paiements"
+        ],
+        "summary": "Créer une session de checkout hébergé",
+        "description": "Génère une page de paiement hébergée par SasPay (`checkout_url`) où le client choisit lui-même son réseau et saisit son numéro. Nécessite un scope de clé API `PAYIN` ou `BOTH`. Le header `Idempotency-Key` n'est pas pris en charge sur cet endpoint : un double appel crée deux sessions distinctes. Sans conséquence financière — une session ne débite rien tant qu'elle n'est pas payée.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "amount",
+                  "currency",
+                  "customer_email",
+                  "customer_name"
+                ],
+                "properties": {
+                  "amount": {
+                    "type": "string",
+                    "format": "decimal",
+                    "example": "5000.00"
+                  },
+                  "currency": {
+                    "type": "string",
+                    "minLength": 3,
+                    "maxLength": 3,
+                    "example": "XOF"
+                  },
+                  "description": {
+                    "type": "string",
+                    "example": "Facture #1042"
+                  },
+                  "country": {
+                    "type": "string",
+                    "minLength": 2,
+                    "maxLength": 2,
+                    "description": "Code ISO2, optionnel — présélectionne le pays sur la page de paiement",
+                    "example": "BJ"
+                  },
+                  "customer_email": {
+                    "type": "string",
+                    "format": "email",
+                    "example": "client@example.com"
+                  },
+                  "customer_name": {
+                    "type": "string",
+                    "example": "Awa Sossou"
+                  },
+                  "customer_phone": {
+                    "type": "string",
+                    "example": ""
+                  },
+                  "return_url": {
+                    "type": "string",
+                    "format": "uri",
+                    "description": "URL vers laquelle rediriger le client une fois le paiement terminé"
+                  },
+                  "metadata": {
+                    "type": "object",
+                    "additionalProperties": true
+                  },
+                  "fee_charge_mode": {
+                    "type": "string",
+                    "enum": [
+                      "ADD_ON",
+                      "DEDUCTED"
+                    ],
+                    "nullable": true,
+                    "description": "ADD_ON : les frais s'ajoutent au montant débité au client. DEDUCTED : les frais sont déduits du montant net reversé au marchand. Défaut : configuration du marchand. Pris en compte SEULEMENT si l'option \"Autoriser le choix du mode de frais par l'API\" (ALLOW_CLIENT_OVERRIDE) est activée sur votre compte, sinon ignoré silencieusement — même garde que sur /payments/softpay/ et /payouts/initialize/."
+                  },
+                  "expires_at": {
+                    "type": "string",
+                    "format": "date-time"
+                  }
+                }
+              },
+              "example": {
+                "amount": "5000.00",
+                "currency": "XOF",
+                "description": "Facture #1042",
+                "country": "BJ",
+                "customer_email": "client@example.com",
+                "customer_name": "Awa Sossou"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Session de checkout créée",
+            "content": {
+              "application/json": {
+                "example": {
+                  "id": "c9a17e2c-4b1a-4f0e-9c3d-2a1b3c4d5e6f",
+                  "merchant": "6f1e2b3a-8c4d-4a2f-9e1b-2d3c4f5a6b7c",
+                  "created_by_member": "4a5b6c7d-8e9f-4a0b-9c1d-2e3f4a5b6c7d",
+                  "slug": "kZ2v9rT4bQxL8mNpYw==",
+                  "checkout_url": "https://pay.saspay.me/checkout/kZ2v9rT4bQxL8mNpYw==",
+                  "amount": "5000.00",
+                  "currency": "XOF",
+                  "description": "Facture #1042",
+                  "country": "BJ",
+                  "customer_email": "client@example.com",
+                  "customer_name": "Awa Sossou",
+                  "customer_phone": "",
+                  "return_url": "",
+                  "metadata": {},
+                  "fee_charge_mode": "",
+                  "status": "PENDING",
+                  "expires_at": null,
+                  "transaction": null,
+                  "payment_link": null,
+                  "paid_at": null,
+                  "created_at": "2026-08-12T10:00:00Z",
+                  "updated_at": "2026-08-12T10:00:00Z"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Scope de clé API insuffisant (PAYIN requis)",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Cette clé API n'est pas autorisée pour les opérations payin (scope actuel : Payout).",
+                  "code": "api_key_scope_forbidden"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Paiements"
+        ],
+        "summary": "Lister ses sessions de checkout",
+        "description": "Pagination par numéro de page classique (`StandardResultsPagination`).",
+        "parameters": [
+          {
+            "name": "status",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "PENDING",
+                "PAID",
+                "EXPIRED",
+                "CANCELLED"
+              ]
+            }
+          },
+          {
+            "name": "currency",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 1
+            }
+          },
+          {
+            "name": "page_size",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 20,
+              "maximum": 100
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Liste paginée",
+            "content": {
+              "application/json": {
+                "example": {
+                  "count": 1,
+                  "next": null,
+                  "previous": null,
+                  "results": [
+                    {
+                      "id": "c9a17e2c-4b1a-4f0e-9c3d-2a1b3c4d5e6f",
+                      "merchant": "6f1e2b3a-8c4d-4a2f-9e1b-2d3c4f5a6b7c",
+                      "created_by_member": "4a5b6c7d-8e9f-4a0b-9c1d-2e3f4a5b6c7d",
+                      "slug": "kZ2v9rT4bQxL8mNpYw==",
+                      "checkout_url": "https://pay.saspay.me/checkout/kZ2v9rT4bQxL8mNpYw==",
+                      "amount": "5000.00",
+                      "currency": "XOF",
+                      "description": "Facture #1042",
+                      "country": "BJ",
+                      "customer_email": "client@example.com",
+                      "customer_name": "Awa Sossou",
+                      "customer_phone": "",
+                      "return_url": "",
+                      "metadata": {},
+                      "status": "PENDING",
+                      "expires_at": null,
+                      "transaction": null,
+                      "payment_link": null,
+                      "paid_at": null,
+                      "created_at": "2026-08-12T10:00:00Z",
+                      "updated_at": "2026-08-12T10:00:00Z"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/checkout-sessions/{id}/": {
+      "get": {
+        "tags": [
+          "Paiements"
+        ],
+        "summary": "Détail d'une session de checkout",
+        "description": "Lecture seule — pas de PATCH/DELETE, une session se termine via le paiement du client ou l'annulation.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Détail de la session",
+            "content": {
+              "application/json": {
+                "example": {
+                  "id": "c9a17e2c-4b1a-4f0e-9c3d-2a1b3c4d5e6f",
+                  "merchant": "6f1e2b3a-8c4d-4a2f-9e1b-2d3c4f5a6b7c",
+                  "created_by_member": "4a5b6c7d-8e9f-4a0b-9c1d-2e3f4a5b6c7d",
+                  "slug": "kZ2v9rT4bQxL8mNpYw==",
+                  "checkout_url": "https://pay.saspay.me/checkout/kZ2v9rT4bQxL8mNpYw==",
+                  "amount": "5000.00",
+                  "currency": "XOF",
+                  "description": "Facture #1042",
+                  "country": "BJ",
+                  "customer_email": "client@example.com",
+                  "customer_name": "Awa Sossou",
+                  "customer_phone": "",
+                  "return_url": "",
+                  "metadata": {},
+                  "status": "PENDING",
+                  "expires_at": null,
+                  "transaction": null,
+                  "payment_link": null,
+                  "paid_at": null,
+                  "created_at": "2026-08-12T10:00:00Z",
+                  "updated_at": "2026-08-12T10:00:00Z"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Session introuvable"
+          }
+        }
+      }
+    },
+    "/checkout-sessions/{id}/cancel/": {
+      "post": {
+        "tags": [
+          "Paiements"
+        ],
+        "summary": "Annuler une session de checkout",
+        "description": "Corps de requête vide. Ne fonctionne que sur une session encore `PENDING`.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {}
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Session annulée",
+            "content": {
+              "application/json": {
+                "example": {
+                  "id": "c9a17e2c-4b1a-4f0e-9c3d-2a1b3c4d5e6f",
+                  "merchant": "6f1e2b3a-8c4d-4a2f-9e1b-2d3c4f5a6b7c",
+                  "created_by_member": "4a5b6c7d-8e9f-4a0b-9c1d-2e3f4a5b6c7d",
+                  "slug": "kZ2v9rT4bQxL8mNpYw==",
+                  "checkout_url": "https://pay.saspay.me/checkout/kZ2v9rT4bQxL8mNpYw==",
+                  "amount": "5000.00",
+                  "currency": "XOF",
+                  "description": "Facture #1042",
+                  "country": "BJ",
+                  "customer_email": "client@example.com",
+                  "customer_name": "Awa Sossou",
+                  "customer_phone": "",
+                  "return_url": "",
+                  "metadata": {},
+                  "status": "CANCELLED",
+                  "expires_at": null,
+                  "transaction": null,
+                  "payment_link": null,
+                  "paid_at": null,
+                  "created_at": "2026-08-12T10:00:00Z",
+                  "updated_at": "2026-08-12T10:00:00Z"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Session déjà dans un état non-PENDING",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Session déjà 'PAID'.",
+                  "code": "not_pending"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Session introuvable"
+          }
+        }
+      }
+    },
+    "/countries/": {
+      "get": {
+        "tags": [
+          "Référence"
+        ],
+        "summary": "Lister les pays supportés",
+        "description": "Endpoint public — aucune authentification requise. Réponse non paginée : un tableau JSON brut, pas d'enveloppe {count, results}.",
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Liste des pays",
+            "content": {
+              "application/json": {
+                "example": [
+                  {
+                    "id": "6d1a3f2e-8b4c-4d5e-9f0a-1b2c3d4e5f6a",
+                    "iso_code": "BJ",
+                    "name": "Bénin",
+                    "default_currency": "XOF",
+                    "created_at": "2026-01-05T08:00:00Z",
+                    "updated_at": "2026-01-05T08:00:00Z"
+                  },
+                  {
+                    "id": "7a2b4c6d-9e0f-4a1b-8c2d-3e4f5a6b7c8d",
+                    "iso_code": "CI",
+                    "name": "Côte d'Ivoire",
+                    "default_currency": "XOF",
+                    "created_at": "2026-01-05T08:00:00Z",
+                    "updated_at": "2026-01-05T08:00:00Z"
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/countries/{id}/": {
+      "get": {
+        "tags": [
+          "Référence"
+        ],
+        "summary": "Détail d'un pays",
+        "description": "Nécessite une authentification, contrairement à la liste.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "Identifiant du pays"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Pays",
+            "content": {
+              "application/json": {
+                "example": {
+                  "id": "6d1a3f2e-8b4c-4d5e-9f0a-1b2c3d4e5f6a",
+                  "iso_code": "BJ",
+                  "name": "Bénin",
+                  "default_currency": "XOF",
+                  "created_at": "2026-01-05T08:00:00Z",
+                  "updated_at": "2026-01-05T08:00:00Z"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Pays introuvable"
+          }
+        }
+      }
+    },
+    "/exchange-rates/": {
+      "get": {
+        "tags": [
+          "Wallet"
+        ],
+        "summary": "Lister les taux de change",
+        "description": "Lecture seule. Pas de filtre par paire de devises disponible.",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 1
+            }
+          },
+          {
+            "name": "page_size",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 20,
+              "maximum": 100
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Liste paginée",
+            "content": {
+              "application/json": {
+                "example": {
+                  "count": 37,
+                  "next": null,
+                  "previous": null,
+                  "results": [
+                    {
+                      "id": "aa11bb22-1111-2222-3333-444455556666",
+                      "from_currency": "XOF",
+                      "to_currency": "XAF",
+                      "rate": "0.00984000",
+                      "auto_update": true,
+                      "created_at": "2026-08-01T00:00:00Z",
+                      "updated_at": "2026-08-12T00:00:00Z"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/merchant-balances/": {
+      "get": {
+        "tags": [
+          "Wallet"
+        ],
+        "summary": "Lister les soldes",
+        "description": "Un wallet par (marchand, pays). Lecture seule stricte. Pas de filtre ?country= disponible.",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 1
+            }
+          },
+          {
+            "name": "page_size",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 20,
+              "maximum": 100
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Liste paginée",
+            "content": {
+              "application/json": {
+                "example": {
+                  "count": 37,
+                  "next": null,
+                  "previous": null,
+                  "results": [
+                    {
+                      "id": "d3a2b1c0-1111-2222-3333-444455556666",
+                      "merchant": "8a1f5c3e-0000-1111-2222-333344445555",
+                      "country": "BJ",
+                      "currency": "XOF",
+                      "available_amount": "1450300.00",
+                      "pending_amount": "150000.00",
+                      "is_frozen": false,
+                      "created_at": "2026-06-01T08:00:00Z",
+                      "updated_at": "2026-08-12T09:45:00Z"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/merchant-balances/{id}/": {
+      "get": {
+        "tags": [
+          "Wallet"
+        ],
+        "summary": "Récupérer un solde",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Détail du solde",
+            "content": {
+              "application/json": {
+                "example": {
+                  "id": "d3a2b1c0-1111-2222-3333-444455556666",
+                  "merchant": "8a1f5c3e-0000-1111-2222-333344445555",
+                  "country": "BJ",
+                  "currency": "XOF",
+                  "available_amount": "1450300.00",
+                  "pending_amount": "150000.00",
+                  "is_frozen": false,
+                  "created_at": "2026-06-01T08:00:00Z",
+                  "updated_at": "2026-08-12T09:45:00Z"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/merchant-webhook-subscriptions/": {
+      "get": {
+        "tags": [
+          "Webhooks"
+        ],
+        "summary": "Lister vos abonnements",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 1
+            }
+          },
+          {
+            "name": "page_size",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 20,
+              "maximum": 100
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Liste paginée",
+            "content": {
+              "application/json": {
+                "example": {
+                  "count": 37,
+                  "next": null,
+                  "previous": null,
+                  "results": [
+                    {
+                      "id": "d2e3f4a5-1111-2222-3333-444455556666",
+                      "webhook": "c1d2e3f4-1111-2222-3333-444455556666",
+                      "event_type": "transaction.success",
+                      "created_at": "2026-08-01T09:05:00Z",
+                      "updated_at": "2026-08-01T09:05:00Z"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/merchant-webhook-subscriptions/{id}/": {
+      "get": {
+        "tags": [
+          "Webhooks"
+        ],
+        "summary": "Récupérer un abonnement",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Détail de l'abonnement",
+            "content": {
+              "application/json": {
+                "example": {
+                  "id": "d2e3f4a5-1111-2222-3333-444455556666",
+                  "webhook": "c1d2e3f4-1111-2222-3333-444455556666",
+                  "event_type": "transaction.success",
+                  "created_at": "2026-08-01T09:05:00Z",
+                  "updated_at": "2026-08-01T09:05:00Z"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/merchant-webhooks/": {
+      "get": {
+        "tags": [
+          "Webhooks"
+        ],
+        "summary": "Lister vos points de réception",
+        "description": "signing_secret n'apparaît jamais dans la réponse — champ write-only.",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 1
+            }
+          },
+          {
+            "name": "page_size",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 20,
+              "maximum": 100
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Liste paginée",
+            "content": {
+              "application/json": {
+                "example": {
+                  "count": 37,
+                  "next": null,
+                  "previous": null,
+                  "results": [
+                    {
+                      "id": "c1d2e3f4-1111-2222-3333-444455556666",
+                      "merchant": "8a1f5c3e-0000-1111-2222-333344445555",
+                      "payment_link": null,
+                      "url": "https://exemple.com/webhooks/saspay",
+                      "description": "Notifications production",
+                      "environment": "LIVE",
+                      "is_active": true,
+                      "created_by_member": null,
+                      "created_at": "2026-08-01T09:00:00Z",
+                      "updated_at": "2026-08-01T09:00:00Z"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/merchant-webhooks/{id}/": {
+      "get": {
+        "tags": [
+          "Webhooks"
+        ],
+        "summary": "Récupérer un point de réception",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Détail du webhook",
+            "content": {
+              "application/json": {
+                "example": {
+                  "id": "c1d2e3f4-1111-2222-3333-444455556666",
+                  "merchant": "8a1f5c3e-0000-1111-2222-333344445555",
+                  "payment_link": null,
+                  "url": "https://exemple.com/webhooks/saspay",
+                  "description": "Notifications production",
+                  "environment": "LIVE",
+                  "is_active": true,
+                  "created_by_member": null,
+                  "created_at": "2026-08-01T09:00:00Z",
+                  "updated_at": "2026-08-01T09:00:00Z"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/networks/": {
+      "get": {
+        "tags": [
+          "Référence"
+        ],
+        "summary": "Lister les réseaux mobile money supportés",
+        "description": "Authentifié et paginé, contrairement à /countries/. Aucun filtre ?country= : listez l'ensemble et filtrez côté client sur le champ country.",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 1
+            }
+          },
+          {
+            "name": "page_size",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 20,
+              "maximum": 100
+            },
+            "description": "Taille de page, 100 maximum"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Liste paginée des réseaux",
+            "content": {
+              "application/json": {
+                "example": {
+                  "count": 1,
+                  "next": null,
+                  "previous": null,
+                  "results": [
+                    {
+                      "id": "9b0c1d2e-3f4a-4b5c-8d6e-7f8a9b0c1d2e",
+                      "country": "6d1a3f2e-8b4c-4d5e-9f0a-1b2c3d4e5f6a",
+                      "code": "mtn_bj",
+                      "name": "MTN Mobile Money",
+                      "is_active": true,
+                      "created_at": "2026-01-05T08:00:00Z",
+                      "updated_at": "2026-01-05T08:00:00Z"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/networks/{id}/": {
+      "get": {
+        "tags": [
+          "Référence"
+        ],
+        "summary": "Détail d'un réseau",
+        "description": "code est la valeur à utiliser dans le champ network de /payments/softpay/ et method de /payouts/initialize/.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "Identifiant du réseau"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Réseau",
+            "content": {
+              "application/json": {
+                "example": {
+                  "id": "9b0c1d2e-3f4a-4b5c-8d6e-7f8a9b0c1d2e",
+                  "country": "6d1a3f2e-8b4c-4d5e-9f0a-1b2c3d4e5f6a",
+                  "code": "mtn_bj",
+                  "name": "MTN Mobile Money",
+                  "is_active": true,
+                  "created_at": "2026-01-05T08:00:00Z",
+                  "updated_at": "2026-01-05T08:00:00Z"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Réseau introuvable"
+          }
+        }
+      }
+    },
+    "/payment-links/": {
+      "post": {
+        "tags": [
+          "Liens de paiement"
+        ],
+        "summary": "Créer un lien de paiement",
+        "description": "Nécessite un scope de clé API `PAYIN` ou `BOTH`. Le header `Idempotency-Key` n'est pas pris en charge sur cet endpoint : un double appel crée deux liens distincts. Sans conséquence financière — un lien en double se supprime depuis votre dashboard.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "name",
+                  "currency"
+                ],
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "maxLength": 150,
+                    "example": "Facture boutique"
+                  },
+                  "description": {
+                    "type": "string",
+                    "maxLength": 255,
+                    "example": "Paiement en ligne"
+                  },
+                  "amount_type": {
+                    "type": "string",
+                    "enum": [
+                      "FIXED",
+                      "FREE"
+                    ],
+                    "default": "FIXED",
+                    "description": "FIXED : montant imposé (amount). FREE : le client choisit (min_amount optionnel comme plancher). Aucune validation croisée serveur — un lien FIXED sans amount est accepté."
+                  },
+                  "amount": {
+                    "type": "string",
+                    "format": "decimal",
+                    "example": "15000.00"
+                  },
+                  "min_amount": {
+                    "type": "string",
+                    "format": "decimal",
+                    "description": "Pertinent si amount_type=FREE"
+                  },
+                  "currency": {
+                    "type": "string",
+                    "minLength": 3,
+                    "maxLength": 3,
+                    "example": "XOF"
+                  },
+                  "is_active": {
+                    "type": "boolean",
+                    "default": true
+                  },
+                  "expires_at": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "usage_limit": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "example": 100
+                  },
+                  "require_phone": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Rend customer.phone obligatoire au checkout depuis ce lien — même pour card/crypto, qui ne le demandent pas par défaut."
+                  },
+                  "facebook_pixel_id": {
+                    "type": "string",
+                    "maxLength": 32
+                  },
+                  "google_ads_id": {
+                    "type": "string",
+                    "maxLength": 32
+                  },
+                  "custom_fields": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "key": {
+                          "type": "string",
+                          "description": "Dérivée du label, jamais saisie directement."
+                        },
+                        "label": {
+                          "type": "string"
+                        },
+                        "required": {
+                          "type": "boolean"
+                        }
+                      }
+                    },
+                    "description": "Champs additionnels demandés au client au moment du paiement — les VALEURS saisies atterrissent dans Transaction.metadata, jamais un nouveau modèle."
+                  },
+                  "show_confirmation_page": {
+                    "type": "boolean",
+                    "default": true
+                  },
+                  "redirect_url": {
+                    "type": "string",
+                    "format": "uri",
+                    "description": "Requis si show_confirmation_page=false (400 sinon)."
+                  }
+                }
+              },
+              "example": {
+                "name": "Facture boutique",
+                "description": "Paiement en ligne",
+                "amount_type": "FIXED",
+                "amount": "15000.00",
+                "currency": "XOF",
+                "usage_limit": 100
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Lien créé",
+            "content": {
+              "application/json": {
+                "example": {
+                  "id": "d2e3f4a5-6b7c-4d8e-9f0a-1b2c3d4e5f6a",
+                  "merchant": "6f1e2b3a-8c4d-4a2f-9e1b-2d3c4f5a6b7c",
+                  "created_by_member": "4a5b6c7d-8e9f-4a0b-9c1d-2e3f4a5b6c7d",
+                  "name": "Facture boutique",
+                  "description": "Paiement en ligne",
+                  "amount_type": "FIXED",
+                  "amount": "15000.00",
+                  "min_amount": null,
+                  "currency": "XOF",
+                  "slug": "kx7f2q1a",
+                  "is_active": true,
+                  "expires_at": null,
+                  "usage_limit": 100,
+                  "usage_count": 0,
+                  "require_phone": false,
+                  "facebook_pixel_id": "",
+                  "google_ads_id": "",
+                  "custom_fields": [],
+                  "show_confirmation_page": true,
+                  "redirect_url": "",
+                  "created_at": "2026-08-12T09:00:00Z",
+                  "updated_at": "2026-08-12T09:00:00Z"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Scope de clé API insuffisant (PAYIN requis)",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Cette clé API n'est pas autorisée pour les opérations payin (scope actuel : Payout).",
+                  "code": "api_key_scope_forbidden"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Liens de paiement"
+        ],
+        "summary": "Lister ses liens de paiement",
+        "description": "Pagination par numéro de page classique (`StandardResultsPagination`).",
+        "parameters": [
+          {
+            "name": "merchant",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "is_active",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 1
+            }
+          },
+          {
+            "name": "page_size",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 20,
+              "maximum": 100
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Liste paginée",
+            "content": {
+              "application/json": {
+                "example": {
+                  "count": 1,
+                  "next": null,
+                  "previous": null,
+                  "results": [
+                    {
+                      "id": "d2e3f4a5-6b7c-4d8e-9f0a-1b2c3d4e5f6a",
+                      "merchant": "6f1e2b3a-8c4d-4a2f-9e1b-2d3c4f5a6b7c",
+                      "created_by_member": "4a5b6c7d-8e9f-4a0b-9c1d-2e3f4a5b6c7d",
+                      "name": "Facture boutique",
+                      "description": "Paiement en ligne",
+                      "amount_type": "FIXED",
+                      "amount": "15000.00",
+                      "min_amount": null,
+                      "currency": "XOF",
+                      "slug": "kx7f2q1a",
+                      "is_active": true,
+                      "expires_at": null,
+                      "usage_limit": 100,
+                      "usage_count": 0,
+                      "require_phone": false,
+                      "facebook_pixel_id": "",
+                      "google_ads_id": "",
+                      "custom_fields": [],
+                      "show_confirmation_page": true,
+                      "redirect_url": "",
+                      "created_at": "2026-08-12T09:00:00Z",
+                      "updated_at": "2026-08-12T09:00:00Z"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/payment-links/{id}/": {
+      "get": {
+        "tags": [
+          "Liens de paiement"
+        ],
+        "summary": "Détail d'un lien de paiement",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Détail du lien",
+            "content": {
+              "application/json": {
+                "example": {
+                  "id": "d2e3f4a5-6b7c-4d8e-9f0a-1b2c3d4e5f6a",
+                  "merchant": "6f1e2b3a-8c4d-4a2f-9e1b-2d3c4f5a6b7c",
+                  "created_by_member": "4a5b6c7d-8e9f-4a0b-9c1d-2e3f4a5b6c7d",
+                  "name": "Facture boutique",
+                  "description": "Paiement en ligne",
+                  "amount_type": "FIXED",
+                  "amount": "15000.00",
+                  "min_amount": null,
+                  "currency": "XOF",
+                  "slug": "kx7f2q1a",
+                  "is_active": true,
+                  "expires_at": null,
+                  "usage_limit": 100,
+                  "usage_count": 0,
+                  "require_phone": false,
+                  "facebook_pixel_id": "",
+                  "google_ads_id": "",
+                  "custom_fields": [],
+                  "show_confirmation_page": true,
+                  "redirect_url": "",
+                  "created_at": "2026-08-12T09:00:00Z",
+                  "updated_at": "2026-08-12T09:00:00Z"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Lien introuvable"
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Liens de paiement"
+        ],
+        "summary": "Modifier un lien de paiement",
+        "description": "Mise à jour partielle. `merchant` reste en lecture seule — un lien ne peut jamais être réattribué à un autre marchand.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "maxLength": 150
+                  },
+                  "description": {
+                    "type": "string",
+                    "maxLength": 255
+                  },
+                  "amount_type": {
+                    "type": "string",
+                    "enum": [
+                      "FIXED",
+                      "FREE"
+                    ]
+                  },
+                  "amount": {
+                    "type": "string",
+                    "format": "decimal"
+                  },
+                  "min_amount": {
+                    "type": "string",
+                    "format": "decimal"
+                  },
+                  "currency": {
+                    "type": "string",
+                    "minLength": 3,
+                    "maxLength": 3
+                  },
+                  "is_active": {
+                    "type": "boolean"
+                  },
+                  "expires_at": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "usage_limit": {
+                    "type": "integer",
+                    "minimum": 1
+                  },
+                  "require_phone": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Rend customer.phone obligatoire au checkout depuis ce lien — même pour card/crypto, qui ne le demandent pas par défaut."
+                  },
+                  "facebook_pixel_id": {
+                    "type": "string",
+                    "maxLength": 32
+                  },
+                  "google_ads_id": {
+                    "type": "string",
+                    "maxLength": 32
+                  },
+                  "custom_fields": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "key": {
+                          "type": "string",
+                          "description": "Dérivée du label, jamais saisie directement."
+                        },
+                        "label": {
+                          "type": "string"
+                        },
+                        "required": {
+                          "type": "boolean"
+                        }
+                      }
+                    },
+                    "description": "Champs additionnels demandés au client au moment du paiement — les VALEURS saisies atterrissent dans Transaction.metadata, jamais un nouveau modèle."
+                  },
+                  "show_confirmation_page": {
+                    "type": "boolean",
+                    "default": true
+                  },
+                  "redirect_url": {
+                    "type": "string",
+                    "format": "uri",
+                    "description": "Requis si show_confirmation_page=false (400 sinon)."
+                  }
+                }
+              },
+              "example": {
+                "is_active": false
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Lien mis à jour",
+            "content": {
+              "application/json": {
+                "example": {
+                  "id": "d2e3f4a5-6b7c-4d8e-9f0a-1b2c3d4e5f6a",
+                  "merchant": "6f1e2b3a-8c4d-4a2f-9e1b-2d3c4f5a6b7c",
+                  "created_by_member": "4a5b6c7d-8e9f-4a0b-9c1d-2e3f4a5b6c7d",
+                  "name": "Facture boutique",
+                  "description": "Paiement en ligne",
+                  "amount_type": "FIXED",
+                  "amount": "15000.00",
+                  "min_amount": null,
+                  "currency": "XOF",
+                  "slug": "kx7f2q1a",
+                  "is_active": false,
+                  "expires_at": null,
+                  "usage_limit": 100,
+                  "usage_count": 0,
+                  "require_phone": false,
+                  "facebook_pixel_id": "",
+                  "google_ads_id": "",
+                  "custom_fields": [],
+                  "show_confirmation_page": true,
+                  "redirect_url": "",
+                  "created_at": "2026-08-12T09:00:00Z",
+                  "updated_at": "2026-08-12T09:00:00Z"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Lien introuvable"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Liens de paiement"
+        ],
+        "summary": "Supprimer un lien de paiement",
+        "description": "Les transactions déjà créées via ce lien restent inchangées.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Lien supprimé"
+          },
+          "404": {
+            "description": "Lien introuvable"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Liens de paiement"
+        ],
+        "summary": "Remplacer un lien de paiement (complet)",
+        "description": "Remplacement complet — tous les champs modifiables doivent être fournis (sauf ceux en lecture seule). `merchant` reste en lecture seule — un lien ne peut jamais être réattribué à un autre marchand.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "maxLength": 150
+                  },
+                  "description": {
+                    "type": "string",
+                    "maxLength": 255
+                  },
+                  "amount_type": {
+                    "type": "string",
+                    "enum": [
+                      "FIXED",
+                      "FREE"
+                    ]
+                  },
+                  "amount": {
+                    "type": "string",
+                    "format": "decimal"
+                  },
+                  "min_amount": {
+                    "type": "string",
+                    "format": "decimal"
+                  },
+                  "currency": {
+                    "type": "string",
+                    "minLength": 3,
+                    "maxLength": 3
+                  },
+                  "is_active": {
+                    "type": "boolean"
+                  },
+                  "expires_at": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "usage_limit": {
+                    "type": "integer",
+                    "minimum": 1
+                  },
+                  "require_phone": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Rend customer.phone obligatoire au checkout depuis ce lien — même pour card/crypto, qui ne le demandent pas par défaut."
+                  },
+                  "facebook_pixel_id": {
+                    "type": "string",
+                    "maxLength": 32
+                  },
+                  "google_ads_id": {
+                    "type": "string",
+                    "maxLength": 32
+                  },
+                  "custom_fields": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "key": {
+                          "type": "string",
+                          "description": "Dérivée du label, jamais saisie directement."
+                        },
+                        "label": {
+                          "type": "string"
+                        },
+                        "required": {
+                          "type": "boolean"
+                        }
+                      }
+                    },
+                    "description": "Champs additionnels demandés au client au moment du paiement — les VALEURS saisies atterrissent dans Transaction.metadata, jamais un nouveau modèle."
+                  },
+                  "show_confirmation_page": {
+                    "type": "boolean",
+                    "default": true
+                  },
+                  "redirect_url": {
+                    "type": "string",
+                    "format": "uri",
+                    "description": "Requis si show_confirmation_page=false (400 sinon)."
+                  }
+                },
+                "required": [
+                  "name",
+                  "amount_type",
+                  "currency"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Lien mis à jour",
+            "content": {
+              "application/json": {
+                "example": {
+                  "id": "d2e3f4a5-6b7c-4d8e-9f0a-1b2c3d4e5f6a",
+                  "merchant": "6f1e2b3a-8c4d-4a2f-9e1b-2d3c4f5a6b7c",
+                  "created_by_member": "4a5b6c7d-8e9f-4a0b-9c1d-2e3f4a5b6c7d",
+                  "name": "Facture boutique",
+                  "description": "Paiement en ligne",
+                  "amount_type": "FIXED",
+                  "amount": "15000.00",
+                  "min_amount": null,
+                  "currency": "XOF",
+                  "slug": "kx7f2q1a",
+                  "is_active": false,
+                  "expires_at": null,
+                  "usage_limit": 100,
+                  "usage_count": 0,
+                  "require_phone": false,
+                  "facebook_pixel_id": "",
+                  "google_ads_id": "",
+                  "custom_fields": [],
+                  "show_confirmation_page": true,
+                  "redirect_url": "",
+                  "created_at": "2026-08-12T09:00:00Z",
+                  "updated_at": "2026-08-12T09:00:00Z"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Lien introuvable"
+          }
+        }
+      }
+    },
+    "/payment-links/{id}/transactions/": {
+      "get": {
+        "tags": [
+          "Liens de paiement"
+        ],
+        "summary": "Lister les transactions issues d'un lien",
+        "description": "Aucun filtre ni recherche disponible sur cette vue précise (contrairement à GET /transactions/) — seul le lien lui-même filtre le résultat. Pagination par numéro de page classique (StandardResultsPagination), pas la pagination par curseur de /transactions/.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 1
+            }
+          },
+          {
+            "name": "page_size",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 20,
+              "maximum": 100
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Liste paginée des transactions issues de ce lien",
+            "content": {
+              "application/json": {
+                "example": {
+                  "count": 1,
+                  "next": null,
+                  "previous": null,
+                  "results": [
+                    {
+                      "id": "9c3f2a10-4b7e-4f1a-9d2e-9b6a7c1e4a02",
+                      "reference": "TXN-20260812-000512",
+                      "merchant": "6f1e2b3a-8c4d-4a2f-9e1b-2d3c4f5a6b7c",
+                      "customer": "1a2b3c4d-5e6f-4a7b-8c9d-0e1f2a3b4c5d",
+                      "country": "3d4e5f6a-7b8c-4d9e-8f0a-1b2c3d4e5f6a",
+                      "network": "5e6f7a8b-9c0d-4e1f-8a2b-3c4d5e6f7a8b",
+                      "transaction_type": "PAIEMENT",
+                      "flow_direction": "INBOUND",
+                      "description": "Abonnement mensuel",
+                      "requested_amount": "2500.00",
+                      "fee_charge_mode": "ADD_ON",
+                      "client_fee": "37.50",
+                      "gateway_fee": "20.00",
+                      "platform_fee": "17.50",
+                      "pricing_rule": null,
+                      "merchant_pricing_rule": "7f8e9d0c-1b2a-4c3d-9e0f-1a2b3c4d5e6f",
+                      "debited_amount": "2537.50",
+                      "net_amount": "2500.00",
+                      "currency": "XOF",
+                      "status": "SUCCESS",
+                      "current_gateway": "2b3c4d5e-6f7a-4b8c-9d0e-1f2a3b4c5d6e",
+                      "external_reference": "PWP-8827311",
+                      "ip_address": "154.72.18.90",
+                      "created_at": "2026-08-12T09:58:11Z",
+                      "updated_at": "2026-08-12T09:58:47Z"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Lien introuvable"
+          }
+        }
+      }
+    },
+    "/payments/softpay/": {
+      "post": {
+        "tags": [
+          "Paiements"
+        ],
+        "summary": "Initier un paiement softpay",
+        "description": "Initie un paiement sur le réseau choisi. Selon l'opérateur, deux cas : soit une demande est poussée directement sur le téléphone du client (USSD/notification), soit `checkout_url` est renvoyée et **vous devez y rediriger votre client** — c'est le cas de Wave, Orange Money, Djamo et des cartes bancaires. Testez toujours `checkout_url` avant de conclure au push. Nécessite un scope de clé API `PAYIN` ou `BOTH`. Header `Idempotency-Key` optionnel, mais vivement recommandé : sans lui, un retry réseau crée un second paiement réel.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "amount",
+                  "currency",
+                  "country",
+                  "customer",
+                  "network"
+                ],
+                "properties": {
+                  "merchant": {
+                    "type": "string",
+                    "format": "uuid",
+                    "description": "UUID du marchand visé. Ignoré pour une clé API (toujours vous-même) ; pour un token dashboard gérant plusieurs marchands, résout la boutique visée si le header X-Merchant-Id n'est pas fourni."
+                  },
+                  "amount": {
+                    "type": "string",
+                    "format": "decimal",
+                    "example": "2500.00"
+                  },
+                  "currency": {
+                    "type": "string",
+                    "minLength": 3,
+                    "maxLength": 3,
+                    "example": "XOF"
+                  },
+                  "country": {
+                    "type": "string",
+                    "minLength": 2,
+                    "maxLength": 2,
+                    "example": "BJ"
+                  },
+                  "description": {
+                    "type": "string",
+                    "example": "Abonnement mensuel"
+                  },
+                  "customer": {
+                    "type": "object",
+                    "required": [
+                      "email",
+                      "first_name",
+                      "last_name",
+                      "phone"
+                    ],
+                    "properties": {
+                      "email": {
+                        "type": "string",
+                        "format": "email",
+                        "example": "client@example.com"
+                      },
+                      "first_name": {
+                        "type": "string",
+                        "example": "Awa"
+                      },
+                      "last_name": {
+                        "type": "string",
+                        "example": "Sossou"
+                      },
+                      "phone": {
+                        "type": "string",
+                        "example": "+22997505050"
+                      }
+                    }
+                  },
+                  "network": {
+                    "type": "string",
+                    "description": "Code réseau, cf. référentiel pays/réseaux",
+                    "example": "mtn_bj"
+                  },
+                  "metadata": {
+                    "type": "object",
+                    "additionalProperties": true
+                  },
+                  "fee_charge_mode": {
+                    "type": "string",
+                    "enum": [
+                      "ADD_ON",
+                      "DEDUCTED"
+                    ],
+                    "nullable": true,
+                    "description": "ADD_ON : les frais s'ajoutent au montant débité au client. DEDUCTED : les frais sont déduits du montant net reversé au marchand. Défaut : configuration du marchand."
+                  },
+                  "preferred_gateway": {
+                    "type": "string",
+                    "description": "Code gateway à privilégier si plusieurs sont éligibles pour ce réseau"
+                  },
+                  "otp": {
+                    "type": "string",
+                    "description": "OTP PRÉ-paiement, uniquement pour les réseaux qui l'exigent (Orange Money Côte d'Ivoire et Burkina Faso : le client compose un code USSD AVANT de payer, cf. GET /pricing/my-rates/). Sans lui sur un réseau qui l'exige : 422 prepayment_otp_missing. À ne pas confondre avec l'OTP reçu par SMS APRÈS le push (Coris Bénin, Wizall Sénégal), qui passe par /payments/{id}/confirm-otp/."
+                  }
+                }
+              },
+              "example": {
+                "amount": "2500.00",
+                "currency": "XOF",
+                "country": "BJ",
+                "description": "Abonnement mensuel",
+                "customer": {
+                  "email": "client@example.com",
+                  "first_name": "Awa",
+                  "last_name": "Sossou",
+                  "phone": "+22997505050"
+                },
+                "network": "mtn_bj"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Paiement poussé avec succès",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Payment pushed successfully",
+                  "id": "9c3f2a10-4b7e-4f1a-9d2e-9b6a7c1e4a02",
+                  "status": "PENDING",
+                  "checkout_url": ""
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Requête valide mais impossible à router. Codes possibles : `missing_method`, `invalid_country`, `no_exchange_rate`, `invalid_customer`, `invalid_method`, `prepayment_otp_missing`, `no_route_available`.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Réseau inconnu ou inactif : 'mtn_xx'.",
+                  "code": "invalid_method"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Scope de clé API insuffisant (PAYIN requis)",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Cette clé API n'est pas autorisée pour les opérations payin (scope actuel : Payout).",
+                  "code": "api_key_scope_forbidden"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/IdempotencyKey"
+          }
+        ]
+      }
+    },
+    "/payments/{payment_id}/confirm-otp/": {
+      "post": {
+        "tags": [
+          "Paiements"
+        ],
+        "summary": "Confirmer un paiement par OTP",
+        "description": "Deuxième étape pour les réseaux qui exigent une confirmation côté client après le push initial (par exemple Wizall au Sénégal ou Coris au Bénin, liste non exhaustive).",
+        "parameters": [
+          {
+            "name": "payment_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "otp"
+                ],
+                "properties": {
+                  "otp": {
+                    "type": "string",
+                    "example": "482913"
+                  }
+                }
+              },
+              "example": {
+                "otp": "482913"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Résultat de la confirmation",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "OTP confirmé",
+                  "id": "9c3f2a10-4b7e-4f1a-9d2e-9b6a7c1e4a02",
+                  "status": "SUCCESS"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Le réseau de cette transaction ne supporte pas la confirmation OTP",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Ce moyen de paiement ne nécessite pas de confirmation OTP.",
+                  "code": "otp_not_applicable"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Paiement introuvable",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Transaction introuvable.",
+                  "code": "not_found"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Transaction dans un état incompatible avec la confirmation OTP. Codes possibles : `not_pending`, `no_gateway`, `no_attempt`.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Aucune tentative réussie à confirmer sur cette transaction.",
+                  "code": "no_attempt"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Échec de la confirmation — message volontairement générique, ne fuite jamais le détail gateway",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Échec de la confirmation du code. Vérifiez le code ou réessayez.",
+                  "code": "otp_confirmation_failed"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/payments/{payment_id}/retry/": {
+      "post": {
+        "tags": [
+          "Paiements"
+        ],
+        "summary": "Relancer un paiement échoué",
+        "description": "Rejoue le routage sur la Transaction existante — ne crée jamais de nouvelle transaction, réutilise le même `id`. Header `Idempotency-Key` optionnel, mais vivement recommandé : sans lui, un retry réseau relance une seconde fois le paiement. Scope requis dérivé automatiquement du sens de la transaction ciblée (PAYIN en pratique, seul un paiement entrant est réessayable ici).",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/IdempotencyKey"
+          },
+          {
+            "name": "payment_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "methods": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "Codes réseau à essayer, dans l'ordre. Défaut : réseau d'origine de la transaction.",
+                    "example": [
+                      "moov_bj"
+                    ]
+                  },
+                  "customer": {
+                    "type": "object",
+                    "properties": {
+                      "email": {
+                        "type": "string",
+                        "format": "email"
+                      },
+                      "first_name": {
+                        "type": "string"
+                      },
+                      "last_name": {
+                        "type": "string"
+                      },
+                      "phone": {
+                        "type": "string",
+                        "description": "Format international, ex: +22997505050"
+                      }
+                    }
+                  },
+                  "preferred_gateway": {
+                    "type": "string"
+                  }
+                }
+              },
+              "example": {
+                "methods": [
+                  "moov_bj"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Paiement relancé (même id de transaction)",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Payment retried successfully",
+                  "id": "9c3f2a10-4b7e-4f1a-9d2e-9b6a7c1e4a02",
+                  "checkout_url": ""
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "La transaction ciblée est un flux sortant (payout), non réessayable via cet endpoint",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Seuls les paiements (INBOUND) sont réessayables via cet endpoint.",
+                  "code": "invalid_flow"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Paiement introuvable",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Transaction introuvable.",
+                  "code": "not_found"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Transaction déjà dans un état terminal, non réessayable",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Transaction déjà 'SUCCESS', non réessayable.",
+                  "code": "not_retryable"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Requête valide mais impossible à router (mêmes codes que l'initialisation d'un paiement)",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Réseau inconnu ou inactif : 'moov_xx'.",
+                  "code": "invalid_method"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/payments/{payment_id}/verify/": {
+      "get": {
+        "tags": [
+          "Paiements"
+        ],
+        "summary": "Vérifier le statut d'un paiement",
+        "description": "Si le statut connu est `PENDING`, revérifie toujours l'état réel côté gateway avant de répondre — jamais confiance dans un statut mémorisé.",
+        "parameters": [
+          {
+            "name": "payment_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Transaction vérifiée",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Payment transaction fetched successfully",
+                  "id": "9c3f2a10-4b7e-4f1a-9d2e-9b6a7c1e4a02",
+                  "reference": "TXN-20260812-000512",
+                  "merchant": "6f1e2b3a-8c4d-4a2f-9e1b-2d3c4f5a6b7c",
+                  "customer": "1a2b3c4d-5e6f-4a7b-8c9d-0e1f2a3b4c5d",
+                  "country": "3d4e5f6a-7b8c-4d9e-8f0a-1b2c3d4e5f6a",
+                  "network": "5e6f7a8b-9c0d-4e1f-8a2b-3c4d5e6f7a8b",
+                  "transaction_type": "PAIEMENT",
+                  "flow_direction": "INBOUND",
+                  "description": "Abonnement mensuel",
+                  "requested_amount": "2500.00",
+                  "fee_charge_mode": "ADD_ON",
+                  "client_fee": "37.50",
+                  "gateway_fee": "20.00",
+                  "platform_fee": "17.50",
+                  "pricing_rule": null,
+                  "merchant_pricing_rule": "7f8e9d0c-1b2a-4c3d-9e0f-1a2b3c4d5e6f",
+                  "debited_amount": "2537.50",
+                  "net_amount": "2500.00",
+                  "currency": "XOF",
+                  "status": "SUCCESS",
+                  "current_gateway": "2b3c4d5e-6f7a-4b8c-9d0e-1f2a3b4c5d6e",
+                  "external_reference": "PWP-8827311",
+                  "ip_address": "154.72.18.90",
+                  "created_at": "2026-08-12T09:58:11Z",
+                  "updated_at": "2026-08-12T09:58:47Z"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Paiement introuvable",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Transaction introuvable.",
+                  "code": "not_found"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/payouts/initialize/": {
+      "post": {
+        "tags": [
+          "Retraits"
+        ],
+        "summary": "Initier un payout",
+        "description": "Envoie des fonds depuis votre solde marchand vers un bénéficiaire mobile money. Nécessite un scope de clé API `PAYOUT` ou `BOTH`, un header `Idempotency-Key` optionnel mais vivement recommandé (sans lui, un retry réseau crée un second décaissement), et — pour un appel authentifié par clé API — une IP whitelistée pour ce marchand.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "amount",
+                  "currency",
+                  "country",
+                  "customer",
+                  "method",
+                  "recipient"
+                ],
+                "properties": {
+                  "merchant": {
+                    "type": "string",
+                    "format": "uuid",
+                    "description": "UUID du marchand visé. Ignoré pour une clé API (toujours vous-même)."
+                  },
+                  "amount": {
+                    "type": "string",
+                    "format": "decimal",
+                    "example": "10000.00"
+                  },
+                  "currency": {
+                    "type": "string",
+                    "minLength": 3,
+                    "maxLength": 3,
+                    "example": "XAF"
+                  },
+                  "country": {
+                    "type": "string",
+                    "minLength": 2,
+                    "maxLength": 2,
+                    "example": "CM"
+                  },
+                  "description": {
+                    "type": "string",
+                    "example": "Remboursement commande #778"
+                  },
+                  "customer": {
+                    "type": "object",
+                    "properties": {
+                      "email": {
+                        "type": "string",
+                        "format": "email"
+                      },
+                      "first_name": {
+                        "type": "string"
+                      },
+                      "last_name": {
+                        "type": "string"
+                      },
+                      "phone": {
+                        "type": "string",
+                        "description": "Format international, ex: +22997505050"
+                      }
+                    }
+                  },
+                  "method": {
+                    "type": "string",
+                    "description": "Code réseau du bénéficiaire",
+                    "example": "mtn_cm"
+                  },
+                  "recipient": {
+                    "type": "object",
+                    "required": [
+                      "msisdn"
+                    ],
+                    "properties": {
+                      "msisdn": {
+                        "type": "string",
+                        "example": "677889900"
+                      }
+                    }
+                  },
+                  "metadata": {
+                    "type": "object",
+                    "additionalProperties": true
+                  },
+                  "fee_charge_mode": {
+                    "type": "string",
+                    "enum": [
+                      "ADD_ON",
+                      "DEDUCTED"
+                    ],
+                    "nullable": true,
+                    "description": "ADD_ON : les frais s'ajoutent au montant débité au client. DEDUCTED : les frais sont déduits du montant net reversé au marchand. Défaut : configuration du marchand."
+                  },
+                  "preferred_gateway": {
+                    "type": "string"
+                  }
+                }
+              },
+              "example": {
+                "amount": "10000.00",
+                "currency": "XAF",
+                "country": "CM",
+                "customer": {
+                  "phone": "+237677889900"
+                },
+                "method": "mtn_cm",
+                "recipient": {
+                  "msisdn": "677889900"
+                },
+                "description": "Remboursement commande #778"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Payout initialisé",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Payout transaction initialized successfully",
+                  "id": "a4b5c6d7-e8f9-4a0b-8c1d-2e3f4a5b6c7d"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "`payout_not_enabled` (fonctionnalité désactivée pour ce marchand), `ip_not_whitelisted` (aucune IP whitelistée pour ce marchand) ou scope de clé API insuffisant.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "IP non autorisée pour les payouts — ajoutez l'IP de votre serveur à la whitelist IP de votre marchand.",
+                  "code": "ip_not_whitelisted"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Requête valide mais impossible à router. Codes possibles : `currency_country_mismatch` (aucune conversion automatique côté payout, contrairement au payin), `invalid_country`, `invalid_customer`, `invalid_method`, `no_route_available`, `wallet_frozen`.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "La devise XOF ne correspond pas au pays CM.",
+                  "code": "currency_country_mismatch"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/IdempotencyKey"
+          }
+        ]
+      }
+    },
+    "/payouts/{payout_id}/verify/": {
+      "get": {
+        "tags": [
+          "Retraits"
+        ],
+        "summary": "Vérifier le statut d'un payout",
+        "description": "Si le statut connu est `PENDING`, revérifie toujours l'état réel côté gateway avant de répondre.",
+        "parameters": [
+          {
+            "name": "payout_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Transaction vérifiée",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Payout transaction fetched successfully",
+                  "id": "a4b5c6d7-e8f9-4a0b-8c1d-2e3f4a5b6c7d",
+                  "reference": "TXN-20260812-000731",
+                  "merchant": "8a9b0c1d-2e3f-4a5b-8c6d-7e8f9a0b1c2d",
+                  "customer": "9b0c1d2e-3f4a-4b5c-8d6e-7f8a9b0c1d2e",
+                  "country": "0c1d2e3f-4a5b-4c6d-8e7f-8a9b0c1d2e3f",
+                  "network": "1d2e3f4a-5b6c-4d7e-8f8a-9b0c1d2e3f4a",
+                  "transaction_type": "RETRAIT",
+                  "flow_direction": "OUTBOUND",
+                  "description": "Remboursement commande #778",
+                  "requested_amount": "10000.00",
+                  "fee_charge_mode": "DEDUCTED",
+                  "client_fee": "150.00",
+                  "gateway_fee": "80.00",
+                  "platform_fee": "70.00",
+                  "pricing_rule": null,
+                  "merchant_pricing_rule": null,
+                  "debited_amount": "10000.00",
+                  "net_amount": "9850.00",
+                  "currency": "XAF",
+                  "status": "PENDING",
+                  "current_gateway": "2e3f4a5b-6c7d-4e8f-8a9b-0c1d2e3f4a5b",
+                  "external_reference": "",
+                  "ip_address": "197.234.10.5",
+                  "created_at": "2026-08-12T11:20:03Z",
+                  "updated_at": "2026-08-12T11:20:03Z"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Payout introuvable",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Transaction introuvable.",
+                  "code": "not_found"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/transaction-attempts/": {
+      "get": {
+        "tags": [
+          "Transactions"
+        ],
+        "summary": "Lister les tentatives de routage",
+        "description": "Lecture seule — les tentatives sont créées par le moteur de routage interne, jamais via l'API. Pagination par curseur, `page_size=50` par défaut, `200` maximum.",
+        "parameters": [
+          {
+            "name": "status",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "SUCCESS",
+                "FAILED",
+                "TIMEOUT"
+              ]
+            }
+          },
+          {
+            "name": "gateway",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "transaction",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "page_size",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 50,
+              "maximum": 200
+            }
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Liste paginée par curseur",
+            "content": {
+              "application/json": {
+                "example": {
+                  "next": null,
+                  "previous": null,
+                  "results": [
+                    {
+                      "id": "d3e4f5a6-b7c8-4d9e-8f0a-1b2c3d4e5f6a",
+                      "transaction": "9c3f2a10-4b7e-4f1a-9d2e-9b6a7c1e4a02",
+                      "gateway": "2e3f4a5b-6c7d-4e8f-8a9b-0c1d2e3f4a5b",
+                      "priority": 0,
+                      "status": "FAILED",
+                      "error_code": "",
+                      "error_message": "Solde opérateur insuffisant côté gateway",
+                      "started_at": "2026-08-12T09:57:40Z",
+                      "ended_at": "2026-08-12T09:57:58Z",
+                      "created_at": "2026-08-12T09:57:40Z",
+                      "updated_at": "2026-08-12T09:57:58Z"
+                    },
+                    {
+                      "id": "b1c2d3e4-f5a6-4b7c-8d9e-0f1a2b3c4d5e",
+                      "transaction": "9c3f2a10-4b7e-4f1a-9d2e-9b6a7c1e4a02",
+                      "gateway": "2b3c4d5e-6f7a-4b8c-9d0e-1f2a3b4c5d6e",
+                      "priority": 1,
+                      "status": "SUCCESS",
+                      "error_code": "",
+                      "error_message": "",
+                      "started_at": "2026-08-12T09:58:11Z",
+                      "ended_at": "2026-08-12T09:58:45Z",
+                      "created_at": "2026-08-12T09:58:11Z",
+                      "updated_at": "2026-08-12T09:58:45Z"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/transaction-attempts/{id}/": {
+      "get": {
+        "tags": [
+          "Transactions"
+        ],
+        "summary": "Détail d'une tentative de routage",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Détail de la tentative",
+            "content": {
+              "application/json": {
+                "example": {
+                  "id": "b1c2d3e4-f5a6-4b7c-8d9e-0f1a2b3c4d5e",
+                  "transaction": "9c3f2a10-4b7e-4f1a-9d2e-9b6a7c1e4a02",
+                  "gateway": "2b3c4d5e-6f7a-4b8c-9d0e-1f2a3b4c5d6e",
+                  "priority": 1,
+                  "status": "SUCCESS",
+                  "error_code": "",
+                  "error_message": "",
+                  "started_at": "2026-08-12T09:58:11Z",
+                  "ended_at": "2026-08-12T09:58:45Z",
+                  "created_at": "2026-08-12T09:58:11Z",
+                  "updated_at": "2026-08-12T09:58:45Z"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Tentative introuvable"
+          }
+        }
+      }
+    },
+    "/transaction-status-logs/": {
+      "get": {
+        "tags": [
+          "Transactions"
+        ],
+        "summary": "Lister les changements de statut",
+        "description": "Lecture seule, append-only. Pagination par curseur, `page_size=50` par défaut, `200` maximum.",
+        "parameters": [
+          {
+            "name": "to_status",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "PENDING",
+                "SUCCESS",
+                "FAILED",
+                "CANCELLED"
+              ]
+            }
+          },
+          {
+            "name": "triggered_by",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "SYSTEM",
+                "ADMIN",
+                "CLIENT",
+                "WEBHOOK_CALLBACK"
+              ]
+            }
+          },
+          {
+            "name": "transaction",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "page_size",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 50,
+              "maximum": 200
+            }
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Liste paginée par curseur",
+            "content": {
+              "application/json": {
+                "example": {
+                  "next": null,
+                  "previous": null,
+                  "results": [
+                    {
+                      "id": "e5f6a7b8-c9d0-4e1f-8a2b-3c4d5e6f7a8b",
+                      "transaction": "9c3f2a10-4b7e-4f1a-9d2e-9b6a7c1e4a02",
+                      "from_status": null,
+                      "to_status": "PENDING",
+                      "reason": "",
+                      "triggered_by": "SYSTEM",
+                      "created_at": "2026-08-12T09:57:40Z"
+                    },
+                    {
+                      "id": "c1d2e3f4-a5b6-4c7d-8e9f-0a1b2c3d4e5f",
+                      "transaction": "9c3f2a10-4b7e-4f1a-9d2e-9b6a7c1e4a02",
+                      "from_status": "PENDING",
+                      "to_status": "SUCCESS",
+                      "reason": "Paiement confirmé par le gateway",
+                      "triggered_by": "SYSTEM",
+                      "created_at": "2026-08-12T09:58:47Z"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/transaction-status-logs/{id}/": {
+      "get": {
+        "tags": [
+          "Transactions"
+        ],
+        "summary": "Détail d'un changement de statut",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Détail de la transition de statut",
+            "content": {
+              "application/json": {
+                "example": {
+                  "id": "c1d2e3f4-a5b6-4c7d-8e9f-0a1b2c3d4e5f",
+                  "transaction": "9c3f2a10-4b7e-4f1a-9d2e-9b6a7c1e4a02",
+                  "from_status": "PENDING",
+                  "to_status": "SUCCESS",
+                  "reason": "Paiement confirmé par le gateway",
+                  "triggered_by": "SYSTEM",
+                  "created_at": "2026-08-12T09:58:47Z"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Entrée introuvable"
+          }
+        }
+      }
+    },
+    "/transactions/": {
+      "get": {
+        "tags": [
+          "Transactions"
+        ],
+        "summary": "Lister ses transactions",
+        "description": "Historique unifié payin+payout. Pagination par curseur (`CreatedAtCursorPagination`, pas de `count`), `page_size=50` par défaut, `200` maximum.",
+        "parameters": [
+          {
+            "name": "status",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "PENDING",
+                "SUCCESS",
+                "FAILED",
+                "CANCELLED"
+              ]
+            }
+          },
+          {
+            "name": "transaction_type",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "RECHARGE",
+                "PAIEMENT",
+                "RETRAIT",
+                "TRANSFERT"
+              ]
+            }
+          },
+          {
+            "name": "currency",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "flow_direction",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "INBOUND",
+                "OUTBOUND"
+              ]
+            }
+          },
+          {
+            "name": "country",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "network",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "merchant",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "created_at__gte",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "created_at__lte",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "search",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Recherche dans reference, external_reference, nom/email/téléphone client, slug de lien de paiement, slug de session checkout"
+          },
+          {
+            "name": "page_size",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 50,
+              "maximum": 200
+            }
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Liste paginée par curseur",
+            "content": {
+              "application/json": {
+                "example": {
+                  "next": "https://api.saspay.me/api/v1/transactions/?cursor=cD0yMDI2LTA4LTEy",
+                  "previous": null,
+                  "results": [
+                    {
+                      "id": "9c3f2a10-4b7e-4f1a-9d2e-9b6a7c1e4a02",
+                      "reference": "TXN-20260812-000512",
+                      "merchant": "6f1e2b3a-8c4d-4a2f-9e1b-2d3c4f5a6b7c",
+                      "customer": "1a2b3c4d-5e6f-4a7b-8c9d-0e1f2a3b4c5d",
+                      "country": "3d4e5f6a-7b8c-4d9e-8f0a-1b2c3d4e5f6a",
+                      "network": "5e6f7a8b-9c0d-4e1f-8a2b-3c4d5e6f7a8b",
+                      "transaction_type": "PAIEMENT",
+                      "flow_direction": "INBOUND",
+                      "description": "Abonnement mensuel",
+                      "requested_amount": "2500.00",
+                      "fee_charge_mode": "ADD_ON",
+                      "client_fee": "37.50",
+                      "gateway_fee": "20.00",
+                      "platform_fee": "17.50",
+                      "pricing_rule": null,
+                      "merchant_pricing_rule": "7f8e9d0c-1b2a-4c3d-9e0f-1a2b3c4d5e6f",
+                      "debited_amount": "2537.50",
+                      "net_amount": "2500.00",
+                      "currency": "XOF",
+                      "status": "SUCCESS",
+                      "current_gateway": "2b3c4d5e-6f7a-4b8c-9d0e-1f2a3b4c5d6e",
+                      "external_reference": "PWP-8827311",
+                      "ip_address": "154.72.18.90",
+                      "created_at": "2026-08-12T09:58:11Z",
+                      "updated_at": "2026-08-12T09:58:47Z"
+                    },
+                    {
+                      "id": "a4b5c6d7-e8f9-4a0b-8c1d-2e3f4a5b6c7d",
+                      "reference": "TXN-20260812-000731",
+                      "merchant": "8a9b0c1d-2e3f-4a5b-8c6d-7e8f9a0b1c2d",
+                      "customer": "9b0c1d2e-3f4a-4b5c-8d6e-7f8a9b0c1d2e",
+                      "country": "0c1d2e3f-4a5b-4c6d-8e7f-8a9b0c1d2e3f",
+                      "network": "1d2e3f4a-5b6c-4d7e-8f8a-9b0c1d2e3f4a",
+                      "transaction_type": "RETRAIT",
+                      "flow_direction": "OUTBOUND",
+                      "description": "Remboursement commande #778",
+                      "requested_amount": "10000.00",
+                      "fee_charge_mode": "DEDUCTED",
+                      "client_fee": "150.00",
+                      "gateway_fee": "80.00",
+                      "platform_fee": "70.00",
+                      "pricing_rule": null,
+                      "merchant_pricing_rule": null,
+                      "debited_amount": "10000.00",
+                      "net_amount": "9850.00",
+                      "currency": "XAF",
+                      "status": "PENDING",
+                      "current_gateway": "2e3f4a5b-6c7d-4e8f-8a9b-0c1d2e3f4a5b",
+                      "external_reference": "",
+                      "ip_address": "197.234.10.5",
+                      "created_at": "2026-08-12T11:20:03Z",
+                      "updated_at": "2026-08-12T11:20:03Z"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/transactions/export/": {
+      "get": {
+        "tags": [
+          "Transactions"
+        ],
+        "summary": "Exporter les transactions en CSV",
+        "description": "Mêmes filtres et recherche que `GET /transactions/`, sans pagination — tout le jeu de résultats matché est exporté d'un coup, streamé. Colonnes, dans l'ordre : reference, external_reference, merchant, customer_name, customer_email, customer_phone, country, network, transaction_type, flow_direction, requested_amount, client_fee, gateway_fee, platform_fee, debited_amount, net_amount, currency, status, gateway, ip_address, created_at.",
+        "parameters": [
+          {
+            "name": "status",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "PENDING",
+                "SUCCESS",
+                "FAILED",
+                "CANCELLED"
+              ]
+            }
+          },
+          {
+            "name": "transaction_type",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "RECHARGE",
+                "PAIEMENT",
+                "RETRAIT",
+                "TRANSFERT"
+              ]
+            }
+          },
+          {
+            "name": "currency",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "flow_direction",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "INBOUND",
+                "OUTBOUND"
+              ]
+            }
+          },
+          {
+            "name": "country",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "network",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "merchant",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "created_at__gte",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "created_at__lte",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "search",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Fichier CSV en téléchargement (`Content-Disposition: attachment; filename=\"transactions.csv\"`)",
+            "content": {
+              "text/csv": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/transactions/{id}/": {
+      "get": {
+        "tags": [
+          "Transactions"
+        ],
+        "summary": "Détail d'une transaction",
+        "description": "Ajoute `attempts` (tentatives de routage gateway) et `status_logs` (historique append-only des transitions de statut) aux champs de base.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Détail de la transaction",
+            "content": {
+              "application/json": {
+                "example": {
+                  "id": "9c3f2a10-4b7e-4f1a-9d2e-9b6a7c1e4a02",
+                  "reference": "TXN-20260812-000512",
+                  "merchant": "6f1e2b3a-8c4d-4a2f-9e1b-2d3c4f5a6b7c",
+                  "customer": "1a2b3c4d-5e6f-4a7b-8c9d-0e1f2a3b4c5d",
+                  "country": "3d4e5f6a-7b8c-4d9e-8f0a-1b2c3d4e5f6a",
+                  "network": "5e6f7a8b-9c0d-4e1f-8a2b-3c4d5e6f7a8b",
+                  "transaction_type": "PAIEMENT",
+                  "flow_direction": "INBOUND",
+                  "description": "Abonnement mensuel",
+                  "requested_amount": "2500.00",
+                  "fee_charge_mode": "ADD_ON",
+                  "client_fee": "37.50",
+                  "gateway_fee": "20.00",
+                  "platform_fee": "17.50",
+                  "pricing_rule": null,
+                  "merchant_pricing_rule": "7f8e9d0c-1b2a-4c3d-9e0f-1a2b3c4d5e6f",
+                  "debited_amount": "2537.50",
+                  "net_amount": "2500.00",
+                  "currency": "XOF",
+                  "status": "SUCCESS",
+                  "current_gateway": "2b3c4d5e-6f7a-4b8c-9d0e-1f2a3b4c5d6e",
+                  "external_reference": "PWP-8827311",
+                  "ip_address": "154.72.18.90",
+                  "created_at": "2026-08-12T09:58:11Z",
+                  "updated_at": "2026-08-12T09:58:47Z",
+                  "attempts": [
+                    {
+                      "id": "d3e4f5a6-b7c8-4d9e-8f0a-1b2c3d4e5f6a",
+                      "transaction": "9c3f2a10-4b7e-4f1a-9d2e-9b6a7c1e4a02",
+                      "gateway": "2e3f4a5b-6c7d-4e8f-8a9b-0c1d2e3f4a5b",
+                      "priority": 0,
+                      "status": "FAILED",
+                      "error_code": "",
+                      "error_message": "Solde opérateur insuffisant côté gateway",
+                      "started_at": "2026-08-12T09:57:40Z",
+                      "ended_at": "2026-08-12T09:57:58Z",
+                      "created_at": "2026-08-12T09:57:40Z",
+                      "updated_at": "2026-08-12T09:57:58Z"
+                    },
+                    {
+                      "id": "b1c2d3e4-f5a6-4b7c-8d9e-0f1a2b3c4d5e",
+                      "transaction": "9c3f2a10-4b7e-4f1a-9d2e-9b6a7c1e4a02",
+                      "gateway": "2b3c4d5e-6f7a-4b8c-9d0e-1f2a3b4c5d6e",
+                      "priority": 1,
+                      "status": "SUCCESS",
+                      "error_code": "",
+                      "error_message": "",
+                      "started_at": "2026-08-12T09:58:11Z",
+                      "ended_at": "2026-08-12T09:58:45Z",
+                      "created_at": "2026-08-12T09:58:11Z",
+                      "updated_at": "2026-08-12T09:58:45Z"
+                    }
+                  ],
+                  "status_logs": [
+                    {
+                      "id": "e5f6a7b8-c9d0-4e1f-8a2b-3c4d5e6f7a8b",
+                      "transaction": "9c3f2a10-4b7e-4f1a-9d2e-9b6a7c1e4a02",
+                      "from_status": null,
+                      "to_status": "PENDING",
+                      "reason": "",
+                      "triggered_by": "SYSTEM",
+                      "created_at": "2026-08-12T09:57:40Z"
+                    },
+                    {
+                      "id": "c1d2e3f4-a5b6-4c7d-8e9f-0a1b2c3d4e5f",
+                      "transaction": "9c3f2a10-4b7e-4f1a-9d2e-9b6a7c1e4a02",
+                      "from_status": "PENDING",
+                      "to_status": "SUCCESS",
+                      "reason": "Paiement confirmé par le gateway",
+                      "triggered_by": "SYSTEM",
+                      "created_at": "2026-08-12T09:58:47Z"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Transaction introuvable"
+          }
+        }
+      }
+    },
+    "/transactions/{id}/invoice/": {
+      "get": {
+        "tags": [
+          "Transactions"
+        ],
+        "summary": "Télécharger la facture PDF",
+        "description": "Disponible uniquement pour un paiement entrant réussi (`flow_direction: \"INBOUND\"` et `status: \"SUCCESS\"`). Ne contient jamais gateway_fee/platform_fee (marge interne de la plateforme) — uniquement requested_amount, client_fee et debited_amount.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Fichier PDF en téléchargement (`Content-Disposition: attachment; filename=\"facture-<reference>.pdf\"`)",
+            "content": {
+              "application/pdf": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Transaction introuvable"
+          },
+          "409": {
+            "description": "`invalid_flow` (transaction sortante, ex. un payout) ou `not_success` (transaction pas encore réussie)",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "La facture n'est disponible que pour un paiement (INBOUND).",
+                  "code": "invalid_flow"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/webhook-logs/": {
+      "get": {
+        "tags": [
+          "Webhooks"
+        ],
+        "summary": "Lister l'historique de livraison",
+        "description": "Pas de filtre disponible sur cette vue marchand.",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 1
+            }
+          },
+          {
+            "name": "page_size",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 20,
+              "maximum": 100
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Liste paginée",
+            "content": {
+              "application/json": {
+                "example": {
+                  "count": 37,
+                  "next": null,
+                  "previous": null,
+                  "results": [
+                    {
+                      "id": "e5f6a7b8-1111-2222-3333-444455556666",
+                      "webhook": "c1d2e3f4-1111-2222-3333-444455556666",
+                      "transaction": "7c1a2b3c-1111-2222-3333-444455556666",
+                      "settlement": null,
+                      "wallet_transfer": null,
+                      "event_type": "transaction.success",
+                      "url": "https://exemple.com/webhooks/saspay",
+                      "payload": {
+                        "event": "transaction.success",
+                        "data": {
+                          "id": "7c1a2b3c-1111-2222-3333-444455556666",
+                          "reference": "TXN-2026-000456",
+                          "type": "PAYIN",
+                          "status": "SUCCESS",
+                          "amount": "25000.00",
+                          "net_amount": "24375.00",
+                          "currency": "XOF"
+                        }
+                      },
+                      "http_status": 200,
+                      "attempt": 1,
+                      "status": "DELIVERED",
+                      "sent_at": "2026-08-12T09:40:01Z",
+                      "response_body": "OK",
+                      "next_retry_at": null,
+                      "exhausted_at": null,
+                      "created_at": "2026-08-12T09:40:00Z"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/webhook-logs/{id}/": {
+      "get": {
+        "tags": [
+          "Webhooks"
+        ],
+        "summary": "Récupérer une livraison",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Détail de la livraison",
+            "content": {
+              "application/json": {
+                "example": {
+                  "id": "e5f6a7b8-1111-2222-3333-444455556666",
+                  "webhook": "c1d2e3f4-1111-2222-3333-444455556666",
+                  "transaction": "7c1a2b3c-1111-2222-3333-444455556666",
+                  "settlement": null,
+                  "wallet_transfer": null,
+                  "event_type": "transaction.success",
+                  "url": "https://exemple.com/webhooks/saspay",
+                  "payload": {
+                    "event": "transaction.success",
+                    "data": {
+                      "id": "7c1a2b3c-1111-2222-3333-444455556666",
+                      "reference": "TXN-2026-000456",
+                      "type": "PAYIN",
+                      "status": "SUCCESS",
+                      "amount": "25000.00",
+                      "net_amount": "24375.00",
+                      "currency": "XOF"
+                    }
+                  },
+                  "http_status": 200,
+                  "attempt": 1,
+                  "status": "DELIVERED",
+                  "sent_at": "2026-08-12T09:40:01Z",
+                  "response_body": "OK",
+                  "next_retry_at": null,
+                  "exhausted_at": null,
+                  "created_at": "2026-08-12T09:40:00Z"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/wallet-transfers/": {
+      "get": {
+        "tags": [
+          "Wallet"
+        ],
+        "summary": "Lister les transferts interwallet",
+        "description": "Historique des transferts entre vos wallets pays. Lecture ouverte à tout scope de clé API — seule la création (POST) exige PAYOUT ou BOTH.",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 1
+            }
+          },
+          {
+            "name": "page_size",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 20,
+              "maximum": 100
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "PENDING",
+                "COMPLETED",
+                "REJECTED"
+              ]
+            }
+          },
+          {
+            "name": "from_country",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Code ISO du wallet source, ex: BJ"
+          },
+          {
+            "name": "to_country",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Code ISO du wallet cible, ex: CM"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Liste paginée",
+            "content": {
+              "application/json": {
+                "example": {
+                  "count": 1,
+                  "next": null,
+                  "previous": null,
+                  "results": [
+                    {
+                      "id": "b2c3d4e5-f6a7-4b8c-9d0e-1f2a3b4c5d6e",
+                      "reference": "9f8e7d6c5b4a3f2e1d0c9b8a7f6e5d4c",
+                      "merchant": "8a1f5c3e-0000-1111-2222-333344445555",
+                      "requested_by_member": null,
+                      "from_country": "BJ",
+                      "to_country": "CM",
+                      "from_amount": "50000.00",
+                      "from_currency": "XOF",
+                      "to_amount": "82000.00",
+                      "to_currency": "XAF",
+                      "exchange_rate": "1.64000000",
+                      "fee_amount": "820.00",
+                      "fee_percent_applied": "1.00",
+                      "status": "PENDING",
+                      "approved_by_admin": null,
+                      "approved_at": null,
+                      "completed_at": null,
+                      "rejection_reason": "",
+                      "created_at": "2026-09-24T10:00:00Z",
+                      "updated_at": "2026-09-24T10:00:00Z"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Wallet"
+        ],
+        "summary": "Initier un transfert interwallet",
+        "description": "Déplace des fonds entre deux wallets pays du même marchand, avec conversion automatique de devise si besoin — jamais d'argent qui quitte la plateforme. Nécessite un scope de clé API `PAYOUT` ou `BOTH`. Un seul transfert `PENDING` à la fois par marchand : un nouvel appel tant qu'un précédent attend une approbation admin est rejeté (`422 transfer_already_pending`). Header `Idempotency-Key` optionnel mais vivement recommandé (sans lui, un retry réseau réserve le montant une seconde fois).",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "from_country",
+                  "to_country",
+                  "from_amount"
+                ],
+                "properties": {
+                  "merchant": {
+                    "type": "string",
+                    "format": "uuid",
+                    "description": "UUID du marchand visé. Ignoré pour une clé API (toujours vous-même)."
+                  },
+                  "from_country": {
+                    "type": "string",
+                    "minLength": 2,
+                    "maxLength": 2,
+                    "example": "BJ",
+                    "description": "Code ISO du wallet source (débité)."
+                  },
+                  "to_country": {
+                    "type": "string",
+                    "minLength": 2,
+                    "maxLength": 2,
+                    "example": "CM",
+                    "description": "Code ISO du wallet cible (crédité, après conversion si devise différente)."
+                  },
+                  "from_amount": {
+                    "type": "string",
+                    "format": "decimal",
+                    "example": "50000.00",
+                    "description": "Montant réservé sur le wallet source, dans sa devise."
+                  }
+                }
+              },
+              "example": {
+                "from_country": "BJ",
+                "to_country": "CM",
+                "from_amount": "50000.00"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Transfert créé — `status` vaut `COMPLETED` si `WALLET_TRANSFER_AUTO_APPROVE` est activé pour votre marchand, `PENDING` sinon (validation admin requise avant que le wallet cible ne soit crédité).",
+            "content": {
+              "application/json": {
+                "example": {
+                  "id": "b2c3d4e5-f6a7-4b8c-9d0e-1f2a3b4c5d6e",
+                  "reference": "9f8e7d6c5b4a3f2e1d0c9b8a7f6e5d4c",
+                  "merchant": "8a1f5c3e-0000-1111-2222-333344445555",
+                  "requested_by_member": null,
+                  "from_country": "BJ",
+                  "to_country": "CM",
+                  "from_amount": "50000.00",
+                  "from_currency": "XOF",
+                  "to_amount": "82000.00",
+                  "to_currency": "XAF",
+                  "exchange_rate": "1.64000000",
+                  "fee_amount": "820.00",
+                  "fee_percent_applied": "1.00",
+                  "status": "PENDING",
+                  "approved_by_admin": null,
+                  "approved_at": null,
+                  "completed_at": null,
+                  "rejection_reason": "",
+                  "created_at": "2026-09-24T10:00:00Z",
+                  "updated_at": "2026-09-24T10:00:00Z"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Scope de clé API insuffisant (`PAYIN` seul).",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Cette clé API n'est pas autorisée pour les opérations payout (décaissement) (scope actuel : Encaissement uniquement).",
+                  "code": "api_key_scope_forbidden"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Requête valide mais impossible à réaliser. Codes possibles : `same_country` (pays source = pays cible), `transfer_already_pending` (un transfert de ce marchand attend déjà une approbation admin), `wallet_frozen` (wallet source gelé pour les sorties), `insufficient_balance`.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Solde disponible insuffisant.",
+                  "code": "insufficient_balance"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/IdempotencyKey"
+          }
+        ]
+      }
+    },
+    "/wallet-transfers/{id}/": {
+      "get": {
+        "tags": [
+          "Wallet"
+        ],
+        "summary": "Récupérer un transfert interwallet",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Détail du transfert",
+            "content": {
+              "application/json": {
+                "example": {
+                  "id": "b2c3d4e5-f6a7-4b8c-9d0e-1f2a3b4c5d6e",
+                  "reference": "9f8e7d6c5b4a3f2e1d0c9b8a7f6e5d4c",
+                  "merchant": "8a1f5c3e-0000-1111-2222-333344445555",
+                  "requested_by_member": null,
+                  "from_country": "BJ",
+                  "to_country": "CM",
+                  "from_amount": "50000.00",
+                  "from_currency": "XOF",
+                  "to_amount": "82000.00",
+                  "to_currency": "XAF",
+                  "exchange_rate": "1.64000000",
+                  "fee_amount": "820.00",
+                  "fee_percent_applied": "1.00",
+                  "status": "PENDING",
+                  "approved_by_admin": null,
+                  "approved_at": null,
+                  "completed_at": null,
+                  "rejection_reason": "",
+                  "created_at": "2026-09-24T10:00:00Z",
+                  "updated_at": "2026-09-24T10:00:00Z"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Transfert introuvable, ou n'appartenant pas à ce marchand."
+          }
+        }
+      }
+    },
+    "/pricing/my-rates/": {
+      "get": {
+        "tags": [
+          "Référence"
+        ],
+        "summary": "Consulter mes tarifs et disponibilités par réseau",
+        "description": "Pour chaque (pays, réseau) actif, le tarif payin/payout réellement applicable à vous aujourd'hui, déjà résolu (réseau + marge combinés en un seul total, jamais l'identité du gateway derrière ni la décomposition). Utilisez `otp_required`/`otp_instructions` pour savoir, avant d'appeler POST /payments/softpay/, si ce réseau exige un OTP pré-paiement (voir la section OTP pré-paiement de la page Paiements).",
+        "parameters": [
+          {
+            "name": "merchant",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "UUID du marchand visé. Ignoré pour une clé API (toujours vous-même) ; pour un token dashboard gérant plusieurs marchands, résout la boutique visée si le header X-Merchant-Id n'est pas fourni."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Un objet par (pays, réseau) où au moins un sens (payin ou payout) est disponible",
+            "content": {
+              "application/json": {
+                "example": [
+                  {
+                    "country_code": "CI",
+                    "country_name": "Côte d'Ivoire",
+                    "currency": "XOF",
+                    "network_code": "orange_ci",
+                    "network_name": "Orange Money",
+                    "payin": {
+                      "available": true,
+                      "is_custom": false,
+                      "otp_required": true,
+                      "otp_instructions": "Sur votre téléphone, composez #144*82# puis choisissez l'option 2 pour obtenir votre code de paiement.",
+                      "tiers": [
+                        {
+                          "min_amount": "0.00",
+                          "max_amount": "500000.00",
+                          "currency": "XOF",
+                          "percent": "2.500",
+                          "fixed": "0.00",
+                          "floor_amount": "50.00",
+                          "cap_amount": null,
+                          "fee_charge_mode": "ADD_ON"
+                        }
+                      ]
+                    },
+                    "payout": {
+                      "available": true,
+                      "is_custom": false,
+                      "otp_required": false,
+                      "otp_instructions": "",
+                      "tiers": [
+                        {
+                          "min_amount": "0.00",
+                          "max_amount": "500000.00",
+                          "currency": "XOF",
+                          "percent": "1.800",
+                          "fixed": "0.00",
+                          "floor_amount": null,
+                          "cap_amount": "5000.00",
+                          "fee_charge_mode": "DEDUCTED"
+                        }
+                      ]
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/checkout-sessions/{id}/status/": {
+      "get": {
+        "tags": [
+          "Paiements"
+        ],
+        "summary": "Statut d'une session de checkout",
+        "description": "Raccourci à côté du détail complet (GET /checkout-sessions/{id}/) : ne renvoie que l'essentiel pour savoir où en est le paiement, et revérifie toujours l'état réel côté gateway avant de répondre (jamais confiance dans un statut mémorisé) — même principe que GET /payments/{payment_id}/verify/. À utiliser en polling si vous n'avez pas encore de webhook configuré.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Statut actuel de la session et de la transaction associée",
+            "content": {
+              "application/json": {
+                "example": {
+                  "id": "c9a17e2c-4b1a-4f0e-9c3d-2a1b3c4d5e6f",
+                  "slug": "kZ2v9rT4bQxL8mNpYw==",
+                  "status": "PAID",
+                  "transaction_id": "9c3f2a10-4b7e-4f1a-9d2e-9b6a7c1e4a02",
+                  "transaction_status": "SUCCESS",
+                  "transaction_reference": "b1f2c3d4-5678-4e9a-9c1d-2e3f4a5b6c7d"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Session introuvable"
+          }
+        }
+      }
+    }
+  }
+}

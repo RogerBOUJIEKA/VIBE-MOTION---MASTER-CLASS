@@ -116,3 +116,26 @@ Si la clé a été collée dans un chat ou un document, la **supprimer et en cr�
 
 - `data/v2_build.py` et `tools/badges.py` contiennent d'anciens chemins : `build.py` ne lit `v2_build.py` que comme du texte (FAQ, profils), il n'est jamais exécuté. `badges.py` a servi à créer `pay/*.webp` à partir de logos tirés de dépôts GitHub publics (voir la liste en tête de fichier) ; les images finales sont déjà dans `pay/`.
 - Les tests simulent l'API YouTube et bloquent les sites externes ; seule la vraie vidéo et le vrai SasPay ne sont pas testables hors ligne : **faire un achat test** après chaque changement du paiement.
+
+## 9. Où se trouve chaque chose (inventaire complet)
+
+**Dans ce dépôt GitHub**
+- `index.html`, `api/`, `assets/`, `fonts/`, `pay/`, logos, `thumbs/` : le site publié.
+- **Vidéos du site** (fichiers à la racine) : `spot-16x9.mp4`, `spot-9x16.mp4`, `motion-kwiva.mp4`, `motion-mboa.mp4`, `motion-snapia.mp4`, `motion-volta.mp4`, `work-bovann.mp4`, `work-camairco.mp4` (+ leurs images `.jpg`), et l'audio `presentation-formation.mp3`.
+- `source/` : le code de fabrication, les tests et les outils (voir §1) ; `source/tunnel/` : le code d'origine du tunnel 3D (`assets/tunnel.js` et `assets/scene.js` en sont la version compilée avec esbuild + three.js 0.187).
+- `archive/visuels-publicitaires/` : les 8 visuels Facebook/Instagram (4 formats × clair/sombre) et leur zip — **au prix 15 000 FCFA, à refaire à 5 500**.
+- `archive/fonds-animes/` : les propositions de fonds animés (aurore, ondes, projecteur…) créées et essayées pour le haut de page.
+- `archive/images-originales/` : photo d'origine de Roger (`roger-orig.webp`, `roger-clean.png`, `roger900.webp`).
+- `archive/documentation-saspay/` : copie de la documentation SasPay (`full.txt`, `llms.txt`, `openapi.json`).
+
+**Vidéos sur YouTube** (affichées dans « Réalisations ») — identifiants :
+`IHRFvM2n8Ws` (Spectacle Cabrel Tindo), `4abyQA1a9h8` (Croisade Bafoussam pour Jésus), `IMaHC8wFzuM` (Pub motion design), `U2wMu5KrVnQ` (Camair-Co), `zbV6wVUsFxU` (Bus gratuits), `oVP2kVm4lMs` (Grande Nuit de Clôture), `Web3N01yUVA` (App Mr N).
+Vidéo de présentation du haut de page : `Ew-ZgqctuxQ`.
+
+**À conserver soi-même, hors du dépôt** (le dépôt est public, ces éléments doivent rester privés) :
+- le **lien de la vidéo de la formation** (vidéo YouTube non répertoriée) ;
+- le **lien d'invitation du groupe WhatsApp des élèves** ;
+- les **clés** SasPay (et l'ancienne clé Maketou si elle existe encore) ;
+- la vidéo originale de chaque cours, sur votre ordinateur ou votre Drive : YouTube n'est pas une sauvegarde.
+
+**Volontairement non copié :** les logos de paiement d'origine tirés de dépôts GitHub tiers (leurs images finales sont dans `pay/`), les captures d'écran de travail et le profil de navigateur de test.

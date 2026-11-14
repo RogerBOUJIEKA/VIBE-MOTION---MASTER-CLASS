@@ -1,0 +1,53 @@
+# SasPay
+
+> SasPay est une API REST unique pour encaisser (mobile money, carte) et payer des bénéficiaires en Afrique de l'Ouest et du Centre. Base URL : https://api.saspay.me/api/v1. Authentification : `Authorization: Bearer sk_test_EXEMPLE` (test) ou `sk_live_EXEMPLE` (production), uniquement côté serveur. La spécification OpenAPI fait foi : n'inventez aucun endpoint, champ ou webhook absent de `/api-reference/openapi.json`.
+
+## Démarrage
+
+- [Présentation](/): vue d'ensemble des services
+- [Créer un compte et obtenir une clé API](/account-setup): inscription, KYC, première clé
+- [Démarrage rapide](/quickstart): premier paiement de test en 5 minutes
+
+## Intégration IA
+
+- [Règles pour assistants IA (AGENTS.md)](/ai/agents-md): règles à copier dans le `AGENTS.md` de votre projet
+- [Skill SasPay](/ai/skill): skill d'intégration complète, fichier `skills/saspay-integration/SKILL.md`
+
+## Intégrations
+
+- [Plugin WooCommerce](/plugins/woocommerce): installation, configuration du webhook, tests et dépannage (archive : https://files.viraclip.me/saspay/docs/saspay-for-woocommerce-1.0.0.zip)
+
+## Référence API
+
+- [Introduction](/api-reference/introduction): base URL, authentification, enveloppe de réponse, erreurs, idempotence, limite de débit
+- [Spécification OpenAPI](/api-reference/openapi.json): source de vérité des routes et des schémas
+
+### Paiements
+
+- [Vue d'ensemble](/api-reference/payments): softpay, checkout hébergé, OTP, statuts
+- [Softpay (paiement direct)](/api-reference/payments/softpay): `POST /payments/softpay/`
+- [Créer une session de checkout](/api-reference/payments/checkout-create): `POST /checkout-sessions/`
+- [Statut d'une session](/api-reference/payments/checkout-status): `GET /checkout-sessions/{id}/status/`
+- [Vérifier un paiement](/api-reference/payments/verify): `GET /payments/{payment_id}/verify/`
+- [Confirmer par OTP](/api-reference/payments/confirm-otp): `POST /payments/{payment_id}/confirm-otp/`
+- [Rejouer un paiement échoué](/api-reference/payments/retry): `POST /payments/{payment_id}/retry/`
+
+### Retraits
+
+- [Vue d'ensemble](/api-reference/payouts): paiement d'un bénéficiaire en mobile money
+- [Initier un payout](/api-reference/payouts/initialize): `POST /payouts/initialize/` (IP whitelistée requise)
+- [Vérifier un payout](/api-reference/payouts/verify): `GET /payouts/{payout_id}/verify/`
+
+### Transactions, liens, wallet
+
+- [Transactions](/api-reference/transactions): liste, détail, export, facture
+- [Liens de paiement](/api-reference/payment-links): CRUD sur `/payment-links/`
+- [Wallet](/api-reference/wallet): soldes, taux de change, transferts interwallet
+
+### Webhooks
+
+- [Webhooks](/api-reference/webhooks): catalogue d'événements, format, vérification de la signature (création et modification depuis le tableau de bord uniquement)
+
+### Référence
+
+- [Pays](/api-reference/reference/countries), [Réseaux](/api-reference/reference/networks), [Formats](/api-reference/reference/formats), [Mes tarifs](/api-reference/reference/my-rates)
