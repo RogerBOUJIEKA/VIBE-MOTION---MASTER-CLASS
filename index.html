@@ -1998,7 +1998,7 @@ const BOOKINGS = [];
   if (!id) show('none'); else check();
 })();
 
-/* ---------- Promo card: first after 25 s, then 45 s after each close; never over a form, a video or the menu ---------- */
+/* ---------- Promo card: first after 12 s, then 40 s after each close; never over a form, a video or the menu ---------- */
 (function () {
   const pp = $('#pp'); if (!pp) return;
   try { if (sessionStorage.getItem('mc_pp') === '0') return; } catch (e) {} // test switch
@@ -2009,12 +2009,12 @@ const BOOKINGS = [];
     if (busy()) { t = setTimeout(show, 8000); return; }
     pp.hidden = false; requestAnimationFrame(() => requestAnimationFrame(() => pp.classList.add('on')));
   }
-  function hide() { pp.classList.remove('on'); setTimeout(() => { pp.hidden = true; }, 350); clearTimeout(t); t = setTimeout(show, 45000); }
+  function hide() { pp.classList.remove('on'); setTimeout(() => { pp.hidden = true; }, 350); clearTimeout(t); t = setTimeout(show, 40000); }
   $('.pp-x', pp).addEventListener('click', hide);
   $('.pp-later', pp).addEventListener('click', hide);
-  pp.addEventListener('click', e => { if (e.target === pp) hide(); if (e.target.closest('.js-cta')) { pp.classList.remove('on'); pp.hidden = true; clearTimeout(t); t = setTimeout(show, 45000); } });
+  pp.addEventListener('click', e => { if (e.target === pp) hide(); if (e.target.closest('.js-cta')) { pp.classList.remove('on'); pp.hidden = true; clearTimeout(t); t = setTimeout(show, 40000); } });
   addEventListener('keydown', e => { if (e.key === 'Escape' && !pp.hidden) hide(); });
-  t = setTimeout(show, 25000);
+  t = setTimeout(show, 12000);
   window.__pp = { show, hide };
 })();
 
