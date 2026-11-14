@@ -2,7 +2,8 @@
 // Secrets live in Vercel environment variables, never in the site code:
 //   SASPAY_SECRET_KEY   secret API key from SasPay (dashboard > Développeur), sk_live_... (scope PAYIN)
 //   COURSE_ACCESS_URL   link to the course, shown only after SasPay confirms the payment
-//   SASPAY_AMOUNT       optional, price in FCFA (default 15000)
+//   COURSE_GROUP_URL    WhatsApp group of the students, shown only after a confirmed payment
+//   SASPAY_AMOUNT       optional, price in FCFA (default 5500)
 //   SASPAY_CURRENCY     optional, ISO currency (default XOF)
 // GET  /api/checkout              -> { enabled }
 // POST /api/checkout              -> { url, id }   creates a hosted SasPay checkout session
@@ -44,7 +45,7 @@ module.exports = async (req, res) => {
       if (!r.ok || !r.data) { console.error('saspay status failed', r.status, errCode(r.err)); return res.status(502).json({ error: 'status_failed' }); }
       const paid = r.data.status === 'PAID' && r.data.transaction_status === 'SUCCESS';
       const out = { paid, status: r.data.status || '' };
-      if (paid) out.access = process.env.COURSE_ACCESS_URL || '';
+      if (paid) { out.access = process.env.COURSE_ACCESS_URL || ''; out.group = process.env.COURSE_GROUP_URL || ''; }
       return res.status(200).json(out);
     } catch (e) {
       console.error('saspay unreachable', e && e.name);
@@ -64,7 +65,7 @@ module.exports = async (req, res) => {
   if (!EMAIL.test(email)) return res.status(400).json({ error: 'invalid_email' });
 
   // the price is set here on the server, never taken from the browser
-  const amount = (Number(process.env.SASPAY_AMOUNT) > 0 ? Number(process.env.SASPAY_AMOUNT) : 15000).toFixed(2);
+  const amount = (Number(process.env.SASPAY_AMOUNT) > 0 ? Number(process.env.SASPAY_AMOUNT) : 5500).toFixed(2);
   const payload = {
     amount, currency: (process.env.SASPAY_CURRENCY || 'XOF').toUpperCase().slice(0, 3),
     description: 'Formation Vibe Motion',
